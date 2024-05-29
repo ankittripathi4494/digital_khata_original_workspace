@@ -83,6 +83,55 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - resources/images/
+    - lib/global_blocs/internet/
+    - lib/
+    - lib/utils/
+    - lib/module/
+    - lib/module/Emi/
+    - lib/module/sms/
+    - lib/module/tax/
+    - lib/module/bill/
+    - lib/module/plan/
+    - lib/module/login/
+    - lib/module/errors/
+    - lib/module/errors/screens/
+    - lib/module/reward/
+    - lib/module/splash/
+    - lib/module/account/
+    - lib/module/applock/
+    - lib/module/applock/pattern/
+    - lib/module/applock/pinlock/
+    - lib/module/invoice/
+    - lib/module/product/
+    - lib/module/profile/
+    - lib/module/service/
+    - lib/module/business/
+    - lib/module/discount/
+    - lib/module/language/
+    - lib/module/payments/
+    - lib/module/payments/net_banking/
+    - lib/module/bill_plan/
+    - lib/module/customers/
+    - lib/module/dashboard/
+    - lib/module/dashboard/screens/
+    - lib/module/purchases/
+    - lib/module/recurring/
+    - lib/module/howitworks/
+    - lib/module/mobile_otp/
+    - lib/module/transaction/
+    - lib/module/add_business/
+    - lib/module/edit_profile/
+    - lib/module/help&support/
+    - lib/module/notification/
+    - lib/module/subscription/
+    - lib/module/subscription/checkout/
+    - lib/module/business_type/
+    - lib/module/custom_amount/
+    - lib/module/privacy_policy/
+    - lib/module/reminder_activity/
+    - lib/generated/
+    - lib/global_blocs/
+    - lib/global_widget/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

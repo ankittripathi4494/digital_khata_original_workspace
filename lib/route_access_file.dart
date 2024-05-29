@@ -20,7 +20,7 @@ import 'module/discount/discount_screen.dart';
 import 'module/edit_profile/edit_personal_profile.dart';
 import 'module/errors/screens/network_error_screen.dart';
 import 'module/errors/screens/page_error_screen.dart';
-import 'module/help&support/help_support_screen.dart';
+import 'module/help_support/help_support_screen.dart';
 import 'module/howitworks/howitworks_screen.dart';
 import 'module/invoice/create_invoice_screen.dart';
 import 'module/invoice/invoice_screen.dart';
