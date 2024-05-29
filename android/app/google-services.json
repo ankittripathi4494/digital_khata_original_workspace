@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "92834692727",
+    "project_id": "digital-khata-original-4494",
+    "storage_bucket": "digital-khata-original-4494.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:92834692727:android:2fa251a4eb93207fa1d072",
+        "android_client_info": {
+          "package_name": "com.vardan.dkapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZhJAvcMGUOhGfwVKVbzBN1DQKTfJcDDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
