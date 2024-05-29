@@ -1,4 +1,4 @@
-class API {
+class APIPathList {
 
   // Production Server
   static const String mainDomain = "";

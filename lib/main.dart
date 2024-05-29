@@ -7,9 +7,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'global_blocs/internet/internet_cubit.dart';
 import 'global_blocs/locale/locale_cubit.dart';
 import 'global_blocs/locale/locale_state.dart';
+import 'utils/shared_preferences_helper.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Initialize the SharedPreferencesHelper
+  await SharedPreferencesHelper().init();
+
   runApp(MyApp(
     key: const Key('MyApp'),
   ));
