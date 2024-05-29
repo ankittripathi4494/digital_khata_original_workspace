@@ -1,0 +1,378 @@
+{
+    "scanEnroll": "Scan To Enroll Power 2.5",
+    "scanEnroll3.0": "Scan To Enroll Aura 3.0",
+    "loadingText": "Loading...",
+    "loginText": "Login",
+    "ResetVerificationButtonText": "Click Here",
+    "ResetVerificationText": "Send Link",
+    "registerText": "Register",
+    "usernameOrEmailText": "Enter E-Mail",
+    "domainNameText": "Enter Domain",
+    "fullNameText": "Enter Full Name",
+    "emailText": "Enter E-Mail",
+    "companyText": "Enter Company Name",
+    "passwordText": "Enter Password",
+    "confirmPasswordText": "Enter Confirm Password",
+    "accountNotHaveRelatedQuestion": "Haven't Any Account?",
+    "resetVerificationLinkText": "Forgot Password?",
+    "accountHavingRelatedQuestion": "Do You Have An Account?",
+    "signUpSuggestion": "Sign Up Here",
+    "noInternetText": "No Internet Available!! Please Try Again.",
+    
+    "termsOfServices": "I agree to Terms of Services and Privacy Policy.",
+    "exitAlertSection": {
+        "message": "Do you want to exit?",
+        "optionYes": "Yes",
+        "optionNo": "No"
+    },
+    "logoutAlertSection": {
+        "message": "Do you want to logout?",
+        "optionYes": "Yes",
+        "optionNo": "No"
+    },
+    "dashboardAlertSection": {
+        "message": "Do you want back to Dashboard?",
+        "optionYes": "Yes",
+        "optionNo": "No"
+    },
+    
+    "menus": {
+        "homeTitle":"Home",
+        "deviceTitle":"Devices",
+        "transactionTitle":"Transactions",
+        "profileTitle":"Profile"
+    },
+    "screens": {
+        "loginScreen":{
+            "usernameText":"Username",
+            "emailText":"Email",
+            "passwordText":"Password",
+            "loginText":"Login"
+                    },
+        "dashboard":{
+            "title":"Dashboard",
+           
+            "activateDevice":{
+                "activeCount":"Active",
+                "inactiveCount":"Inactive",
+                "gsfIdTitle":"Enter GSF ID",
+                "deviceOS":"Enter Device OS",
+                "deviceIMEI":"Enter Device IMEI",
+
+                "deviceActivationLoading":"Activating..",
+                "deviceActivationButtonTitle":"Activate Device"
+            },
+            "addDevice":{
+                "buttonTitleZt":" Aura 3.0 ",
+                "buttonTitleQr":"Power 2.5",
+                "buttonTitleQr2":"Axiom 4.0",
+                "buttonQr":"QR To Scan",
+                "title":"Add Device(QR)",
+                "title1":"Add",
+                "title2":"Device(QR)",
+
+                "titlezt":"Add Device(ZT)",
+                "alert":{
+                    "alertTitle":"Cannot Add Device!",
+                    "alertMessage":"You cannot add any device because you have no licence key!"
+                },
+                "form":{
+                    "employeeFullNameTitle": "Enter Employee Full Name",
+                    "employeeEMailTitle": "Enter Employee E-Mail",
+                    "employeePhoneNumberTitle": "Enter Employee Phone Number",
+                    "employeeDeviceIMEIOneTitle": "Enter Employee Device IMEI 1",
+                    "employeeDeviceIMEITwoTitle": "Enter Employee Device IMEI 2",
+                    "employeeAddDeviceButtonText":"Add Device"
+                }
+            },
+            "card":{
+                "licenceKeyTitle":"Licence Keys",
+                "enrollDeviceKeyTitle":"Managed Devices",
+                "inactiveDeviceKeyTitle":"Unmanaged Devices",
+                "lockedDeviceKeyTitle":"Locked\nDevices",
+                "unlockedDeviceKeyTitle":"Unlocked Devices",
+                "removedDeviceKeyTitle":"Removed\n Devices",
+                "deactiveDeviceKeyTitle":"Deactive Devices",
+                "enrollDeviceKey1Title":"Today's Enrollment",
+                "totalusers":"Total Devices",
+                "totalusers1":"Total",
+                "totalusers2":"Devices",
+                "activeusers":"Active Devices",
+                "devices":"Devices",
+                "recentEnrollment":"Recent\nEnrollment",
+                "deviceSummary":"Device\nSummary",
+                "deviceSummary1":"Device",
+                "deviceSummary2":"Summary",
+                "qr":"QR",
+                
+                "addDevices":"Add\nDevices(QR)",
+                "add":"Add",
+                "Devices":"Devices(QR)",
+                "addDeviceZt":"Add\nDevices(ZT)",
+                "addzt":"Add",
+                "DeviceZt":"Devices(ZT)"
+
+
+
+
+            },
+            "recentActivations":"Recent Activations",
+            "salesSummary":"Sales Summary",
+            "noRecentActivations":"No Recent Activations!!!"
+        },
+        "notification":{
+            "title":"Notifications",
+            "noNotificationTitle":"No Notifications!!!"
+        },
+        "emiAlert":{
+            "title":"EMI Alert",
+            "noEMIAlertTitle":"No EMI Alert!!!",
+            "mobileTitle":"Mobile",
+            "emiAmountTitle":"Emi Amount",
+            "emiDueDateTitle":"Emi Due Date",
+            "deviceBrandTitle":"Device Brand",
+            "imeiOneTitle":"IMEI 1"
+        },
+        "customer":{
+            "title":"Devices",
+            "noCustomerFound":"No Customer Found!!!",
+            "noDeviceFound":"No Device Found!!!",
+            "customerCard":{
+                "customerNameTitle":"Customer Name ",
+                "customerIdTitle":"Customer ID ",
+                "customerImeiOneTitle":"IMEI 1 ",
+                "customerDeviceTitle":"Device",
+                "customerEnrollTypeTitle":"Enroll Type",
+                "customerDeviceStatusTitle":"Device Status",
+                "customerTotalEMITitle":"Total EMI",
+                "customerEnrollDateTitle":"Enroll Date",
+                "lastSeen":"Last Seen"
+            },
+            "deviceStatusMenu":{
+                "inactive": "Inactive",
+                "locked": "Locked",
+                "unlocked": "Unlocked",
+                "deactivated": "Deactivated",
+                "uninstalled": "Uninstalled",
+                "all":"All",
+                "enroll":"Enrolled"
+            },
+            "subscreen":{
+                "customerDetails":{
+                    "title":"Customer Details",
+                    "customerDetailsSection":{
+                        "editCustomerDetailsButtonQR":"Edit Customer (Power 2.5)",
+                        "editCustomerDetailsButtonQR2":"Edit Customer (Axiom 4.0)",
+                        "editCustomerDetailsButtonZT":"Edit Customer (Aura 3.0)",
+                        "fields":{
+                            "fullNameTitle":"Full Name",
+                            "mobileTitle":"Mobile",
+                            "emailTitle":"Aadhaar",
+                            "createdDateTitle":"Created Date",
+                            "registrationNumberTitle":"Registration No",
+                            "imeiOne":"IMEI 1",
+                            "imeiTwo":"IMEI 2",
+                            "customerSignatureTitle":"Customer Signature"
+                        },
+                        "tabs":{
+                            "deviceDetailsTab":"Device Details",
+                            "emiDetailsTab":"EMI Details",
+                            "commandsTab":"\tCommands\t"
+                        },
+                        "customerDeviceDetailsTab":{
+                            "noDeviceFound":"No Device Available",
+                            "modelTitle":"Model",
+                            "brandTitle":"Brand",
+                            "manufacturerTitle":"Manufacturer",
+                            "batteryLevelTitle":"Enrollment Type",
+                            "imeiOneTitle":"IMEI 1",
+                            "imeiTwoTitle":"IMEI 2",
+                            "serialNumberTitle":"Serial Number",
+                            "simOneTitle":"Sim 1",
+                            "simTwoTitle":"Sim 2",
+                            "deviceStatusTitle":"Device Status",
+                            "deviceTitle":"Device",
+                            "appStatusTitle":"App Lock\\Unlock",
+                            "cameraStatusTitle":"Camera Lock\\Unlock",
+                            "outgoingCallStatusTitle":"Outgoing Call Block\\Unblock",
+                            "usbStatusTitle":"USB Block\\Unblock",
+                            "locationStatusTitle":"Location On\\Off",
+                            "lastOnlineDateTitle":"Last Online Date",
+                            "locationTitle":"Location",
+                            "osTitle":"Operating System",
+                            "flversionTitle":"FL Version",
+                            "timerDateTimeTitle":"Timer Date",
+                            "timerTitle":"Timer Lock"
+                        },
+                        "customerEmiDetailsTab":{
+                            "noDeviceFound":"No Device Available",
+                            "customerUpdateEMIDetailsButtonText":"Update EMI"
+                        }
+                    }
+                },
+                "customerUpdateScreen":{
+                    "title":"Update Customer\n",
+                    "updateDevice":{
+                        "form":{
+                            "customerFullNameTitle": "Enter Customer Full Name",
+                            "customerEMailTitle": "Enter Customer E-Mail",
+                            "customerPhoneNumberTitle": "Enter Customer Phone Number",
+                            "customerDeviceIMEIOneTitle": "Enter Customer Device IMEI 1",
+                            "customerDeviceIMEITwoTitle": "Enter Customer Device IMEI 2",
+                            "customerUpdateDeviceButtonText":"Update Customer"
+                        }
+                    }
+                },
+                "customerKYCScreen":{
+                    "title":"Customer KYC",
+                    "form":{
+                        "customerNameTitle":"Customer Name",
+                        "customerMobileTitle":"Customer Mobile",
+                        "customerEmailTitle":"Customer Aadhaar",
+                        "bankNameTitle":"Bank Name",
+                        "bankAccountNumberTitle":"Bank Account Number",
+                        "bankIfscCodeTitle":"IFSC Code",
+                        "customerAddressTitle":"Customer Address",
+                        "customerUpdateKYCButtonText":"Submit"
+                    }
+                },
+                "customerEMIDetailsScreen":{
+                    "title":"EMI Details",
+                    "emiUpdateSuccessMessage":"EMI Successfully Updated!",
+                    "emiUpdateFailedMessage":"EMI Updation Failed!",
+                    "form":{
+                        "productPriceTitle":"Product Value",
+                        "downPaymentTitle":"Down Payment",
+                        "balanceAmountTitle":"Balance Amount",
+                        "numberOfMonths": "Number of Months",
+                        "interestRate": "Interest Charge",
+                        "otherAmount": "File Charge",
+                        "totalEmiAmount": "Total Finance Amount",
+                        "emiAmount": "EMI Amount",
+                        "city": "City",
+                        "guarantorName": "Guarantor Name",
+                        "guarantorContactNumber": "Guarantor Contact Number",
+                        "guarantorAadhaarNumber": "Guarantor Aadhaar Number",
+                        "firstEmiDueDate": "Pick First EMI Due Date",
+                        "customerUpdateEMIButtonText":"Update EMI"
+                    }
+                }
+            }
+        },
+       "topupHistory":{
+            "licenseHistory":{
+                "title":"Licence History",
+                "noLicenseFound":"No Licence Found!!!",
+                "receivedFromText":"Received from",
+                "creditText":"Credit",
+                "totalText":" Total "
+            },
+            "emiTransactions":{
+                "title":"EMI Transactions",
+                "noEmiFound":"No EMI Found!!!"
+            }
+       },
+        "profile":{
+            "title":"Profile",
+            "subSections":{
+                "securitySectionTitle":{
+                    "title":"Security",
+                    "deviceMpinMenu":"Set Device MPin",
+                    "setPinPageTitle":"Set Your PIN",
+                    "setPasscodePageTitle":"Set Your Passcode",
+                    "enterPinPageTitle":"Enter Your PIN",
+                    "confirmPinPageTitle":"Confirm Your PIN",
+                    "confirmPasscodePageTitle":"Confirm Your passcode",
+                    "backToProfileTitle":"Back to Setting?",
+                    "backToLoginTitle":"Back to Login?",
+                    "optionYes":"Yes",
+                    "optionNo":"No"
+                },
+                "settingSection":{
+                    "title":"Settings &\n Preferences",
+                    "title1":"Settings",
+                    "themeChangeMenu":"Change Theme",
+                    "languageAppMenu":"App Language",
+                    "languagechoice":"Select the language ",
+                    "languageHindi":"Hindi",
+                    "languageEnglish":"English"
+                },
+
+                "fingerPrint":{
+                    "title":"Enable Fingerprint"
+
+                },
+                "aboutSection":{
+                    "title":"About SDM",
+                    "aboutMenuTitle":"About EMIPay",
+                    "aboutMenuSubtitle":"Privacy Policy, Terms, Contact Us and About EMIPay",
+                    "contactUsMenu":"Contact Us",
+                    "privacyPolicyMenu": "Privacy Policy",
+                    "termsMenu":"Terms & Conditions"
+                },
+                "changePasswordSection":{
+                    "title":"Change Password",
+                    "currentPasswordTitle":"Current Password",
+                    "newPasswordTitle":"New Password",
+                    "confirmNewPasswordTitle":"Confirm New Password"
+                },
+                "logoutTitle":"Logout"
+            },
+            "subscreen":{
+                "profileDetails":{
+                    "title":"Profile Details",
+                    "fields":{
+                        "fullNameTitle":"Name",
+                        "imei1":"IMEI 1",
+                        "imei2":"IMEI 2",
+                        "id":"Device ID",
+                        "enrollType":"Enroll Type",
+                        "parentNameTitle":"Parent Name",
+                        "companyNameTitle":"Company Name",
+                        "companyDetailTitle":"Company Details",
+                        "mobileTitle":"Mobile",
+                        "emailTitle":"Email",
+                        "gstNoTitle":"GST",
+                        "addressTitle":"Address",
+                        "cityNameTitle":"City",
+                        "stateNameTitle":"State",
+                        "countryNameTitle":"Country",
+                        "retailerQRTitle":"QR",
+                        "logoTitle":"Logo",
+                        "retailerSignatureTitle":"Signature",
+                        "retailerContact":"Contact"
+                    }
+                }
+            },
+            "summaryDetails":{
+                "viewActivities":"View Activities",
+                "action":"Actions",
+                "deviceSummary":"Device Summary",
+                "deviceSumarryDetails":{
+                    "deiviceManufacturer":"Device Manufacturer",
+                    "deviceModel":"Device Model",
+                    "imei1":"IMEI 1",
+                    "imei2":"IMEI 2",
+                    "deviceName":"Device Name",
+                    "productName":"Product Name",
+                    "sharedDevices":"Shared Devices",
+                    "lastscanTime":"Last Scan Time",
+                    "lastcontactTime":"Last Contact Time"
+                },
+                "actions":{
+                    "actionsButton":"Actions",
+                    "scanNow":"Scan Now",
+                    "remoteLock":"Remote Lock",
+                    "remoteAlarm":"Remote Alarm",
+                    "completeWipe":"Complete Wipe",
+                    "corporateWipe":"Corporate Wipe",
+                    "clearPasscode": "Clear Passcode",
+                    "resetPasscode":"Reset Passcode",
+                    "locateDevice":"Locate Device"
+                }
+                            }
+                    
+        }
+       
+    }
+}

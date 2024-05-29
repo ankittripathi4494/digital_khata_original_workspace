@@ -1,0 +1,373 @@
+{
+    "scanEnroll": "ऐनरोल के लिए स्कैन करें Power 2.5",
+    "scanEnroll3.0": "ऐनरोल के लिए स्कैन करें Aura 3.0",
+    "loadingText": "लोड हो रहा है...",
+    "loginText": "लॉग इन करें",
+    "ResetVerificationButtonText": "यहाँ क्लिक करें",
+    "ResetVerificationText": "लिंक भेजें",
+    "registerText": "रजिस्टर करें",
+    "usernameOrEmailText": "ईमेल दर्ज करें",
+    "domainNameText": "डोमेन दर्ज करें",
+    "fullNameText": "पूरा नाम दर्ज करें",
+    "emailText": "ईमेल दर्ज करें",
+    "companyText": "कंपनी का नाम दर्ज करें",
+    "passwordText": "पास वर्ड दर्ज करें",
+    "confirmPasswordText": "पासवर्ड की पुष्टि दर्ज करें",
+    "accountNotHaveRelatedQuestion": "क्या कोई खाता नहीं है?",
+    "resetVerificationLinkText": "पासवर्ड भूल गए हैं?",
+    "accountHavingRelatedQuestion": "क्या आपकॆ पास खाता है?",
+    "signUpSuggestion": "रजिस्टर करें",
+    "noInternetText": "कोई इंटरनेट उपलब्ध नहीं है !! कृपया पुन: प्रयास करें।",
+    
+    
+    "exitAlertSection": {
+        "message": "क्या आप ऐप से लॉगआउट चाहते हैं ??",
+        "optionYes": "हां",
+        "optionNo": "नहीं"
+    },
+    "logoutAlertSection": {
+        "message": "क्या आप ऐप से बाहर निकलना चाहते हैं ??",
+        "optionYes": "हां",
+        "optionNo": "नहीं"
+    },
+    "dashboardAlertSection": {
+        "message": "क्या आप डैशबोर्ड चाहते हैं ??",
+        "optionYes": "हां",
+        "optionNo": "नहीं"
+    },
+    
+    "termsOfServices": "मैं सेवा की शर्तों और गोपनीयता नीति से सहमत हूं।",
+    "menus": {
+        "homeTitle":"होम",
+        "deviceTitle":"डिवाइस",
+        "transactionTitle":"ट्रैन्ज़ैक्शन्ज़",
+        "profileTitle":"प्रोफाइल"
+    },
+    
+    "screens": {
+        "loginScreen":{
+"usernameText":"यूजरनाम",
+"emailText":"Email",
+"passwordText":"पासवर्ड",
+"loginText":"लॉगिन"
+        },
+        "dashboard":{
+            "title":"डैशबोर्ड",
+            "activateDevice":{
+                "activeCount":"एक्टिव",
+                "inactiveCount":"इनएक्टिव",
+                "gsfIdTitle":"जीएसएफ आईडी एन्टर करें",
+                "deviceOS":"डिवाइस OS एन्टर करें",
+                "deviceIMEI":"डिवाइस IMEI एन्टर करें",
+                "deviceActivationLoading":"ऐक्टवैटिंग ..",
+                "deviceActivationButtonTitle":"डिवाइस ऐक्टवैट करें"
+            },
+            "addDevice":{
+                "title":"ऐड डिवाइस(QR)",
+                "title1":"ऐड",
+                "title2":"डिवाइस(QR)",
+                "titlezt":"ऐड डिवाइस(ZT)",
+                "buttonTitleZt":"औरा 3.0  ",
+                "buttonTitleQr":"पाअर 2.5",
+                "buttonTitleQr2":"एक्ज़िम 4.0",
+                "buttonQr":"QR To स्कैन",
+             
+                "alert":{
+                    "alertTitle":"डिवाइस ऐड नहीं कर सकते!",
+                    "alertMessage":"आप कोई डिवाइस ऐड नहीं कर सकते क्योंकि आपके पास कोई लाइसेंस की बचा नहीं है!"
+                },
+                "form":{
+                    "employeeFullNameTitle": "एम्प्लॉय का पुरा नाम एन्टर करें",
+                    "employeeEMailTitle": "एम्प्लॉय का ईमेल एन्टर करें",
+                    "employeePhoneNumberTitle": "एम्प्लॉय का फोन नम्‍बर एन्टर करें",
+                    "employeeDeviceIMEIOneTitle": "एम्प्लॉय का डिवाइस IMEI 1 एन्टर करें",
+                    "employeeDeviceIMEITwoTitle": "एम्प्लॉय का डिवाइस IMEI 2 एन्टर करें",
+                    "employeeAddDeviceButtonText":"डिवाइस जोडे"
+                }
+            },
+            "card":{
+                "licenceKeyTitle":"लाइसेंस कीज",
+                "enrollDeviceKeyTitle":"Managed डिवाइस",
+                "inactiveDeviceKeyTitle":"Unmanaged डिवाइस",
+                "lockedDeviceKeyTitle":"लौक्‍ड\nडिवाइस",
+                "unlockedDeviceKeyTitle":"अनलौक्‍ड डिवाइस",
+                "deactiveDeviceKeyTitle":"डिएक्टिव डिवाइस",
+                "enrollDeviceKey1Title":"Today's एनरोलमेंट",
+                "totalusers":"टोटल डिवाइस",
+                "totalusers1":"टोटल",
+                "totalusers2":"डिवाइस",
+                "devices":"डिवाइस",
+                "activeusers":"एक्टिव डिवाइस",
+                "recentEnrollment":"रीसेंट\nएनरोलमेंट",
+                "deviceSummary":"डिवाइस\nसमरी",
+                "deviceSummary1":"डिवाइस",
+                "deviceSummary2":"समरी",
+                "qr":"क्यूआर",
+               
+                "addDevices":"Add\nडिवाइस(QR)",
+                "add":"Add",
+                "Devices":"डिवाइस(QR)",
+                "addDeviceZt":"Add\nडिवाइस(ZT)",
+                "addzt":"Add",
+                "DeviceZt":"डिवाइस(ZT)"
+
+
+            },
+            "recentActivations":"रीसन्ट ऐक्टवैशन",
+            "salesSummary":"सेल समरी",
+            "noRecentActivations":"नो रीसन्ट ऐक्टवैशन!!!"
+        },
+        "notification":{
+            "title":"नोटफकैशन",
+            "noNotificationTitle":"कोई नोटफकैशन नहीं मिला!!!"
+        },
+        "emiAlert":{
+            "title":"EMI अलर्ट",
+            "noEMIAlertTitle":"कोई EMI अलर्ट नहीं मिला!!!",
+            "mobileTitle":"मोबाईल",
+            "emiAmountTitle":"Emi अमाऊ्न्‍ट",
+            "emiDueDateTitle":"Emi दयु देट",
+            "deviceBrandTitle":"डिवाइस बरेन्‍ड",
+            "imeiOneTitle":"IMEI 1"
+        },
+        "customer":{
+            "title":"डिवाइस",
+            "noCustomerFound":"कोई कस्टमर नहीं मिला!!!",
+            "noDeviceFound":"कोई डिवाइस नहीं मिला!!!",
+            "customerCard":{
+                "customerNameTitle":"कस्टमर नेम ",
+                "customerIdTitle":"कस्टमर आईडी ",
+                "customerImeiOneTitle":"IMEI 1 ",
+                "customerDeviceTitle":"डिवाइस",
+                "customerEnrollTypeTitle":"एनरोल टाइप",
+                "customerDeviceStatusTitle":"डिवाइस स्टेटस",
+                "customerTotalEMITitle":"टोटल EMI",
+                "customerEnrollDateTitle":"ऐन्‍रोल डेट",
+                "lastSeen":"लास्ट सीन"
+            },
+            "deviceStatusMenu":{
+                "inactive": "इनैक्टिव",
+                "locked": "लौक्‍ड",
+                "unlocked": "अनलौक्‍ड",
+                "deactivated": "डीऐक्टिवैट",
+                "uninstalled": "अनइंस्टॉल",
+                "all":"ऑल",
+                "enroll":"ऐन्‍रोल्‍ड"
+            },
+            "subscreen":{
+                "customerDetails":{
+                    "title":"कस्टमर डीटैल्ज़",
+                    "customerDetailsSection":{
+                        "editCustomerDetailsButtonQR":"एडिट कस्टमर (Power 2.5)",
+                        "editCustomerDetailsButtonZT":"एडिट कस्टमर (Aura 3.0)",
+                        "fields":{
+                            "fullNameTitle":"फुल नेम",
+                            "mobileTitle":"मोबाईल",
+                            "emailTitle":"आधार",
+                            "createdDateTitle":"क्रिएटेड डेट",
+                            "registrationNumberTitle":"रजिस्ट्रेशन नंबर",
+                            "imeiOne":"IMEI 1",
+                            "imeiTwo":"IMEI 2",
+                            "customerSignatureTitle":"कस्टमर सिग्नेचर"
+                        },
+                        "tabs":{
+                            "deviceDetailsTab":"डिवाइस डिटेल्स",
+                            "emiDetailsTab":"\t\tEMI डिटेल्स\t\t",
+                            "commandsTab":"\t\t\t\t\tकमांड्स\t\t\t\t\t"
+                        },
+                        "customerDeviceDetailsTab":{
+                            "noDeviceFound":"कोई डिवाइस उपलब्ध नहीं!!!",
+                            "modelTitle":"मॉडल",
+                            "brandTitle":"ब्रांड",
+                            "manufacturerTitle":"मैन्युफैक्चरर",
+                            "batteryLevelTitle":"Enrollment Type",
+                            "imeiOneTitle":"IMEI 1",
+                            "imeiTwoTitle":"IMEI 2",
+                            "serialNumberTitle":"सीरियल नंबर",
+                            "simOneTitle":"सिम 1",
+                            "simTwoTitle":"सिम 2",
+                            "deviceStatusTitle":"डिवाइस स्टेटस",
+                            "deviceTitle":"डिवाइस",
+                            "appStatusTitle":"ऐप लॉक\\अनलॉक",
+                            "cameraStatusTitle":"कैमरा लॉक\\अनलॉक",
+                            "outgoingCallStatusTitle":"आउटगोइंग कॉल ब्लॉक\\अनब्लॉक",
+                            "usbStatusTitle":"USB ब्लॉक\\अनब्लॉक",
+                            "locationStatusTitle":"लोकेशन On\\Off",
+                            "lastOnlineDateTitle":"लास्ट ऑनलाइन डेट",
+                            "locationTitle":"लोकेशन",
+                            "osTitle":"ऑपरेटिंग सिस्टम",
+                            "flversionTitle":"FL Version",
+                            "timerDateTimeTitle":"Timer Date",
+                            "timerTitle":"Timer लॉक"
+                        },
+                        "customerEmiDetailsTab":{
+                            "noDeviceFound":"कोई डिवाइस उपलब्ध नहीं!!!",
+                            "customerUpdateEMIDetailsButtonText":"अपडेट EMI"
+                        }
+                    }
+                },
+                "customerUpdateScreen":{
+                    "title":"अपडेट कस्टमर\n",
+                    "updateDevice":{
+                        "form":{
+                            "customerFullNameTitle": "कस्टमर का पुरा नाम एन्टर करें",
+                            "customerEMailTitle": "कस्टमर का ईमेल एन्टर करें",
+                            "customerPhoneNumberTitle": "कस्टमर का फोन नम्‍बर एन्टर करें",
+                            "customerDeviceIMEIOneTitle": "कस्टमर का डिवाइस IMEI 1 एन्टर करें",
+                            "customerDeviceIMEITwoTitle": "कस्टमर का डिवाइस IMEI 2 एन्टर करें",
+                            "customerUpdateDeviceButtonText":"अपडेट कस्टमर"
+                        }
+                    }
+                },
+                "customerKYCScreen":{
+                    "title":"कस्टमर KYC",
+                    "form":{
+                        "customerNameTitle":"कस्टमर का नाम",
+                        "customerMobileTitle":"कस्टमर का मोबाईल",
+                        "customerEmailTitle":"कस्टमर का आधार",
+                        "bankNameTitle":"बैंक का नाम",
+                        "bankAccountNumberTitle":"बैंक अकाउंट नंबर",
+                        "bankIfscCodeTitle":"IFSC कोड",
+                        "customerAddressTitle":"कस्टमर का एड्रेस",
+                        "customerUpdateKYCButtonText":"सबमिट"
+                    }
+                },
+                "customerEMIDetailsScreen":{
+                    "title":"EMI डिटेल्स",
+                    "emiUpdateSuccessMessage":"EMI Successfully Updated!",
+                    "emiUpdateFailedMessage":"EMI Updation Failed!",
+                    "form":{
+                        "productPriceTitle":"प्रोडक्ट मूल्य",
+                        "downPaymentTitle":"डाउन पेमेंट",
+                        "balanceAmountTitle":"बैलेंस अमाउंट",
+                        "numberOfMonths": "नंबर ऑफ़ मोनथस",
+                        "interestRate": "इंटरेस्ट चार्ज",
+                        "otherAmount": "फ़ाइल चार्ज",
+                        "totalEmiAmount": "टोटल फाइनेंस अमाउंट",
+                        "emiAmount": "EMI अमाउंट",
+                        "city": "सिटी",
+                        "guarantorName": "गारंटर का नाम",
+                        "guarantorContactNumber": "गारंटर का मोबाईल",
+                        "guarantorAadhaarNumber": "गारंटर का आधार",
+                        "firstEmiDueDate": "पिक फर्स्ट EMI देय डेट",
+                        "customerUpdateEMIButtonText":"अपडेट EMI"
+                    }
+                }
+            }
+        },
+       "topupHistory":{
+            "licenseHistory":{
+                "title":"लाइसेंस हिस्टरी",
+                "noLicenseFound":"कोई लाइसेंस नहीं मिला!!!",
+                "receivedFromText":"रिसीव्ड फ्रम",
+                "creditText":"क्रेडिट",
+                "totalText":" टोटल "
+            },
+            "emiTransactions":{
+                "title":"EMI ट्रैन्ज़ैक्शन्ज़",
+                "noEmiFound":"कोई EMI नहीं मिला!!!"
+            }
+       },
+        "profile":{
+            "title":"प्रोफ़ाइल",
+            "subSections":{
+                "securitySectionTitle":{
+                    "title":"सिक्योरिटी",
+                    "deviceMpinMenu":"सेट डिवाइस MPin",
+                    "setPinPageTitle":"अपना पिन सेट करें",
+                    "setPasscodePageTitle":"अपना पासकोड सेट करें",
+                    "enterPinPageTitle":"अपना पिन एन्टर करें",
+                    "confirmPinPageTitle":"अपने पिन की पुष्टि करें",
+                    "confirmPasscodePageTitle":"अपने पासकोड की पुष्टि करें",
+                    "backToProfileTitle":"सेटिंग्स पर वापस जाएं?",
+                    "optionYes":"हां",
+                    "optionNo":"नहीं",
+                    "backToLoginTitle":"लॉगिन पर वापस जाएं?"
+                },
+                "settingSection":{
+                    "title":"सेटिंग्स एंड\n प्रैफरेंसेज",
+                    "title1":"सेटिंग्स",
+                    "themeChangeMenu":"चेंज थीम",
+                    "languageAppMenu":"एप्प लैंग्वेज",
+                    "languagechoice":"भाषा चुनें ",
+                   
+                    "languageHindi":"हिन्दी",
+                    "languageEnglish":"अंग्रेज़ी"
+                    
+                },
+                "fingerPrint":{
+                    "title":"इनेबल फिंगरप्रिंट"
+
+                },
+                "aboutSection":{
+                    "title":"अबाउट SDM",
+                    "aboutMenuTitle":"अबाउट EMIPay",
+                    "aboutMenuSubtitle":"प्राइवेसी पालिसी, टर्म्स, कांटेक्ट अस एंड अबाउट EMIPay",
+                    "contactUsMenu":"कांटेक्ट अस",
+                    "privacyPolicyMenu": "प्राइवेसी पालिसी",
+                    "termsMenu":"टर्म्स एंड कंडीशंस"
+                },
+                "changePasswordSection":{
+                    "title":"चेंज पासवर्ड",
+                    "currentPasswordTitle":"करंट पासवर्ड",
+                    "newPasswordTitle":"न्यू पासवर्ड",
+                    "confirmNewPasswordTitle":"कन्फर्म न्यू पासवर्ड"
+                },
+                "logoutTitle":"लॉगआउट"
+            },
+            "subscreen":{
+                "profileDetails":{
+                    "title":"प्रोफ़ाइल डीटैल्ज़",
+                    "fields":{
+                        "fullNameTitle":"नेम",
+                        "imei1":"IMEI 1",
+                        "imei2":"IMEI 2",
+                        "id":"डिवाइस ID",
+                        "enrollType":"एनरोल टाइप",
+                        "parentNameTitle":"पैरेंट नेम",
+                        "companyNameTitle":"कंपनी नेम",
+                        "companyDetailTitle":"कंपनी डीटैल्ज़",
+                        "mobileTitle":"मोबाईल",
+                        "emailTitle":"ईमेल",
+                        "gstNoTitle":"GST नंबर",
+                        "addressTitle":"एड्रेस",
+                        "cityNameTitle":"सिटी",
+                        "stateNameTitle":"स्टेट",
+                        "countryNameTitle":"कंट्री",
+                        "retailerQRTitle":"QR",
+                        "logoTitle":"लोगो",
+                        "retailerSignatureTitle":"सिग्नेचर",
+                        "retailerContact":"Contact"
+                    }
+                }
+            },
+            "summaryDetails":{
+"viewActivities":"View एक्टिविटी",
+"action":"एक्शन",
+"deviceSummary":"डिवाइस समरी",
+"deviceSumarryDetails":{
+    "deiviceManufacturer":"डिवाइस मैन्युफैक्चरर",
+    "deviceModel":"डिवाइस मॉडल",
+    "imei1":"IMEI 1",
+    "imei2":"IMEI 2",
+    "deviceName":"डिवाइस नेम",
+    "productName":"प्रोडक्ट नेम",
+    "sharedDevices":"Shared डिवाइस",
+    "lastscanTime":"लास्ट स्कैन टाइम",
+    "lastcontactTime":"लास्ट Contact टाइम"
+},
+"actions":{
+    "actionsButton":"एक्शन",
+    "scanNow":"स्कैन नाउ",
+    "remoteLock":"रिमोटलॉक",
+    "remoteAlarm":"रिमोट अलार्म",
+    "completeWipe":"Complete वाइप",
+    "corporateWipe":"Corporate वाइप",
+    "clearPasscode": "Clear पासकोड",
+    "resetPasscode":"Reset पासकोड",
+    "locateDevice":"Locate डिवाइस"
+}
+            }
+        }
+    }
+}
