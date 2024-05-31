@@ -597,6 +597,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
                       const Divider(),
                       InkWell(
                         onTap: () {
+                       
                           Navigator.pushNamed(context, '/terms-and-condition');
                         },
                         child: ListTile(
