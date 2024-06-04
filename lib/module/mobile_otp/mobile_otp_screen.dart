@@ -1,7 +1,20 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
+import 'package:dkapp/module/login/model/login_response_model.dart';
+import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/exceptions.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timer_count_down/timer_controller.dart';
+import 'package:timer_count_down/timer_count_down.dart';
+import 'dart:convert' as convert;
+
+import 'model/mobile_response_model.dart';
 
 class MobileOtpScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -13,6 +26,27 @@ class MobileOtpScreen extends StatefulWidget {
 
 class _MobileOtpScreenState extends State<MobileOtpScreen> {
   TextEditingController otpController = TextEditingController();
+  final CountdownController countdownController =
+      CountdownController(autoStart: true);
+  int reloadCountdownSeconds = 0;
+  bool showResendButton = false;
+  String inputPinned = "";
+  String intToTimeLeft(int value) {
+    int m, s;
+
+    m = ((value)) ~/ 60;
+
+    s = value - (m * 60);
+
+    String minuteLeft = m.toString().length < 2 ? "0$m" : m.toString();
+
+    String secondsLeft = s.toString().length < 2 ? "0$s" : s.toString();
+
+    String result = "$minuteLeft:$secondsLeft";
+
+    return result;
+  }
+
   final defaultPinTheme = PinTheme(
     width: 46,
     height: 46,
@@ -62,6 +96,32 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                 SizedBox(
                   height: screenSize.height * 0.1,
                 ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Countdown(
+                    controller: countdownController,
+                    seconds: 120,
+                    build: (_, double time) => Text(
+                      intToTimeLeft(time.toInt()),
+                      textAlign: TextAlign.end,
+                      softWrap: true,
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    interval: const Duration(milliseconds: 100),
+                    onFinished: () {
+                      setState(() {
+                        showResendButton = true;
+                      });
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: screenSize.height * 0.1,
+                ),
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: Pinput(
@@ -72,6 +132,14 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                     showCursor: true,
                     defaultPinTheme: defaultPinTheme,
                     autofocus: true,
+                    validator: (value) {
+                      return value ==
+                              (widget.argus['loginResponseData']
+                                      as LoginResponseData)
+                                  .otp
+                          ? null
+                          : 'OTP does not matched.';
+                    },
                     keyboardType: TextInputType.number,
                     hapticFeedbackType: HapticFeedbackType.vibrate,
                     focusedPinTheme: defaultPinTheme.copyDecorationWith(
@@ -84,7 +152,12 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                           color: const Color.fromARGB(245, 12, 44, 104),
                         ),
                         borderRadius: BorderRadius.circular(8.0)),
-                    onCompleted: (pin) {},
+                    onCompleted: (pin) {
+                      debugPrint('onCompleted: $pin');
+                      setState(() {
+                        inputPinned = pin;
+                      });
+                    },
                     onChanged: (value) {
                       debugPrint('onChanged: $value');
                     },
@@ -93,40 +166,6 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                 SizedBox(
                   height: screenSize.height / 1.9,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Need help?',
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    // SizedBox(
-                    //   width: screenSize.width * 0.01,
-                    // ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Click here',
-                        style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15),
-                      ),
-                    ),
-                    // TextButton(
-                    //   onPressed: () {},
-                    //   style: TextButton.styleFrom(),
-                    //   child: Text(
-                    //     'Click here',
-                    //     style: TextStyle(color: Colors.grey, fontSize: 12),
-                    //   ),
-                    // )
-                  ],
-                )
                 // Directionality(
                 //   textDirection: TextDirection.ltr,
                 //   child: Pinput(
@@ -183,39 +222,148 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
             ),
           ),
         ),
-        floatingActionButton: Container(
-          margin: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.06,
-              vertical: screenSize.height * 0.01),
-          // width: screenSize.width,
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(245, 12, 44, 104),
-          ),
-          child: InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, '/dashboard');
-            },
-            child: Container(
-                height: 50.0,
-                width: screenSize.width,
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(245, 12, 44, 104),
-                    borderRadius: BorderRadius.circular(8.0)),
-                margin: EdgeInsets.symmetric(
-                    horizontal: screenSize.width * 0.001,
-                    vertical: screenSize.height * 0.001),
-                // padding: EdgeInsets.symmetric(
-                //   horizontal: screenSize.width * 0.01,
-                // ),
-                child: const Center(
-                  child: Text(
-                    'Verify code',
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                )),
-          ),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            (showResendButton == true)
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Need help?',
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      // SizedBox(
+                      //   width: screenSize.width * 0.01,
+                      // ),
+                      TextButton(
+                        onPressed: () {
+                          resendOTP(widget.argus);
+                        },
+                        child: const Text(
+                          'Click here',
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15),
+                        ),
+                      ),
+                      // TextButton(
+                      //   onPressed: () {},
+                      //   style: TextButton.styleFrom(),
+                      //   child: Text(
+                      //     'Click here',
+                      //     style: TextStyle(color: Colors.grey, fontSize: 12),
+                      //   ),
+                      // )
+                    ],
+                  )
+                : Container(),
+            Container(
+              margin: EdgeInsets.symmetric(
+                  horizontal: screenSize.width * 0.06,
+                  vertical: screenSize.height * 0.01),
+              // width: screenSize.width,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(245, 12, 44, 104),
+              ),
+              child: InkWell(
+                onTap: () async {
+                  if (inputPinned ==
+                      (widget.argus['loginResponseData'] as LoginResponseData)
+                          .otp) {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setBool("userLoggedIn", true);
+                    prefs.setString(
+                        "userid",
+                        (widget.argus['loginResponseData'] as LoginResponseData)
+                            .userId!);
+                    prefs.setString(
+                        "emailORmobile",
+                        (widget.argus['loginResponseData'] as LoginResponseData)
+                            .emailORmobile!);
+                    Navigator.pushReplacementNamed(context, '/dashboard');
+                    EssentialWidgetsCollection.showSuccessSnackbar(
+                        context, "Login Successful!");
+                  }
+                },
+                child: Container(
+                    height: 50.0,
+                    width: screenSize.width,
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(245, 12, 44, 104),
+                        borderRadius: BorderRadius.circular(8.0)),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: screenSize.width * 0.001,
+                        vertical: screenSize.height * 0.001),
+                    // padding: EdgeInsets.symmetric(
+                    //   horizontal: screenSize.width * 0.01,
+                    // ),
+                    child: const Center(
+                      child: Text(
+                        'Verify code',
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      ),
+                    )),
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  resendOTP(Map<String, dynamic> argus) async {
+    var map = {};
+    try {
+      map['emailORmobile'] =
+          (widget.argus['loginResponseData'] as LoginResponseData)
+              .emailORmobile;
+      map['token'] = 'bnbuujn';
+
+      map['type'] = ((widget.argus['loginResponseData'] as LoginResponseData)
+              .emailORmobile!
+              .isValidEmail())
+          ? '2'
+          : '1';
+
+      http.Response response = await http.post(
+          Uri.http(APIPathList.mainDomain, APIPathList.resendOTP),
+          body: map,
+          headers: {
+            "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+          });
+
+      if (response.statusCode == 200) {
+        MobileOtpResponseModel jsonResponse =
+            MobileOtpResponseModel.fromJson(convert.jsonDecode(response.body));
+
+        if (jsonResponse.response != "failure") {
+          if (kDebugMode) {
+            print(jsonResponse.toString());
+          }
+          Navigator.pushReplacementNamed(context, '/mobile-otp', arguments: {
+            "loginResponseData":
+                (widget.argus['loginResponseData'] as LoginResponseData)
+          });
+          EssentialWidgetsCollection.showSuccessSnackbar(
+              context, jsonResponse.message!);
+        } else {
+          EssentialWidgetsCollection.showErrorSnackbar(
+              context, jsonResponse.message!);
+        }
+      } else {
+        EssentialWidgetsCollection.showErrorSnackbar(
+            context, 'Request failed with status: ${response.statusCode}.');
+      }
+    } on PlatformException {
+      EssentialWidgetsCollection.showErrorSnackbar(
+          context, 'Failed to get platform version.');
+    }
   }
 }

@@ -3,7 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
+  static final DatabaseHelper instance = DatabaseHelper._internal();
   static Database? _database;
 
   // Private constructor
@@ -11,7 +11,7 @@ class DatabaseHelper {
 
   // Public factory method to provide access to the singleton instance
   factory DatabaseHelper() {
-    return _instance;
+    return instance;
   }
 
   // Method to get the database instance
@@ -44,6 +44,7 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         mobile TEXT,
         email TEXT,
+        type TEXT, 
         old_auth_key TEXT, 
         mpin TEXT, 
         accountid TEXT

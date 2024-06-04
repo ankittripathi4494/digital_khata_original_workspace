@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dkapp/module/login/login_bloc/login_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,9 @@ class _MyAppState extends State<MyApp> {
           ),
           BlocProvider<LocaleCubit>(
             create: (BuildContext context) => LocaleCubit(),
+          ),
+           BlocProvider<LoginBloc>(
+            create: (BuildContext context) => LoginBloc(),
           ),
         ],
         child: BlocBuilder<LocaleCubit, LocaleState>(

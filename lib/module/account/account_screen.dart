@@ -1,7 +1,8 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, use_build_context_synchronously
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreeen extends StatefulWidget {
@@ -98,7 +99,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
         });
   }
 
-  Future<bool> showLogoutPopup(context) async {
+  showLogoutPopup(context) async {
     // exit from app
     return await showDialog(
         // barrierColor: Colors.white,
@@ -124,8 +125,13 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           fontWeight: FontWeight.w700),
                     )),
                 TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/login');
+                    onPressed: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.clear().then((c) {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, '/');
+                      });
                     },
                     child: const Text(
                       'YES',
@@ -169,8 +175,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                     Navigator.pushNamed(context, '/edit-personal-profile');
                   },
                   child: Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: screenSize.height * 0.02),
+                    padding: EdgeInsets.symmetric(
+                        vertical: screenSize.height * 0.02),
                     decoration: const BoxDecoration(color: Colors.white),
                     width: screenSize.width,
                     child: ListTile(
@@ -253,7 +259,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                             onPressed: () {},
                             child: const Text(
                               'Invite Now',
-                              style: TextStyle(fontSize: 12, color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.white),
                             ))
                       ],
                     ),
@@ -262,7 +269,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
                 InkWell(
                   onTap: () async {
                     var callUrl = "https://financepe.in/";
-      
+
                     var url = Uri.parse(callUrl);
                     if (await canLaunchUrl(url)) {
                       await launchUrl(url);
@@ -348,7 +355,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'App Security/Lock',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -373,7 +381,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'Choose Language',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -398,7 +407,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'Enable Notification',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -454,7 +464,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'Digital Khata',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -477,7 +488,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'Rate Us',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -541,7 +553,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
                       InkWell(
                         onTap: () async {
                           var callUrl = "tel:+91 7054344815";
-      
+
                           var url = Uri.parse(callUrl);
                           if (await canLaunchUrl(url)) {
                             await launchUrl(url);
@@ -560,7 +572,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'Call helpdesk',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -585,7 +598,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'Privacy Policy',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -597,7 +611,6 @@ class _AccountScreeenState extends State<AccountScreeen> {
                       const Divider(),
                       InkWell(
                         onTap: () {
-                       
                           Navigator.pushNamed(context, '/terms-and-condition');
                         },
                         child: ListTile(
@@ -611,7 +624,8 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           title: const Text(
                             'Terms & Conditions',
                             style: TextStyle(
-                                color: Colors.black, fontWeight: FontWeight.w500),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios_outlined,
@@ -642,21 +656,21 @@ class _AccountScreeenState extends State<AccountScreeen> {
             ),
           ),
         ),
-      bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
-              screenSize, context, currentPageIndexValue,(index) {
-           setState(() {
-             currentPageIndexValue = index;
-           });
-            if (currentPageIndexValue == 0) {
-              Navigator.pushNamed(context, '/dashboard');
-            } else if (currentPageIndexValue == 1) {
-              Navigator.pushNamed(context, '/invoice');
-            } else if (currentPageIndexValue == 2) {
-              Navigator.pushNamed(context, '/business');
-            } else if (currentPageIndexValue == 3) {
-              Navigator.pushNamed(context, '/accounts');
-            }
-          }),
+        bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
+            screenSize, context, currentPageIndexValue, (index) {
+          setState(() {
+            currentPageIndexValue = index;
+          });
+          if (currentPageIndexValue == 0) {
+            Navigator.pushNamed(context, '/dashboard');
+          } else if (currentPageIndexValue == 1) {
+            Navigator.pushNamed(context, '/invoice');
+          } else if (currentPageIndexValue == 2) {
+            Navigator.pushNamed(context, '/business');
+          } else if (currentPageIndexValue == 3) {
+            Navigator.pushNamed(context, '/accounts');
+          }
+        }),
       ),
     );
   }
