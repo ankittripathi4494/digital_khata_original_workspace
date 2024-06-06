@@ -366,4 +366,5 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
           context, 'Failed to get platform version.');
     }
   }
+
 }

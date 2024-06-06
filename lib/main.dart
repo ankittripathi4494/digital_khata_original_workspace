@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dkapp/module/account/account_bloc/account_bloc.dart';
 import 'package:dkapp/module/login/login_bloc/login_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -27,10 +28,10 @@ Future<void> main() async {
 
   FirebaseMessagingHelper().initialize();
 
-    // Handle notification tap when app is terminated or in the background
+  // Handle notification tap when app is terminated or in the background
   FirebaseMessaging.onBackgroundMessage(
       FirebaseMessagingHelper().firebaseMessagingBackgroundHandler);
-  
+
   runApp(const MyApp(
     data: "default",
     key: Key('MyApp'),
@@ -52,13 +53,15 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _loadLangData();
-     // Only after at least the action method is set, the notification events are delivered
+    // Only after at least the action method is set, the notification events are delivered
     AwesomeNotifications().setListeners(
-        onActionReceivedMethod:         NotificationController.onActionReceivedMethod,
-        onNotificationCreatedMethod:    NotificationController.onNotificationCreatedMethod,
-        onNotificationDisplayedMethod:  NotificationController.onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod:  NotificationController.onDismissActionReceivedMethod
-    );
+        onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+        onNotificationCreatedMethod:
+            NotificationController.onNotificationCreatedMethod,
+        onNotificationDisplayedMethod:
+            NotificationController.onNotificationDisplayedMethod,
+        onDismissActionReceivedMethod:
+            NotificationController.onDismissActionReceivedMethod);
   }
 
   _loadLangData() async {
@@ -76,8 +79,11 @@ class _MyAppState extends State<MyApp> {
           BlocProvider<LocaleCubit>(
             create: (BuildContext context) => LocaleCubit(),
           ),
-           BlocProvider<LoginBloc>(
+          BlocProvider<LoginBloc>(
             create: (BuildContext context) => LoginBloc(),
+          ),
+          BlocProvider<AccountBloc>(
+            create: (BuildContext context) => AccountBloc(),
           ),
         ],
         child: BlocBuilder<LocaleCubit, LocaleState>(

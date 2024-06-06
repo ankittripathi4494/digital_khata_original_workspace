@@ -1,7 +1,10 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
+import 'dart:io';
+
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:duration_button/duration_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +125,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final screenSize = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          EssentialWidgetsCollection.showAlertDialogForLogout(context,
+              content: "Do you want to exit from App?", taskOne: () {
+            exit(0);
+          }, taskTwo: () {
+            Navigator.pop(context);
+          });
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           leading: Container(),
@@ -1038,10 +1051,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
-            screenSize, context, currentPageIndexValue,(index) {
-         setState(() {
-           currentPageIndexValue = index;
-         });
+            screenSize, context, currentPageIndexValue, (index) {
+          setState(() {
+            currentPageIndexValue = index;
+          });
           if (currentPageIndexValue == 0) {
             Navigator.pushNamed(context, '/dashboard');
           } else if (currentPageIndexValue == 1) {

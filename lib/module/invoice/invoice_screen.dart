@@ -1,7 +1,10 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:io';
+
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +69,16 @@ class _InVoiceScreenState extends State<InVoiceScreen>
     // int currentIndex = 0;
     return PopScope(
       canPop: false,
+       onPopInvoked: (didPop) {
+        if (!didPop) {
+          EssentialWidgetsCollection.showAlertDialogForLogout(context,
+              content: "Do you want to exit from App?", taskOne: () {
+            exit(0);
+          }, taskTwo: () {
+            Navigator.pop(context);
+          });
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue,

@@ -1,7 +1,14 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously
+import 'dart:io';
+
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
+import 'package:dkapp/module/account/account_bloc/account_bloc.dart';
+import 'package:dkapp/module/account/account_bloc/account_event.dart';
+import 'package:dkapp/module/account/account_bloc/account_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -148,10 +155,33 @@ class _AccountScreeenState extends State<AccountScreeen> {
   }
 
   @override
+  void initState() {
+    callUserFetchDetails();
+    super.initState();
+  }
+
+  callUserFetchDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    BlocProvider.of<AccountBloc>(context)
+        .add(UserAccountFetchEvent(userId: prefs.getString("userid")!));
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          EssentialWidgetsCollection.showAlertDialogForLogout(context,
+              content: "Do you want to exit from App?", taskOne: () {
+            exit(0);
+          }, taskTwo: () {
+            Navigator.pop(context);
+          });
+        }
+      },
       child: Scaffold(
         backgroundColor: Colors.grey[100],
         appBar: AppBar(
@@ -170,46 +200,101 @@ class _AccountScreeenState extends State<AccountScreeen> {
             decoration: BoxDecoration(color: Colors.grey[200]),
             child: Column(
               children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/edit-personal-profile');
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                        vertical: screenSize.height * 0.02),
-                    decoration: const BoxDecoration(color: Colors.white),
-                    width: screenSize.width,
-                    child: ListTile(
-                      minLeadingWidth: 10.0,
-                      leading: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Colors.blue[100],
-                          child: const Icon(
-                            Icons.person,
-                            size: 40,
-                          )),
-                      horizontalTitleGap: screenSize.width * 0.07,
-                      title: const Text(
-                        'Priyanka',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      subtitle: const Text(
-                        '+919856784567',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.black,
-                          size: 20,
+                BlocBuilder<AccountBloc, AccountState>(
+                  builder: (context, state) {
+                    if (state is AccountDetailSuccessState) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/edit-personal-profile',
+                              arguments: {
+                                "userProfileDetails": state.successData
+                              });
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: screenSize.height * 0.02),
+                          decoration: const BoxDecoration(color: Colors.white),
+                          width: screenSize.width,
+                          child: ListTile(
+                            minLeadingWidth: 10.0,
+                            leading: CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.blue[100],
+                                child: const Icon(
+                                  Icons.person,
+                                  size: 40,
+                                )),
+                            horizontalTitleGap: screenSize.width * 0.07,
+                            title: Text(
+                              (state.successData.fullname == null)
+                                  ? "No Name"
+                                  : state.successData.fullname!,
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            subtitle: (state.successData.phone != null)
+                                ? Text(
+                                    state.successData.phone!,
+                                    style: const TextStyle(color: Colors.grey),
+                                  )
+                                : Text(
+                                    state.successData.email!,
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                              onPressed: () {},
+                            ),
+                          ),
                         ),
-                        onPressed: () {},
+                      );
+                    }
+                    return InkWell(
+                      onTap: () {},
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            vertical: screenSize.height * 0.02),
+                        decoration: const BoxDecoration(color: Colors.white),
+                        width: screenSize.width,
+                        child: ListTile(
+                          minLeadingWidth: 10.0,
+                          leading: CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.blue[100],
+                              child: const Icon(
+                                Icons.person,
+                                size: 40,
+                              )),
+                          horizontalTitleGap: screenSize.width * 0.07,
+                          title: const Text(
+                            '',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          subtitle: const Text(
+                            '',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
                 InkWell(
                   onTap: () {
