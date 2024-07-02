@@ -1,1 +1,41 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"digital-khata-original-4494","appId":"1:92834692727:android:2fa251a4eb93207fa1d072","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"digital-khata-original-4494","appId":"1:92834692727:ios:4b18bdfa697a1d0aa1d072","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"macos":{"default":{"projectId":"digital-khata-original-4494","appId":"1:92834692727:ios:4b18bdfa697a1d0aa1d072","uploadDebugSymbols":false,"fileOutput":"macos/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"digital-khata-original-4494","configurations":{"android":"1:92834692727:android:2fa251a4eb93207fa1d072","ios":"1:92834692727:ios:4b18bdfa697a1d0aa1d072","macos":"1:92834692727:ios:4b18bdfa697a1d0aa1d072","web":"1:92834692727:web:afd83dc04e1bb470a1d072","windows":"1:92834692727:web:9ef4ea450b87b551a1d072"}}}}}}
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "digital-khata-original-4494",
+                    "appId": "1:92834692727:android:2fa251a4eb93207fa1d072",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "digital-khata-original-4494",
+                    "appId": "1:92834692727:ios:4b18bdfa697a1d0aa1d072",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "macos": {
+                "default": {
+                    "projectId": "digital-khata-original-4494",
+                    "appId": "1:92834692727:ios:4b18bdfa697a1d0aa1d072",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "macos/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "digital-khata-original-4494",
+                    "configurations": {
+                        "android": "1:92834692727:android:2fa251a4eb93207fa1d072",
+                        "ios": "1:92834692727:ios:4b18bdfa697a1d0aa1d072",
+                        "macos": "1:92834692727:ios:4b18bdfa697a1d0aa1d072",
+                        "web": "1:92834692727:web:afd83dc04e1bb470a1d072",
+                        "windows": "1:92834692727:web:9ef4ea450b87b551a1d072"
+                    }
+                }
+            }
+        }
+    }
+}
