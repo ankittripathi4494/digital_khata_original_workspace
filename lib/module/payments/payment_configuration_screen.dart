@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PaymentConfigurationScreen extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   PaymentConfigurationScreen({super.key, required this.argus});
 
   @override
@@ -103,8 +103,7 @@ class _PaymentConfigurationScreenState
                       InkWell(
                         onTap: () {
                           Navigator.pushReplacementNamed(
-                              context,
-                              '/upi-payment');
+                              context, '/upi-payment');
                         },
                         child: const Padding(
                           padding: EdgeInsets.symmetric(

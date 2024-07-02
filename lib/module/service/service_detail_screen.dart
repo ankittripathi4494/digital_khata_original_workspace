@@ -334,8 +334,9 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/tax', arguments: { "tax": '',});
-                       
+                        Navigator.pushNamed(context, '/tax', arguments: {
+                          "tax": '',
+                        });
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

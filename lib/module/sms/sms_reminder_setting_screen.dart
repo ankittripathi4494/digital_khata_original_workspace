@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:switcher_button/switcher_button.dart';
 
 class SmsReminderSettingscreen extends StatefulWidget {
-   late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   SmsReminderSettingscreen({super.key, required this.argus});
 
   @override
@@ -49,9 +49,7 @@ class _SmsReminderSettingscreenState extends State<SmsReminderSettingscreen> {
                     EdgeInsets.symmetric(vertical: screenSize.height * 0.02),
                 child: ListTile(
                   onTap: () {
-                    Navigator.pushNamed(
-                        context,
-                        '/subscription');
+                    Navigator.pushNamed(context, '/subscription');
                   },
                   title: const Text(
                     'You want to send automatic whatsapp message?',
@@ -84,9 +82,7 @@ class _SmsReminderSettingscreenState extends State<SmsReminderSettingscreen> {
                   children: [
                     ListTile(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context,
-                            '/select-sms-template');
+                        Navigator.pushNamed(context, '/select-sms-template');
                       },
                       title: const Text(
                         'Choose SMS Template',

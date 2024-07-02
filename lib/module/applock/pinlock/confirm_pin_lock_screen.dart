@@ -1,15 +1,13 @@
 // ignore_for_file: must_be_immutable
 
-
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:numpad/numpad.dart';
 import 'package:pinput/pinput.dart';
-import 'package:duration_button/duration_button.dart';
 
 class ConfirmPinLockScreen extends StatefulWidget {
-
-late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   ConfirmPinLockScreen({super.key, required this.argus});
 
   @override
@@ -20,8 +18,6 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
   final FocusNode _focus = FocusNode(); // 1) init _focus
   TextEditingController textController = TextEditingController();
   String code = '';
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -117,22 +113,23 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                                           fontWeight: FontWeight.w500,
                                           fontSize: 15),
                                     ),
-                                    DurationButton(
-                                        width: 1,
-                                        height: 1,
-                                        onPressed: () {},
-                                        onComplete: () async {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            // initScreen = 1;
-                                            if (kDebugMode) {
-                                              print('init-={initScreen}');
-                                            }
-                                           Navigator.pushNamed(context, '/dashboard');
-                                          });
-                                        },
-                                        duration: const Duration(seconds: 1),
-                                        child: Container())
+                                    EssentialWidgetsCollection.autoScheduleTask(
+                                      context,
+                                      childWidget: Container(),
+                                      taskWaitDuration:
+                                          const Duration(seconds: 1),
+                                      task: () {
+                                        Navigator.pop(context);
+                                        setState(() {
+                                          // initScreen = 1;
+                                          if (kDebugMode) {
+                                            print('init-={initScreen}');
+                                          }
+                                          Navigator.pushNamed(
+                                              context, '/dashboard');
+                                        });
+                                      },
+                                    )
                                   ],
                                 ));
                           });

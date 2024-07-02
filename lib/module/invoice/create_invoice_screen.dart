@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class CreateInvoiceScreen extends StatefulWidget {
-   late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   CreateInvoiceScreen({super.key, required this.argus});
 
   @override

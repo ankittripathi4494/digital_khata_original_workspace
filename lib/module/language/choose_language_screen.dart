@@ -352,7 +352,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
               ),
               InkWell(
                 onTap: () {
-                 Navigator.pushNamed(context, '/accounts');
+                  Navigator.pushNamed(context, '/accounts');
                 },
                 child: Container(
                   width: screenSize.width,

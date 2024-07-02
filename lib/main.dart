@@ -1,18 +1,24 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:dkapp/module/account/account_bloc/account_bloc.dart';
-import 'package:dkapp/module/login/login_bloc/login_bloc.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
+import 'module/business/user_group_bloc/user_group_bloc.dart';
+import 'module/customers/customer_bloc/customer_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dkapp/route_access_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'Localization/app_localizations_setup.dart';
 import 'firebase_options.dart';
 import 'global_blocs/internet/internet_cubit.dart';
 import 'global_blocs/locale/locale_cubit.dart';
 import 'global_blocs/locale/locale_state.dart';
+import 'module/account/account_bloc/account_bloc.dart';
+import 'module/business/business_bloc/business_bloc.dart';
+import 'module/business_type/business_type_bloc/business_type_bloc.dart';
+import 'module/login/login_bloc/login_bloc.dart';
+import 'route_access_file.dart';
 import 'utils/firebase_messaging_helper.dart';
 import 'utils/notification_controller.dart';
 import 'utils/shared_preferences_helper.dart';
@@ -71,40 +77,60 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-        providers: [
-          BlocProvider<InternetCubit>(
-            create: (BuildContext context) => InternetCubit(),
-          ),
-          BlocProvider<LocaleCubit>(
-            create: (BuildContext context) => LocaleCubit(),
-          ),
-          BlocProvider<LoginBloc>(
-            create: (BuildContext context) => LoginBloc(),
-          ),
-          BlocProvider<AccountBloc>(
-            create: (BuildContext context) => AccountBloc(),
-          ),
-        ],
-        child: BlocBuilder<LocaleCubit, LocaleState>(
-          builder: (context, state2) {
-            if (state2 is SelectedLocale) {
-              return MaterialApp(
-                navigatorKey: navigatorKey,
-                title: 'Digital Khata',
-                debugShowCheckedModeBanner: false,
-                initialRoute: '/',
-                onGenerateRoute: RouteAccessGenerator.routerFunc,
-              );
-            }
-            return MaterialApp(
-              navigatorKey: navigatorKey,
-              title: 'Digital Khata',
-              debugShowCheckedModeBanner: false,
-              initialRoute: '/',
-              onGenerateRoute: RouteAccessGenerator.routerFunc,
+    return FutureBuilder<void>(
+        future: _loadLangData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider<InternetCubit>(
+                  create: (BuildContext context) => InternetCubit(),
+                ),
+                BlocProvider<LocaleCubit>(
+                  create: (BuildContext context) => LocaleCubit(),
+                ),
+                BlocProvider<LoginBloc>(
+                  create: (BuildContext context) => LoginBloc(),
+                ),
+                BlocProvider<AccountBloc>(
+                  create: (BuildContext context) => AccountBloc(),
+                ),
+                BlocProvider<CustomerBloc>(
+                  create: (BuildContext context) => CustomerBloc(),
+                ),
+                BlocProvider<BusinessTypeBloc>(
+                  create: (BuildContext context) => BusinessTypeBloc(),
+                ),
+                BlocProvider<BusinessBloc>(
+                  create: (BuildContext context) => BusinessBloc(),
+                ),
+                BlocProvider<UserGroupBloc>(
+                  create: (BuildContext context) => UserGroupBloc(),
+                ),
+              ],
+              child: BlocBuilder<LocaleCubit, LocaleState>(
+                builder: (context, localeState) {
+                  Locale? appLocale = localeState is SelectedLocale
+                      ? localeState.locale
+                      : locale;
+                  return MaterialApp(
+                    navigatorKey: navigatorKey,
+                    supportedLocales: AppLocalizationsSetup.supportedLocales,
+                    localizationsDelegates:
+                        AppLocalizationsSetup.localizationsDelegates,
+                    localeResolutionCallback:
+                        AppLocalizationsSetup.localeResolutionCallback,
+                    locale: appLocale,
+                    title: 'Digital Khata',
+                    debugShowCheckedModeBanner: false,
+                    initialRoute: '/',
+                    onGenerateRoute: RouteAccessGenerator.routerFunc,
+                  );
+                },
+              ),
             );
-          },
-        ));
+          }
+          return const Center(child: AnimatedImageLoader());
+        });
   }
 }

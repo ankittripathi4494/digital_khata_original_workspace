@@ -67,7 +67,6 @@ class FirebaseMessagingHelper {
       sound: true,
     );
     print('User granted permission: ${settings.authorizationStatus}');
-   
   }
 
 // Handle foreground messages
@@ -97,7 +96,7 @@ class FirebaseMessagingHelper {
 // Handle notification tap when app is terminated or in the background
   Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp();
-     print("background Notification is empty");
+    print("background Notification is empty");
     if (message.data.isNotEmpty) {
       _showNotification(message);
     } else {
@@ -110,10 +109,10 @@ class FirebaseMessagingHelper {
     // Custom logic for handling the message
     print('Handling message: ${message.data}');
 
-    String? title = (message.notification!=null)
+    String? title = (message.notification != null)
         ? message.notification?.title
         : 'Default Title';
-    String? body = (message.notification!=null)
+    String? body = (message.notification != null)
         ? message.notification?.body
         : 'Default Body';
     String imageUrl = (message.data.isNotEmpty) ? message.data['image'] : '';

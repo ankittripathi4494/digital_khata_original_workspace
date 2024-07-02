@@ -36,9 +36,9 @@ class LoginResponseData {
   LoginResponseData({this.userId, this.otp, this.emailORmobile});
 
   LoginResponseData.fromJson(Map<String, dynamic> json) {
-    userId = json["user_id"];
-    otp = json["otp"];
-    emailORmobile = json["emailORmobile"];
+    userId = json["user_id"].toString().trim();
+    otp = json["otp"].toString().trim();
+    emailORmobile = json["emailORmobile"].toString().trim();
   }
 
   Map<String, dynamic> toJson() {

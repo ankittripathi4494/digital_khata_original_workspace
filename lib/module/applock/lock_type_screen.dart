@@ -1,8 +1,9 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+
 class LockTypeScreen extends StatefulWidget {
-      late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   LockTypeScreen({super.key, required this.argus});
 
   @override
@@ -32,13 +33,12 @@ class _LockTypeScreenState extends State<LockTypeScreen> {
         children: [
           InkWell(
             onTap: () {
-              Navigator.pushNamed(context,
-                  '/app-lock/pin-lock');
+              Navigator.pushNamed(context, '/app-lock/pin-lock');
             },
             child: Container(
               width: screenSize.width,
-              padding: const EdgeInsets.symmetric(
-                  vertical: 20.0, horizontal: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
               decoration: const BoxDecoration(color: Colors.white),
               child: const Text(
                 'Pin',
@@ -48,14 +48,13 @@ class _LockTypeScreenState extends State<LockTypeScreen> {
           ),
           InkWell(
             onTap: () {
-               Navigator.pushNamed(context,
-                  '/app-lock/set-pattern');
+              Navigator.pushNamed(context, '/app-lock/set-pattern');
             },
             child: Container(
               width: screenSize.width,
               margin: const EdgeInsets.symmetric(vertical: 5.0),
-              padding: const EdgeInsets.symmetric(
-                  vertical: 20.0, horizontal: 20.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
               decoration: const BoxDecoration(color: Colors.white),
               child: const Text(
                 'Pattern',

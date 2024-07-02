@@ -1,5 +1,3 @@
-
-
 import 'package:dkapp/module/login/model/login_response_model.dart';
 
 abstract class LoginState {}

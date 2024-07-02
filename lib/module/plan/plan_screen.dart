@@ -23,8 +23,7 @@ class _PlanScreenState extends State<PlanScreen> {
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pushReplacementNamed(
-                    context,
-                    '/recurring-transaction');
+                    context, '/recurring-transaction');
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -50,9 +49,7 @@ class _PlanScreenState extends State<PlanScreen> {
               ]),
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(
-                    context,
-                    '/recurring-transaction');
+              Navigator.pushNamed(context, '/recurring-transaction');
             },
             child: const ListTile(
               title: Text('CustomerNaame'),
@@ -67,9 +64,7 @@ class _PlanScreenState extends State<PlanScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
           onPressed: () {
-            Navigator.pushNamed(
-                context,
-                '/new-transaction-plan');
+            Navigator.pushNamed(context, '/new-transaction-plan');
           },
           child: const Icon(
             Icons.add,

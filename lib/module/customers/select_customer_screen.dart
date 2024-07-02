@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class SelectCustomerScreen extends StatefulWidget {
-   late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   SelectCustomerScreen({super.key, required this.argus});
 
   @override

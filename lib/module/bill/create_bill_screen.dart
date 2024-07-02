@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class CreateBillScreen extends StatefulWidget {
-   late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   CreateBillScreen({super.key, required this.argus});
 
   @override

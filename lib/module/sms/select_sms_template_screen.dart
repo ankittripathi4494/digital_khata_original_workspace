@@ -28,9 +28,7 @@ class _SelectSmsTemplatesScreenState extends State<SelectSmsTemplatesScreen> {
             ),
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushNamed(
-                  context,
-                  '/sms-remainder-settings');
+              Navigator.pushNamed(context, '/sms-remainder-settings');
             },
           ),
           title: const Text(

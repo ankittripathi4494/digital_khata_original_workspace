@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class BillPlansScreen extends StatefulWidget {
-   late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   BillPlansScreen({super.key, required this.argus});
 
   @override
@@ -20,9 +20,7 @@ class _BillPlansScreenState extends State<BillPlansScreen> {
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(
-                context,
-                '/recurring-transaction');
+              Navigator.pushReplacementNamed(context, '/recurring-transaction');
             },
             icon: const Icon(
               Icons.arrow_back,
@@ -48,9 +46,7 @@ class _BillPlansScreenState extends State<BillPlansScreen> {
             ]),
         child: InkWell(
           onTap: () {
-            Navigator.pushNamed(
-                context,
-                '/recurring-transaction');
+            Navigator.pushNamed(context, '/recurring-transaction');
           },
           child: const ListTile(
             title: Text('CustomerNaame'),
@@ -65,9 +61,7 @@ class _BillPlansScreenState extends State<BillPlansScreen> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
         onPressed: () {
-          Navigator.pushNamed(
-              context,
-              '/recurring-new-bill-plan');
+          Navigator.pushNamed(context, '/recurring-new-bill-plan');
         },
         child: const Icon(
           Icons.add,

@@ -18,7 +18,7 @@ class _AnimatedImageLoaderState extends State<AnimatedImageLoader> {
       height: 100,
       padding: const EdgeInsets.all(8),
       child: const LoadingIndicator(
-          indicatorType: Indicator.ballSpinFadeLoader,
+          indicatorType: Indicator.lineSpinFadeLoader,
 
           /// Required, The loading type of the widget
           colors: [

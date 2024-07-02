@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class HowItWorksScreen extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   HowItWorksScreen({super.key, required this.argus});
 
   @override

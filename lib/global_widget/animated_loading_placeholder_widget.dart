@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -13,15 +12,14 @@ class AnimatedImagePlaceholderLoader extends StatefulWidget {
 /// AnimationControllers can be created with `vsync: this` because of
 /// TickerProviderStateMixin.
 class _AnimatedImageLoaderState extends State<AnimatedImagePlaceholderLoader> {
-
   @override
   Widget build(BuildContext context) {
-     return Container(
+    return Container(
       width: 35,
       height: 35,
       padding: const EdgeInsets.all(8),
       child: const LoadingIndicator(
-          indicatorType: Indicator.ballSpinFadeLoader,
+          indicatorType: Indicator.lineSpinFadeLoader,
 
           /// Required, The loading type of the widget
           colors: [
@@ -44,6 +42,5 @@ class _AnimatedImageLoaderState extends State<AnimatedImagePlaceholderLoader> {
           /// Optional, the stroke backgroundColor
           ),
     );
-  
   }
 }

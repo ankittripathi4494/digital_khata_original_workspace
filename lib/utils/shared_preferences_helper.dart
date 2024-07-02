@@ -18,6 +18,11 @@ class SharedPreferencesHelper {
     _preferences = await SharedPreferences.getInstance();
   }
 
+// Method to get a String value from SharedPreferences
+  bool? containsKey(String key) {
+    return _preferences?.containsKey(key);
+  }
+
 //! Getter Methods
   // Method to get a String value from SharedPreferences
   String? getString(String key) {
@@ -80,5 +85,4 @@ class SharedPreferencesHelper {
   Future<void> removeAll() async {
     await _preferences?.clear();
   }
-
 }

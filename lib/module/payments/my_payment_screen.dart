@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyPaymentScreen extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   MyPaymentScreen({super.key, required this.argus});
 
   @override
@@ -24,7 +24,7 @@ class _MyPaymentScreenState extends State<MyPaymentScreen> {
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
-                 Navigator.pushReplacementNamed(context, '/business');
+                Navigator.pushReplacementNamed(context, '/business');
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -36,7 +36,7 @@ class _MyPaymentScreenState extends State<MyPaymentScreen> {
             style: TextStyle(color: Colors.white, fontSize: 23),
           ),
         ),
-         body: Column(
+        body: Column(
           children: [
             SizedBox(
               height: screenSize.height / 1.2,

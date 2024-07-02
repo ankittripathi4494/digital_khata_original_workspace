@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pattern_lock/pattern_lock.dart';
 
 class SetPatternScreen extends StatefulWidget {
-     late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   SetPatternScreen({super.key, required this.argus});
 
   @override
@@ -94,9 +94,7 @@ class _SetPatternScreenState extends State<SetPatternScreen> {
                   return;
                 }
                 setState(() {
-                  Navigator.pushNamed(
-                      context,
-                      '/app-lock/confirm-set-pattern');
+                  Navigator.pushNamed(context, '/app-lock/confirm-set-pattern');
                 });
               },
             ),

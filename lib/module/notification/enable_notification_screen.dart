@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class EnableNotificationScreen extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   EnableNotificationScreen({super.key, required this.argus});
 
   @override

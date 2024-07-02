@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class ProductScreen extends StatefulWidget {
-   late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   ProductScreen({super.key, required this.argus});
 
   @override
@@ -20,8 +20,7 @@ class _ProductScreenState extends State<ProductScreen> {
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushReplacementNamed(context,
-                  '/emi');
+              Navigator.pushReplacementNamed(context, '/emi');
             },
             icon: const Icon(
               Icons.arrow_back,

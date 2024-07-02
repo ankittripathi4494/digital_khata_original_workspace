@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-      late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   ProductDetailScreen({super.key, required this.argus});
 
   @override
@@ -25,7 +25,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         backgroundColor: Colors.blue,
         leading: IconButton(
             onPressed: () {
-             Navigator.pop(context);
+              Navigator.pop(context);
               Navigator.pushReplacementNamed(context, '/emi');
             },
             icon: const Icon(
@@ -330,9 +330,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     ),
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context,
-                            '/tax');
+                        Navigator.pushNamed(context, '/tax');
                       },
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

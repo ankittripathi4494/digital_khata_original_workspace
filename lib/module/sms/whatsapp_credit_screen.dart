@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class WhatsappCreditScreen extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   WhatsappCreditScreen({super.key, required this.argus});
 
   @override

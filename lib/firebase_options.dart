@@ -83,5 +83,4 @@ class DefaultFirebaseOptions {
     authDomain: 'digital-khata-original-4494.firebaseapp.com',
     storageBucket: 'digital-khata-original-4494.appspot.com',
   );
-
 }

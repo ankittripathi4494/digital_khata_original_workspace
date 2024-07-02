@@ -202,7 +202,7 @@ class _RecurringBillScreenState extends State<RecurringBillScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                     Navigator.pushNamed(context, '/select-customer');
+                    Navigator.pushNamed(context, '/select-customer');
                   },
                   child: TextFormField(
                     enabled: false,
@@ -244,9 +244,7 @@ class _RecurringBillScreenState extends State<RecurringBillScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(
-                        context,
-                        '/bill-plan');
+                    Navigator.pushNamed(context, '/bill-plan');
                   },
                   child: TextFormField(
                     enabled: false,

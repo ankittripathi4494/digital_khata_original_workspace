@@ -77,11 +77,11 @@ class _NetBankingScreenState extends State<NetBankingScreen> {
         backgroundColor: Colors.blue,
         leading: IconButton(
             onPressed: () {
-               Navigator.pushNamed(context, '/payment-configuration',
-                          arguments: {
-                            "isNetbanking": '',
-                            "isDeleted": '',
-                          });
+              Navigator.pushNamed(context, '/payment-configuration',
+                  arguments: {
+                    "isNetbanking": '',
+                    "isDeleted": '',
+                  });
             },
             icon: const Icon(
               Icons.arrow_back,
@@ -267,11 +267,10 @@ class _NetBankingScreenState extends State<NetBankingScreen> {
       ),
       floatingActionButton: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, '/payment-configuration',
-                          arguments: {
-                            "isNetbanking": 'true',
-                            "isDeleted": '',
-                          });
+          Navigator.pushNamed(context, '/payment-configuration', arguments: {
+            "isNetbanking": 'true',
+            "isDeleted": '',
+          });
         },
         child: Container(
           margin: EdgeInsets.symmetric(

@@ -9,7 +9,7 @@
 // }
 
 // class _PaymentProviderScreenState extends State<PaymentProviderScreen> {
- 
+
 //   Future<bool> showDeletePopup(context) async {
 //     // exit from app
 //     return await showDialog(

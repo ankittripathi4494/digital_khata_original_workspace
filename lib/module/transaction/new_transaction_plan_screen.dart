@@ -24,7 +24,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
           backgroundColor: Colors.blue,
           leading: IconButton(
               onPressed: () {
-                 Navigator.pushNamed(context, '/invoice');
+                Navigator.pushNamed(context, '/invoice');
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -179,7 +179,8 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                 keyboardType: TextInputType.name,
                 decoration: InputDecoration(
                     hintText: '\u{20B9} ${0}',
-                    hintStyle: const TextStyle(color: Colors.grey, fontSize: 20),
+                    hintStyle:
+                        const TextStyle(color: Colors.grey, fontSize: 20),
                     border: OutlineInputBorder(
                         // Color.fromARGB(255, 31, 1, 102),
                         borderSide: const BorderSide(color: Colors.grey),
@@ -228,18 +229,16 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                 {'text': 'HalfYearly', 'isChecked': false},
                                 {'text': 'Yearly', 'isChecked': false},
                               ];
-        
+
                               return StatefulBuilder(
                                 builder: (BuildContext context,
                                     StateSetter setState) {
-                                  Size screenSize =
-                                      MediaQuery.of(context).size;
+                                  Size screenSize = MediaQuery.of(context).size;
                                   return SizedBox(
                                     width: screenSize.width,
                                     child: Padding(
                                       padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              screenSize.width * 0.05),
+                                          horizontal: screenSize.width * 0.05),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment:
@@ -256,8 +255,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                              height:
-                                                  screenSize.height * 0.04),
+                                              height: screenSize.height * 0.04),
                                           ...options.map((option) {
                                             return CheckboxListTile(
                                               selectedTileColor: Colors.green,
@@ -269,17 +267,15 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                                       option['isChecked']
                                                           ? FontWeight.w600
                                                           : FontWeight.normal,
-                                                  fontSize:
-                                                      option['isChecked']
-                                                          ? 17
-                                                          : 15,
+                                                  fontSize: option['isChecked']
+                                                      ? 17
+                                                      : 15,
                                                 ),
                                               ),
                                               value: option['isChecked'],
                                               onChanged: (bool? value) {
                                                 setState(() {
-                                                  option['isChecked'] =
-                                                      value!;
+                                                  option['isChecked'] = value!;
                                                 });
                                               },
                                               controlAffinity:
@@ -307,8 +303,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.0)),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   'Monthly',
@@ -414,8 +409,8 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
               Padding(
                 padding: EdgeInsets.only(right: screenSize.width * 0.69),
                 child: Card(
-                  margin: EdgeInsets.symmetric(
-                      vertical: screenSize.height * 0.01),
+                  margin:
+                      EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
                   color: Colors.grey[100],
                   surfaceTintColor: Colors.grey[100],
                   shape: RoundedRectangleBorder(

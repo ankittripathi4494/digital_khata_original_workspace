@@ -26,7 +26,7 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-print(response.body);
+        print(response.body);
         if (response.statusCode == 200) {
           AccountResponseModel jsonResponse =
               AccountResponseModel.fromJson(convert.jsonDecode(response.body));

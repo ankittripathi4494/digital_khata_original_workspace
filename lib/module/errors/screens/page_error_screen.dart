@@ -19,7 +19,6 @@ class _PageErrorScreenState extends State<PageErrorScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
         body: Column(
-          
           children: [
             SizedBox(
               height: screenSize.height * 0.2,
@@ -51,7 +50,6 @@ class _PageErrorScreenState extends State<PageErrorScreen> {
             SizedBox(
               height: screenSize.height * 0.02,
             ),
-            
           ],
         ),
       ),

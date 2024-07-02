@@ -26,7 +26,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
   bool isData = true;
   late TabController tabController;
   int tabIndex = 0;
-    late int currentPageIndexValue = 1;
+  late int currentPageIndexValue = 1;
 // Option 2
   @override
   void initState() {
@@ -69,7 +69,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
     // int currentIndex = 0;
     return PopScope(
       canPop: false,
-       onPopInvoked: (didPop) {
+      onPopInvoked: (didPop) {
         if (!didPop) {
           EssentialWidgetsCollection.showAlertDialogForLogout(context,
               content: "Do you want to exit from App?", taskOne: () {
@@ -2487,9 +2487,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(
-                                    context,
-                                   '/create-invoice');
+                                Navigator.pushNamed(context, '/create-invoice');
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
@@ -2504,8 +2502,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                             InkWell(
                               onTap: () {
                                 Navigator.pushReplacementNamed(
-                                    context,
-                                    '/create-bill');
+                                    context, '/create-bill');
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
@@ -2553,8 +2550,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                             InkWell(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context,
-                                    '/recurring-transaction');
+                                    context, '/recurring-transaction');
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
@@ -2572,8 +2568,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                               child: InkWell(
                                 onTap: () {
                                   Navigator.pushNamed(
-                                      context,
-                                      '/recurring-invoice');
+                                      context, '/recurring-invoice');
                                 },
                                 child: const Text(
                                   'Recurring Invoice',
@@ -2584,9 +2579,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(
-                                    context,
-                                    '/recurring-bill');
+                                Navigator.pushNamed(context, '/recurring-bill');
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
@@ -2600,9 +2593,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                             ),
                             InkWell(
                               onTap: () {
-                                Navigator.pushNamed(
-                                    context,
-                                    '/emi');
+                                Navigator.pushNamed(context, '/emi');
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(
@@ -2626,19 +2617,31 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                   size: 40,
                 ),
               ),
-      bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
+        bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
             screenSize, context, currentPageIndexValue, (index) {
-         setState(() {
-           currentPageIndexValue = index;
-         });
+          setState(() {
+            currentPageIndexValue = index;
+          });
           if (currentPageIndexValue == 0) {
-            Navigator.pushNamed(context, '/dashboard');
+            Navigator.pushNamed(
+              context,
+              '/dashboard',
+            );
           } else if (currentPageIndexValue == 1) {
-            Navigator.pushNamed(context, '/invoice');
+            Navigator.pushNamed(
+              context,
+              '/invoice',
+            );
           } else if (currentPageIndexValue == 2) {
-            Navigator.pushNamed(context, '/business');
+            Navigator.pushNamed(
+              context,
+              '/business',
+            );
           } else if (currentPageIndexValue == 3) {
-            Navigator.pushNamed(context, '/accounts');
+            Navigator.pushNamed(
+              context,
+              '/accounts',
+            );
           }
         }),
       ),

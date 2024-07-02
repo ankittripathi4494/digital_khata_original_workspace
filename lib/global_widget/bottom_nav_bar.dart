@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
 
 class BottomNavBarWidget {
-    static BottomNavigationBar bottomNavBar(Size screenSize, BuildContext context,int currentPageIndexValue
-, Function(int)? e) {
+  static BottomNavigationBar bottomNavBar(Size screenSize, BuildContext context,
+      int currentPageIndexValue, Function(int)? e) {
     return BottomNavigationBar(
-        showUnselectedLabels: true,
-        unselectedItemColor: const Color.fromARGB(255, 122, 121, 121),
-        selectedItemColor: Colors.blue,
-        showSelectedLabels: true,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
-        iconSize: screenSize.height * 0.035,
-        currentIndex: currentPageIndexValue,
-        onTap: e,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.list,
-            ),
-            label: 'Customers',
+      showUnselectedLabels: true,
+      unselectedItemColor: const Color.fromARGB(255, 122, 121, 121),
+      selectedItemColor: Colors.blue,
+      showSelectedLabels: true,
+      selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+      unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500),
+      iconSize: screenSize.height * 0.035,
+      currentIndex: currentPageIndexValue,
+      onTap: e,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.list,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.record_voice_over,
-            ),
-            label: 'Invoices',
+          label: 'Customers',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.record_voice_over,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.business,
-            ),
-            label: 'Business',
+          label: 'Invoices',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.business,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.person_2_outlined,
-            ),
-            label: 'Account',
+          label: 'Business',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(
+            Icons.person_2_outlined,
           ),
-        ],
-      );
+          label: 'Account',
+        ),
+      ],
+    );
   }
 }

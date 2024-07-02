@@ -271,9 +271,7 @@ class _SmsCreditScreenState extends State<SmsCreditScreen> {
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(
-                      context,
-                      '/subscription');
+                  Navigator.pushNamed(context, '/subscription');
                 },
                 child: Container(
                   margin:

@@ -59,11 +59,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-print(response.body);
+        print(response.body);
         if (response.statusCode == 200) {
           LoginResponseModel jsonResponse =
               LoginResponseModel.fromJson(convert.jsonDecode(response.body));
-
+          print(response.body);
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
               print(jsonResponse.response.toString());
@@ -97,7 +97,7 @@ print(response.body);
 
     //! Email ID Form Submissions Event
     on<LoginEmailFormSubmissionEvent>((event, emit) async {
-      emit(LoginPhoneNumberLoadingState());
+      emit(LoginEmailIDLoadingState());
       var map = {};
       fcmToken = await messaging.getToken();
       try {

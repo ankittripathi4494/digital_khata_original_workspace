@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class EmiPlanScreen extends StatefulWidget {
- late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   EmiPlanScreen({super.key, required this.argus});
 
   @override
@@ -23,8 +23,7 @@ class _EmiPlanScreenState extends State<EmiPlanScreen> {
               onPressed: () {
                 Navigator.pop(context);
                 Navigator.pushReplacementNamed(
-                    context,
-                    '/recurring-transaction');
+                    context, '/recurring-transaction');
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -50,9 +49,7 @@ class _EmiPlanScreenState extends State<EmiPlanScreen> {
               ]),
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(
-                    context,
-                    '/recurring-transaction');
+              Navigator.pushNamed(context, '/recurring-transaction');
             },
             child: const ListTile(
               title: Text('CustomerNaame'),
@@ -67,9 +64,7 @@ class _EmiPlanScreenState extends State<EmiPlanScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
           onPressed: () {
-            Navigator.pushNamed(
-                context,
-                '/new-emi-plan');
+            Navigator.pushNamed(context, '/new-emi-plan');
           },
           child: const Icon(
             Icons.add,

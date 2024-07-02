@@ -1,4 +1,3 @@
-
 // ignore_for_file: must_be_immutable, unnecessary_to_list_in_spreads
 
 import 'package:flutter/material.dart';
@@ -184,7 +183,8 @@ class _RecurringNewBillPlanScreenState
                   keyboardType: TextInputType.name,
                   decoration: InputDecoration(
                       hintText: '\u{20B9} ${0}',
-                      hintStyle: const TextStyle(color: Colors.grey, fontSize: 20),
+                      hintStyle:
+                          const TextStyle(color: Colors.grey, fontSize: 20),
                       border: OutlineInputBorder(
                           // Color.fromARGB(255, 31, 1, 102),
                           borderSide: const BorderSide(color: Colors.grey),
@@ -233,7 +233,7 @@ class _RecurringNewBillPlanScreenState
                                   {'text': 'HalfYearly', 'isChecked': false},
                                   {'text': 'Yearly', 'isChecked': false},
                                 ];
-          
+
                                 return StatefulBuilder(
                                   builder: (BuildContext context,
                                       StateSetter setState) {
@@ -265,8 +265,7 @@ class _RecurringNewBillPlanScreenState
                                                     screenSize.height * 0.04),
                                             ...options.map((option) {
                                               return CheckboxListTile(
-                                                selectedTileColor:
-                                                    Colors.green,
+                                                selectedTileColor: Colors.green,
                                                 title: Text(
                                                   option['text'],
                                                   style: TextStyle(
@@ -274,8 +273,7 @@ class _RecurringNewBillPlanScreenState
                                                     fontWeight:
                                                         option['isChecked']
                                                             ? FontWeight.w600
-                                                            : FontWeight
-                                                                .normal,
+                                                            : FontWeight.normal,
                                                     fontSize:
                                                         option['isChecked']
                                                             ? 17
@@ -360,8 +358,7 @@ class _RecurringNewBillPlanScreenState
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8.0)),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 IconButton(
                                   onPressed: () {
@@ -431,7 +428,7 @@ class _RecurringNewBillPlanScreenState
                           {'text': 'E-Mail', 'isChecked': false},
                           {'text': 'Whatsapp', 'isChecked': false},
                         ];
-          
+
                         return StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) {
@@ -443,8 +440,7 @@ class _RecurringNewBillPlanScreenState
                                     horizontal: screenSize.width * 0.05),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Center(
                                       child: Text(
@@ -456,8 +452,7 @@ class _RecurringNewBillPlanScreenState
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                        height: screenSize.height * 0.04),
+                                    SizedBox(height: screenSize.height * 0.04),
                                     ...options.map((option) {
                                       return CheckboxListTile(
                                         selectedTileColor: Colors.green,
@@ -549,7 +544,7 @@ class _RecurringNewBillPlanScreenState
                           {'text': 'Pre-billing cycle', 'isChecked': false},
                           {'text': 'Post-billing cycle', 'isChecked': false},
                         ];
-          
+
                         return StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) {
@@ -561,8 +556,7 @@ class _RecurringNewBillPlanScreenState
                                     horizontal: screenSize.width * 0.05),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Center(
                                       child: Text(
@@ -574,8 +568,7 @@ class _RecurringNewBillPlanScreenState
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                        height: screenSize.height * 0.04),
+                                    SizedBox(height: screenSize.height * 0.04),
                                     ...options.map((option) {
                                       return CheckboxListTile(
                                         selectedTileColor: Colors.green,
@@ -671,7 +664,7 @@ class _RecurringNewBillPlanScreenState
                           {'text': '10 days', 'isChecked': false},
                           {'text': '15 days', 'isChecked': false},
                         ];
-          
+
                         return StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) {
@@ -683,8 +676,7 @@ class _RecurringNewBillPlanScreenState
                                     horizontal: screenSize.width * 0.05),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Center(
                                       child: Text(
@@ -696,8 +688,7 @@ class _RecurringNewBillPlanScreenState
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                        height: screenSize.height * 0.04),
+                                    SizedBox(height: screenSize.height * 0.04),
                                     ...options.map((option) {
                                       return CheckboxListTile(
                                         selectedTileColor: Colors.green,
@@ -797,8 +788,7 @@ class _RecurringNewBillPlanScreenState
                           ),
                           Text(
                             'Add New',
-                            style:
-                                TextStyle(color: Colors.grey, fontSize: 10),
+                            style: TextStyle(color: Colors.grey, fontSize: 10),
                           )
                         ],
                       ),

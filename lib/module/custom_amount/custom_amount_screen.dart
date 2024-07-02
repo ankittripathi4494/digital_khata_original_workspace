@@ -410,9 +410,11 @@ class _CustomAmountScreenState extends State<CustomAmountScreen> {
                         "Enter name to save the custom amount",
                         style: TextStyle(),
                       )));
-                 
-                              Navigator.pushNamed(context, '/emi', arguments: { "addContent": '',
-                                "customAmount": 'true',});
+
+                  Navigator.pushNamed(context, '/emi', arguments: {
+                    "addContent": '',
+                    "customAmount": 'true',
+                  });
                 },
                 child: const ListTile(
                     title: Text(

@@ -24,9 +24,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(
-                    context,
-                    '/invoice');
+                Navigator.pushReplacementNamed(context, '/invoice');
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -193,7 +191,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                     ),
                   ),
                 ),
-          
+
                 InkWell(
                   onTap: () {
                     showModalBottomSheet<void>(
@@ -264,15 +262,14 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                     title: Text(
                       'Add new product or service',
                       style: TextStyle(
-                          color: Color.fromARGB(255, 31, 1, 102),
-                          fontSize: 16),
+                          color: Color.fromARGB(255, 31, 1, 102), fontSize: 16),
                     ),
                   ),
                 ),
                 SizedBox(
                   height: screenSize.height * 0.02,
                 ),
-          
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -309,7 +306,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                   {'text': 'HalfYearly', 'isChecked': false},
                                   {'text': 'Yearly', 'isChecked': false},
                                 ];
-          
+
                                 return StatefulBuilder(
                                   builder: (BuildContext context,
                                       StateSetter setState) {
@@ -341,8 +338,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                                     screenSize.height * 0.04),
                                             ...options.map((option) {
                                               return CheckboxListTile(
-                                                selectedTileColor:
-                                                    Colors.green,
+                                                selectedTileColor: Colors.green,
                                                 title: Text(
                                                   option['text'],
                                                   style: TextStyle(
@@ -350,8 +346,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                                     fontWeight:
                                                         option['isChecked']
                                                             ? FontWeight.w600
-                                                            : FontWeight
-                                                                .normal,
+                                                            : FontWeight.normal,
                                                     fontSize:
                                                         option['isChecked']
                                                             ? 17
@@ -432,8 +427,8 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                           height: screenSize.height * 0.01,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
-                              right: screenSize.width * 0.008),
+                          padding:
+                              EdgeInsets.only(right: screenSize.width * 0.008),
                           child: Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: screenSize.width * 0.01,
@@ -535,12 +530,10 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                               )),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide:
-                                  const BorderSide(color: Colors.grey)),
+                              borderSide: const BorderSide(color: Colors.grey)),
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide:
-                                  const BorderSide(color: Colors.grey)),
+                              borderSide: const BorderSide(color: Colors.grey)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
                               borderSide: const BorderSide(
@@ -548,14 +541,13 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                               )),
                           disabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10.0),
-                              borderSide:
-                                  const BorderSide(color: Colors.grey)),
+                              borderSide: const BorderSide(color: Colors.grey)),
                         ),
                       ),
                     ),
                   ],
                 ),
-          
+
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.center,
                 //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -588,7 +580,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                           {'text': 'E-Mail', 'isChecked': false},
                           {'text': 'Whatsapp', 'isChecked': false},
                         ];
-          
+
                         return StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) {
@@ -600,8 +592,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                     horizontal: screenSize.width * 0.05),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Center(
                                       child: Text(
@@ -613,8 +604,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                        height: screenSize.height * 0.04),
+                                    SizedBox(height: screenSize.height * 0.04),
                                     ...options.map((option) {
                                       return CheckboxListTile(
                                         selectedTileColor: Colors.green,
@@ -685,7 +675,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                     ),
                   ),
                 ),
-          
+
                 SizedBox(
                   height: screenSize.height * 0.02,
                 ),
@@ -714,7 +704,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                           {'text': 'Pre-billing cycle', 'isChecked': false},
                           {'text': 'Post-billing cycle', 'isChecked': false},
                         ];
-          
+
                         return StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) {
@@ -726,8 +716,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                     horizontal: screenSize.width * 0.05),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Center(
                                       child: Text(
@@ -739,8 +728,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                        height: screenSize.height * 0.04),
+                                    SizedBox(height: screenSize.height * 0.04),
                                     ...options.map((option) {
                                       return CheckboxListTile(
                                         selectedTileColor: Colors.green,
@@ -811,7 +799,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                     ),
                   ),
                 ),
-          
+
                 SizedBox(
                   height: screenSize.height * 0.02,
                 ),
@@ -841,7 +829,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                           {'text': '10 days', 'isChecked': false},
                           {'text': '15 days', 'isChecked': false},
                         ];
-          
+
                         return StatefulBuilder(
                           builder:
                               (BuildContext context, StateSetter setState) {
@@ -853,8 +841,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                     horizontal: screenSize.width * 0.05),
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Center(
                                       child: Text(
@@ -866,8 +853,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                        height: screenSize.height * 0.04),
+                                    SizedBox(height: screenSize.height * 0.04),
                                     ...options.map((option) {
                                       return CheckboxListTile(
                                         selectedTileColor: Colors.green,
@@ -939,7 +925,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                 SizedBox(
                   height: screenSize.height * 0.02,
                 ),
-          
+
                 Padding(
                   padding: EdgeInsets.only(right: screenSize.width * 0.66),
                   child: const Text(
@@ -989,12 +975,12 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                   height: screenSize.height * 0.02,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: screenSize.width * 0.02),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: screenSize.width * 0.02),
                   child: TextFormField(
                     enabled: true,
-                    scrollPadding: EdgeInsets.symmetric(
-                        vertical: screenSize.height * 0.1),
+                    scrollPadding:
+                        EdgeInsets.symmetric(vertical: screenSize.height * 0.1),
                     enableInteractiveSelection: true,
                     // maxLength: 100,
                     minLines: 5,
@@ -1030,7 +1016,7 @@ class _NewEmiPlanScreenState extends State<NewEmiPlanScreen> {
                     ),
                   ),
                 ),
-          
+
                 SizedBox(
                   height: screenSize.height * 0.11,
                 )

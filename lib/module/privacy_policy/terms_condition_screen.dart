@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class TermsConditionScreen extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   TermsConditionScreen({super.key, required this.argus});
 
   @override

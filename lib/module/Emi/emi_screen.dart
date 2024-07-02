@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
 
 class EmiScreen extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   EmiScreen({super.key, required this.argus});
 
   @override
@@ -308,9 +308,7 @@ class _EmiScreenState extends State<EmiScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(
-                        context,
-                        '/select-customer');
+                    Navigator.pushNamed(context, '/select-customer');
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -357,9 +355,7 @@ class _EmiScreenState extends State<EmiScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                     Navigator.pushNamed(
-                        context,
-                       '/emi-plan');
+                    Navigator.pushNamed(context, '/emi-plan');
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -543,9 +539,7 @@ class _EmiScreenState extends State<EmiScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context,
-                                      '/product');
+                                  Navigator.pushNamed(context, '/product');
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(
@@ -559,9 +553,7 @@ class _EmiScreenState extends State<EmiScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context,
-                                      '/service');
+                                  Navigator.pushNamed(context, '/service');
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(
@@ -576,8 +568,7 @@ class _EmiScreenState extends State<EmiScreen> {
                               InkWell(
                                 onTap: () {
                                   Navigator.pushNamed(
-                                      context,
-                                      '/custom-amount');
+                                      context, '/custom-amount');
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(

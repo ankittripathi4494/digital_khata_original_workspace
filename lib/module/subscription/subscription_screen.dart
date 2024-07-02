@@ -22,8 +22,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
           backgroundColor: Colors.blue,
           leading: IconButton(
               onPressed: () {
-                 Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/business');
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/business');
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -532,9 +532,8 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                   ),
                                   InkWell(
                                     onTap: () {
-                                       Navigator.pushNamed(
-                                          context,
-                                          '/check-diamond');
+                                      Navigator.pushNamed(
+                                          context, '/check-diamond');
                                     },
                                     child: Container(
                                       decoration: const BoxDecoration(
@@ -851,8 +850,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                                   InkWell(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context,
-                                          '/check-platinum');
+                                          context, '/check-platinum');
                                     },
                                     child: Container(
                                       decoration: const BoxDecoration(

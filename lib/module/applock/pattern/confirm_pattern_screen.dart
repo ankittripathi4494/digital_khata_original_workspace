@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:pattern_lock/pattern_lock.dart';
 
 class ConfirmPatternScreen extends StatefulWidget {
-     late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   ConfirmPatternScreen({super.key, required this.argus});
   @override
   State<ConfirmPatternScreen> createState() => _ConfirmPatternScreenState();

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ReminderActivity extends StatefulWidget {
-    late Map<String, dynamic> argus;
+  late Map<String, dynamic> argus;
   ReminderActivity({super.key, required this.argus});
 
   @override
@@ -23,9 +23,7 @@ class _ReminderActivityState extends State<ReminderActivity> {
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.pushReplacementNamed(
-                    context,
-                    '/business');
+                Navigator.pushReplacementNamed(context, '/business');
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -101,7 +99,8 @@ class _ReminderActivityState extends State<ReminderActivity> {
                                               onPrimary: Colors.white,
                                               surface: Color.fromARGB(
                                                   255, 0, 31, 103),
-                                              surfaceContainerHighest: Colors.grey,
+                                              surfaceContainerHighest:
+                                                  Colors.grey,
                                               onSurface: Colors.white,
                                               secondary: Colors.red),
                                           dialogBackgroundColor: Colors.white,
@@ -191,7 +190,8 @@ class _ReminderActivityState extends State<ReminderActivity> {
                                               onPrimary: Colors.white,
                                               surface: Color.fromARGB(
                                                   255, 0, 31, 103),
-                                              surfaceContainerHighest: Colors.grey,
+                                              surfaceContainerHighest:
+                                                  Colors.grey,
                                               onSurface: Colors.white,
                                               secondary: Colors.red),
                                           dialogBackgroundColor: Colors.white,
@@ -264,8 +264,7 @@ class _ReminderActivityState extends State<ReminderActivity> {
                               child: InkWell(
                                 onTap: () async {
                                   Navigator.pushNamed(
-                                      context,
-                                      '/select-customer');
+                                      context, '/select-customer');
                                 },
                                 child: TextFormField(
                                   enabled: false,
