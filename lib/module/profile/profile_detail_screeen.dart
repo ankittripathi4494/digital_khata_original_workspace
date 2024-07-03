@@ -250,10 +250,67 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
                   ],
                 ),
                 child: ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text((widget.argus['customerData']
+                              as SelectedCustomerResponseData)
+                          .mobile!),
+                      TextButton.icon(
+                        style:
+                            TextButton.styleFrom(foregroundColor: Colors.blue),
+                        onPressed: () {},
+                        label: const Text("Alternate Numbers"),
+                        icon: const Icon(Icons.add),
+                      )
+                    ],
+                  ),
+                )),
+            Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: screenSize.height * 0.008,
+                    horizontal: screenSize.width * 0.05),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 203, 202, 202),
+                      offset: Offset(0.0, 1.0),
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+                child: ListTile(
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: -4),
                   title: Text((widget.argus['customerData']
                           as SelectedCustomerResponseData)
-                      .mobile!),
+                      .email!),
                 )),
+            Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: screenSize.height * 0.008,
+                    horizontal: screenSize.width * 0.05),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 203, 202, 202),
+                      offset: Offset(0.0, 1.0),
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+                child: const ListTile(
+                  visualDensity:
+                      VisualDensity(horizontal: 0, vertical: -4),
+                  title: Text("Add Label..",style: TextStyle(fontStyle: FontStyle.italic),),
+                )),
+          
           ],
         ),
       ),
