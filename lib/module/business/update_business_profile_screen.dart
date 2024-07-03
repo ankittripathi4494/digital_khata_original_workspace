@@ -94,15 +94,15 @@ class _UpdateBusinessProfileScreenState
           });
         } else {
           EssentialWidgetsCollection.showErrorSnackbar(
-              context, jsonResponse.message!);
+              context, title: null, description: jsonResponse.message!);
         }
       } else {
         EssentialWidgetsCollection.showErrorSnackbar(
-            context, 'Request failed with status: ${response.statusCode}.');
+            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
       EssentialWidgetsCollection.showErrorSnackbar(
-          context, 'Failed to get platform version.');
+          context, title: null, description: 'Failed to get platform version.');
     }
     fillFormDetails();
   }
@@ -258,7 +258,7 @@ class _UpdateBusinessProfileScreenState
                         showDeletePopup(context);
                       } else {
                         EssentialWidgetsCollection.showErrorSnackbar(
-                            context, "Business cannot delete !!");
+                            context,title: null, description:  "Business cannot delete !!");
                       }
                     },
                     icon: const Icon(
@@ -280,7 +280,7 @@ class _UpdateBusinessProfileScreenState
               taskWaitDuration: Durations.long2,
               task: () {
                 EssentialWidgetsCollection.showSuccessSnackbar(
-                    context, state.successMessage);
+                    context, title: null, description: state.successMessage);
 
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/business');
@@ -297,7 +297,7 @@ class _UpdateBusinessProfileScreenState
                     context, '/update-business-profile',
                     arguments: widget.argus);
                 EssentialWidgetsCollection.showErrorSnackbar(
-                    context, state.failedMessage);
+                    context, title: null, description: state.failedMessage);
               },
             );
           }

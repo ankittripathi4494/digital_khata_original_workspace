@@ -156,7 +156,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                   task: () {
                                     EssentialWidgetsCollection
                                         .showSuccessSnackbar(
-                                            context, state.successMessage);
+                                            context, title: null, description: state.successMessage);
 
                                     Navigator.pop(context);
                                     Navigator.pushNamed(context, '/dashboard');
@@ -174,7 +174,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                         arguments: widget.argus);
                                     EssentialWidgetsCollection
                                         .showErrorSnackbar(
-                                            context, state.failedMessage);
+                                            context, title: null, description: state.failedMessage);
                                   },
                                 )
                               : Container(),

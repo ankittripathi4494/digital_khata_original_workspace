@@ -2,6 +2,7 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
+import 'package:toastification/toastification.dart';
 import 'module/business/user_group_bloc/user_group_bloc.dart';
 import 'module/customers/customer_bloc/customer_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -113,18 +114,20 @@ class _MyAppState extends State<MyApp> {
                   Locale? appLocale = localeState is SelectedLocale
                       ? localeState.locale
                       : locale;
-                  return MaterialApp(
-                    navigatorKey: navigatorKey,
-                    supportedLocales: AppLocalizationsSetup.supportedLocales,
-                    localizationsDelegates:
-                        AppLocalizationsSetup.localizationsDelegates,
-                    localeResolutionCallback:
-                        AppLocalizationsSetup.localeResolutionCallback,
-                    locale: appLocale,
-                    title: 'Digital Khata',
-                    debugShowCheckedModeBanner: false,
-                    initialRoute: '/',
-                    onGenerateRoute: RouteAccessGenerator.routerFunc,
+                  return ToastificationWrapper(
+                    child: MaterialApp(
+                      navigatorKey: navigatorKey,
+                      supportedLocales: AppLocalizationsSetup.supportedLocales,
+                      localizationsDelegates:
+                          AppLocalizationsSetup.localizationsDelegates,
+                      localeResolutionCallback:
+                          AppLocalizationsSetup.localeResolutionCallback,
+                      locale: appLocale,
+                      title: 'Digital Khata',
+                      debugShowCheckedModeBanner: false,
+                      initialRoute: '/',
+                      onGenerateRoute: RouteAccessGenerator.routerFunc,
+                    ),
                   );
                 },
               ),

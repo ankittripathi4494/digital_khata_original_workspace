@@ -255,7 +255,7 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                               .emailORmobile!);
                       Navigator.pushReplacementNamed(context, '/dashboard');
                       EssentialWidgetsCollection.showSuccessSnackbar(
-                          context, "Login Successful!");
+                          context, title: null, description: "Login Successful!");
                     }
                   },
                   child: Container(
@@ -319,18 +319,18 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                 (widget.argus['loginResponseData'] as LoginResponseData)
           });
           EssentialWidgetsCollection.showSuccessSnackbar(
-              context, jsonResponse.message!);
+              context, title: null, description: jsonResponse.message!);
         } else {
           EssentialWidgetsCollection.showErrorSnackbar(
-              context, jsonResponse.message!);
+              context, title: null, description: jsonResponse.message!);
         }
       } else {
         EssentialWidgetsCollection.showErrorSnackbar(
-            context, 'Request failed with status: ${response.statusCode}.');
+            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
       EssentialWidgetsCollection.showErrorSnackbar(
-          context, 'Failed to get platform version.');
+          context, title: null, description: 'Failed to get platform version.');
     }
   }
 

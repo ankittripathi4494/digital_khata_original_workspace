@@ -73,7 +73,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                   taskWaitDuration: Durations.long2,
                   task: () {
                     EssentialWidgetsCollection.showSuccessSnackbar(
-                        context, state.successMessage);
+                        context, title: null, description: state.successMessage);
 
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/dashboard');
@@ -89,7 +89,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                     Navigator.pushReplacementNamed(context, '/add-new-business',
                         arguments: widget.argus);
                     EssentialWidgetsCollection.showErrorSnackbar(
-                        context, state.failedMessage);
+                        context, title: null, description: state.failedMessage);
                   },
                 );
               }

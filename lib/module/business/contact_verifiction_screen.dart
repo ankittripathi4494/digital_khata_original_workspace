@@ -338,10 +338,10 @@ class _ContactVerificationScreenState extends State<ContactVerificationScreen> {
                                 } else {
                                   EssentialWidgetsCollection.showErrorSnackbar(
                                       context,
-                                      "Please Enter Valid Contact Number");
+                                      title: null,description: "Please Enter Valid Contact Number");
                                 }
                               },
-                              child: Text("Send OTP")),
+                              child: const Text("Send OTP")),
                       const SizedBox(
                         height: 10,
                       ),

@@ -228,7 +228,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                   task: () {
                                     EssentialWidgetsCollection
                                         .showSuccessSnackbar(
-                                            context, state.successMessage);
+                                            context, title: null, description: state.successMessage);
 
                                     Navigator.pop(context);
                                     Navigator.pushReplacementNamed(
@@ -248,7 +248,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                         arguments: widget.argus);
                                     EssentialWidgetsCollection
                                         .showErrorSnackbar(
-                                            context, state.failedMessage);
+                                            context, title: null, description: state.failedMessage);
                                   },
                                 )
                               : Container(),

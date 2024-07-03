@@ -71,15 +71,15 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
           });
         } else {
           EssentialWidgetsCollection.showErrorSnackbar(
-              context, jsonResponse.message!);
+              context, title: null, description: jsonResponse.message!);
         }
       } else {
         EssentialWidgetsCollection.showErrorSnackbar(
-            context, 'Request failed with status: ${response.statusCode}.');
+            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
       EssentialWidgetsCollection.showErrorSnackbar(
-          context, 'Failed to get platform version.');
+          context, title: null, description: 'Failed to get platform version.');
     }
     fillFormDetails();
   }
@@ -654,11 +654,11 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
         // Navigator.pop(context);
       } else {
         EssentialWidgetsCollection.showErrorSnackbar(
-            context, 'Request failed with status: ${response.statusCode}.');
+            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
       EssentialWidgetsCollection.showErrorSnackbar(
-          context, 'Failed to get platform version.');
+          context, title: null, description: 'Failed to get platform version.');
     }
   }
 
@@ -693,18 +693,18 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
 
           Navigator.pushReplacementNamed(context, '/accounts');
           EssentialWidgetsCollection.showSuccessSnackbar(
-              context, jsonResponse.message!);
+              context, title: null, description: jsonResponse.message!);
         } else {
           EssentialWidgetsCollection.showErrorSnackbar(
-              context, jsonResponse.message!);
+              context, title: null, description: jsonResponse.message!);
         }
       } else {
         EssentialWidgetsCollection.showErrorSnackbar(
-            context, 'Request failed with status: ${response.statusCode}.');
+            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
       EssentialWidgetsCollection.showErrorSnackbar(
-          context, 'Failed to get platform version.');
+          context, title: null, description: 'Failed to get platform version.');
     }
   }
 

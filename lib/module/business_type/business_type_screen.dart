@@ -164,7 +164,7 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
                         });
                       } else {
                         EssentialWidgetsCollection.showErrorSnackbar(context,
-                            "Please enter some data in search field to add data");
+                            title: null, description: "Please enter some data in search field to add data");
                       }
                     },
                     child: Card(

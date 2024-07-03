@@ -113,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       arguments: {
                         'customerData': state.selectedCustomerDetailedData,
                         'selectedBusiness': (widget.argus['selectedBusiness']
-                                      as BusinessListResponseData)
+                            as BusinessListResponseData)
                       });
                 },
                 leading: CircleAvatar(
@@ -1274,13 +1274,13 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                   ContactsService.addContact(newContact).then((c) {
                     Navigator.pop(context);
-                    EssentialWidgetsCollection.showSuccessSnackbar(
-                        context, "Contact added successfully");
+                    EssentialWidgetsCollection.showSuccessSnackbar(context,
+                        title: null, description: "Contact added successfully");
                   }).onError(
                     (error, stackTrace) {
                       Navigator.pop(context);
-                      EssentialWidgetsCollection.showErrorSnackbar(
-                          context, error.toString());
+                      EssentialWidgetsCollection.showErrorSnackbar(context,
+                          title: null, description: error.toString());
                     },
                   );
                 },
@@ -1325,13 +1325,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ];
                 ContactsService.addContact(newContact).then((c) {
                   Navigator.pop(context);
-                  EssentialWidgetsCollection.showSuccessSnackbar(
-                      context, "Contact added successfully");
+                  EssentialWidgetsCollection.showSuccessSnackbar(context,
+                      title: null, description: "Contact added successfully");
                 }).onError(
                   (error, stackTrace) {
                     Navigator.pop(context);
-                    EssentialWidgetsCollection.showErrorSnackbar(
-                        context, error.toString());
+                    EssentialWidgetsCollection.showErrorSnackbar(context,
+                        title: null, description: error.toString());
                   },
                 );
               },
