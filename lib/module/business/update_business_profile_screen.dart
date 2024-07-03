@@ -14,6 +14,7 @@ import 'package:dkapp/utils/api_list.dart';
 import 'package:dkapp/utils/exceptions.dart';
 import 'package:dkapp/utils/image_list.dart';
 import 'package:dkapp/utils/location_handler.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -257,6 +258,7 @@ class _UpdateBusinessProfileScreenState
                       if (state.successData!.length > 1) {
                         showDeletePopup(context);
                       } else {
+                        LoggerUtil().errorData("Business cannot delete !!");
                         EssentialWidgetsCollection.showErrorSnackbar(
                             context,title: null, description:  "Business cannot delete !!");
                       }

@@ -78,6 +78,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   contacts_service: ^0.6.3
   toastification: ^2.0.0
+  talker: ^4.3.2
 
 dev_dependencies:
   flutter_test:
