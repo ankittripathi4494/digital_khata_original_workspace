@@ -25,6 +25,9 @@ extension StringCasingExtension on String {
             r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
         .hasMatch(this);
   }
+  bool isValidContact() {
+    return (length==10)?true:false;
+  }
 }
 
 Map<int, String> monthsInYear = {

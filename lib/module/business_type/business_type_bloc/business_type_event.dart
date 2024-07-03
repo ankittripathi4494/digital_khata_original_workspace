@@ -10,11 +10,13 @@ class BusinessTypeListSelectedFilterEvent extends BusinessTypeEvent {
   late final String searchText;
   late final List<BusinessTypeListResponseData> selectedDataList;
   late final List<String> choiceList;
+   late final String choiceAndType;
   BusinessTypeListSelectedFilterEvent({
     required this.userId,
     required this.searchText,
     required this.selectedDataList,
     required this.choiceList,
+    required this.choiceAndType,
   });
 }
 
@@ -23,11 +25,13 @@ class BusinessTypeListEvent extends BusinessTypeEvent {
   late final String searchText;
   late final List<BusinessTypeListResponseData> selectedDataList;
   late final List<String> choiceList;
+  late final String choiceAndType;
   BusinessTypeListEvent({
     required this.userId,
     required this.searchText,
     required this.selectedDataList,
     required this.choiceList,
+    required this.choiceAndType,
   });
 }
 

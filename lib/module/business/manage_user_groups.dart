@@ -139,12 +139,26 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                 color: Color.fromARGB(255, 31, 1, 102),
                                 fontWeight: FontWeight.w700),
                           ),
-                          subtitle: Text(
-                            userGroupData.mobile!,
-                            style: const TextStyle(
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 31, 1, 102),
-                                fontWeight: FontWeight.w400),
+                          subtitle: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                userGroupData.mobile!,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 31, 1, 102),
+                                    fontWeight: FontWeight.w400),
+                              ),
+                               Text(
+                                userGroupData.description!,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 31, 1, 102),
+                                    fontWeight: FontWeight.w400),
+                              ),
+                            ],
                           ),
                           trailing: const Icon(
                             Icons.arrow_forward_ios,

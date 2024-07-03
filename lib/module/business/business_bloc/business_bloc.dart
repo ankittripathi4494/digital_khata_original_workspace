@@ -2,6 +2,7 @@
 
 import 'package:dkapp/module/business/model/add_new_business_response_model.dart';
 import 'package:dkapp/module/business/model/delete_business_response_model.dart';
+import 'package:dkapp/module/business/model/update_new_business_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
 import 'package:dkapp/utils/exceptions.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
@@ -170,7 +171,6 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
     on<AddNewBusinessTextChangedEvent>((event, emit) async {
       if (event.businessTaxNumber.isEmpty &&
-          event.businessTaxNumber.isEmpty &&
           event.businessWebsite.isEmpty &&
           event.businessType.isEmpty &&
           event.businessAddress.isEmpty &&
@@ -405,17 +405,69 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       }
     });
 
-    on<FetchSelectedBusinessEvent>((event, emit) {
-      if (sph.containsKey("selectedBusiness") == true) {
-        var decodedJson =
-            convert.jsonDecode(sph.getString("selectedBusiness")!);
-        Map<String, dynamic> jsonMap = decodedJson as Map<String, dynamic>;
-        selectedBusiness = BusinessListResponseData.fromJson(jsonMap);
-        emit(FetchSelectedBusinessSuccessState(
-            selectedBusinessData: selectedBusiness));
-      } else {
+    on<FetchSelectedBusinessEvent>((event, emit) async {
+      emit(BusinessListLoadingState());
+
+      var map = {};
+      try {
+        map['token'] = 'bnbuujn';
+        map['user_id'] = event.userId;
+        print(map);
+
+        http.Response response = await http.post(
+            Uri.http(
+                APIPathList.mainDomain, APIPathList.getBusinessListUserWise),
+            body: map,
+            headers: {
+              "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+            });
+        print(response.body);
+        if (response.statusCode == 200) {
+          BusinessListResponseModel jsonResponse =
+              BusinessListResponseModel.fromJson(
+                  convert.jsonDecode(response.body));
+
+          if (jsonResponse.response != "failure") {
+            if (kDebugMode) {
+              print(jsonResponse.data!
+                  .map((c) {
+                    return c.toJson();
+                  })
+                  .toList()
+                  .toString());
+            }
+
+            if (sph.containsKey("selectedBusiness") == true) {
+              var decodedJson =
+                  convert.jsonDecode(sph.getString("selectedBusiness")!);
+              Map<String, dynamic> jsonMap =
+                  decodedJson as Map<String, dynamic>;
+
+              for (BusinessListResponseData blrm in jsonResponse.data!) {
+                if (blrm.id == BusinessListResponseData.fromJson(jsonMap).id) {
+                  emit(FetchSelectedBusinessSuccessState(
+                      selectedBusinessData: blrm));
+                }
+              }
+            } else {
+              emit(FetchSelectedBusinessFailedState(
+                  failedMessage: "Cannot Fetched Business"));
+            }
+          } else {
+            emit(FetchSelectedBusinessFailedState(
+              failedMessage: jsonResponse.message!,
+            ));
+          }
+        } else {
+          emit(FetchSelectedBusinessFailedState(
+            failedMessage:
+                'Request failed with status: ${response.statusCode}.',
+          ));
+        }
+      } on PlatformException {
         emit(FetchSelectedBusinessFailedState(
-            failedMessage: "Cannot Fetched Business"));
+          failedMessage: 'Failed to get platform version.',
+        ));
       }
     });
 
@@ -564,5 +616,198 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         ));
       }
     });
+
+    on<UpdateBusinessTextChangedEvent>((event, emit) async {
+      if (event.businessTaxNumber.isEmpty &&
+          event.businessContactNumber.isEmpty &&
+          (event.businessCountry == null) &&
+          event.businessWebsite.isEmpty &&
+          event.businessType.isEmpty &&
+          event.businessAddress.isEmpty &&
+          event.businessEmail.isEmpty &&
+          event.businessName.isEmpty) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessNameError: "Please enter business name",
+            businessEmailError: "Please enter business email",
+            businessAddressError: "Please select business address",
+            businessWebsiteError: "Please enter business website",
+            businessTypeError: "Please select business type",
+            businessTaxNumberError: "Please enter business GST Number"));
+      } else if (event.businessName.isEmpty) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessNameError: "Please enter business name",
+            businessCountryError: null,
+            businessContactNumberError: null,
+            businessEmailError: null,
+            businessAddressError: null,
+            businessWebsiteError: null,
+            businessTypeError: null,
+            businessTaxNumberError: null));
+      } else if (event.businessCountry == null) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessCountryError: "Please select Country name",
+            businessContactNumberError: null,
+            businessNameError: null,
+            businessEmailError: null,
+            businessAddressError: null,
+            businessWebsiteError: null,
+            businessTypeError: null,
+            businessTaxNumberError: null));
+      } else if ((event.businessContactNumber.isEmpty) ||
+          (!event.businessContactNumber.isValidContact())) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessContactNumberError: "Please enter proper Contact number",
+            businessCountryError: null,
+            businessEmailError: null,
+            businessNameError: null,
+            businessAddressError: null,
+            businessWebsiteError: null,
+            businessTypeError: null,
+            businessTaxNumberError: null));
+      } else if ((event.businessEmail.isEmpty) ||
+          (!event.businessEmail.isValidEmail())) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessEmailError: "Please enter proper business email",
+            businessCountryError: null,
+            businessContactNumberError: null,
+            businessNameError: null,
+            businessAddressError: null,
+            businessWebsiteError: null,
+            businessTypeError: null,
+            businessTaxNumberError: null));
+      } else if (event.businessAddress.isEmpty) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessCountryError: null,
+            businessContactNumberError: null,
+            businessNameError: null,
+            businessEmailError: null,
+            businessAddressError: "Please select business address",
+            businessWebsiteError: null,
+            businessTypeError: null,
+            businessTaxNumberError: null));
+      } else if (event.businessType.isEmpty) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessCountryError: null,
+            businessContactNumberError: null,
+            businessNameError: null,
+            businessEmailError: null,
+            businessWebsiteError: null,
+            businessTaxNumberError: null,
+            businessAddressError: null,
+            businessTypeError: "Please select business type"));
+      } else if (event.businessWebsite.isEmpty) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessCountryError: null,
+            businessContactNumberError: null,
+            businessNameError: null,
+            businessEmailError: null,
+            businessTypeError: null,
+            businessTaxNumberError: null,
+            businessAddressError: null,
+            businessWebsiteError: "Please enter business website"));
+      } else if (event.businessTaxNumber.isEmpty) {
+        emit(UpdateBusinessTextChangedErrorState(
+            businessCountryError: null,
+            businessContactNumberError: null,
+            businessNameError: null,
+            businessEmailError: null,
+            businessTypeError: null,
+            businessWebsiteError: null,
+            businessAddressError: null,
+            businessTaxNumberError: "Please enter business GST Number"));
+      } else {
+        emit(UpdateBusinessValidState());
+      }
+    });
+
+    on<UpdateBusinessEvent>((event, emit) async {
+      emit(UpdateBusinessLoadingState());
+      if (event.businessImage != null) {
+        await updateBusinessProfileImage(event, emit);
+      } else {
+        await updatePersonalProfile(event, emit);
+      }
+    });
+  }
+
+  updateBusinessProfileImage(
+      UpdateBusinessEvent event, Emitter<BusinessState> emit) async {
+    try {
+      var requestForImage = http.MultipartRequest(
+          'POST',
+          Uri.http(
+              APIPathList.mainDomain, APIPathList.updateBusinessProfileImage));
+      requestForImage.fields['id'] = event.businessId;
+      requestForImage.fields['token'] = 'bnbuujn';
+      requestForImage.fields['user_id'] = event.userId;
+
+      requestForImage.headers["HTTP_AUTHORIZATION"] =
+          '${DateTime.now().millisecondsSinceEpoch}';
+      requestForImage.files.add(await http.MultipartFile.fromPath(
+          "profile_image",
+          (event.businessImage != null) ? event.businessImage!.path : ''));
+
+      var responseBusinessProfileImage = await requestForImage.send();
+      if (responseBusinessProfileImage.statusCode == 200) {
+        print("Image uplodade success");
+        await updatePersonalProfile(event, emit);
+      } else {
+        emit(UpdateBusinessFailedState(
+            failedMessage:
+                'Request failed with status: ${responseBusinessProfileImage.statusCode}.'));
+      }
+    } on PlatformException {
+      emit(UpdateBusinessFailedState(
+          failedMessage: 'Failed to get platform version.'));
+    }
+  }
+
+  updatePersonalProfile(
+      UpdateBusinessEvent event, Emitter<BusinessState> emit) async {
+    var map = {};
+    try {
+      map['token'] = 'bnbuujn';
+      map['id'] = event.businessId;
+      map['user_id'] = event.userId;
+      map['b_name'] = event.businessName;
+      map['email'] = event.businessEmail;
+      map['mobile'] = event.businessContactNumber;
+      map['gst_no'] = event.businessTaxNumber;
+      map['website'] = event.businessWebsite;
+      map['address'] = event.businessAddress;
+      map['business_type'] = event.businessType;
+      print("Input Map :- $map");
+      http.Response response = await http.post(
+          Uri.http(
+              APIPathList.mainDomain, APIPathList.updateBusinessProfileData),
+          body: map,
+          headers: {
+            "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+          });
+      print(response.body);
+      if (response.statusCode == 200) {
+        UpdateBusinessResponseModel jsonResponse =
+            UpdateBusinessResponseModel.fromJson(
+                convert.jsonDecode(response.body));
+
+        if (jsonResponse.response != "failure") {
+          if (kDebugMode) {
+            print(jsonResponse.response.toString());
+          }
+
+          emit(UpdateBusinessSuccessState(
+              successMessage: jsonResponse.message!));
+        } else {
+          emit(UpdateBusinessFailedState(failedMessage: jsonResponse.message!));
+        }
+      } else {
+        emit(UpdateBusinessFailedState(
+            failedMessage:
+                'Request failed with status: ${response.statusCode}.'));
+      }
+    } on PlatformException {
+      emit(UpdateBusinessFailedState(
+          failedMessage: 'Failed to get platform version.'));
+    }
   }
 }

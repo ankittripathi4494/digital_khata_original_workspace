@@ -2,6 +2,8 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
 import 'package:dkapp/module/business/business_bloc/business_event.dart';
@@ -9,6 +11,8 @@ import 'package:dkapp/module/business/business_bloc/business_state.dart';
 import 'package:dkapp/module/business_type/model/business_type_list_response_model.dart';
 import 'package:dkapp/module/edit_profile/model/country_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/exceptions.dart';
+import 'package:dkapp/utils/image_list.dart';
 import 'package:dkapp/utils/location_handler.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/foundation.dart';
@@ -43,6 +47,7 @@ class _UpdateBusinessProfileScreenState
 
   TextEditingController businessContactController = TextEditingController();
   Map<String, dynamic>? sendUpdateAddress;
+  Map<String, dynamic>? sendUpdateContact;
   Map<String, dynamic>? sendUpdateBusinessType;
   String? signatureImageFile;
   final ImagePicker _picker = ImagePicker();
@@ -103,6 +108,8 @@ class _UpdateBusinessProfileScreenState
   }
 
   fillFormDetails() {
+    print(
+        "Fetched Data :- ${(widget.argus['businessProfileData'] as BusinessListResponseData).toJson().toString()}");
     LocationHandler.getCurrentPosition().then(
       (value) {
         LocationHandler.getCountryFromLatLng(value!).then((vw) {
@@ -264,168 +271,336 @@ class _UpdateBusinessProfileScreenState
           )
         ],
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            (callFunc == true)
-                ? EssentialWidgetsCollection.autoScheduleTask(
-                    context,
-                    childWidget: Container(),
-                    taskWaitDuration: Durations.medium2,
-                    task: () {
-                      Navigator.pop(context);
-                      BlocProvider.of<BusinessBloc>(context).add(
-                          SelectedBusinessDeleteEvent(
-                              userId: SharedPreferencesHelper()
-                                  .getString("userid")!,
-                              businessId: (widget.argus['businessProfileData']
-                                      as BusinessListResponseData)
-                                  .id!));
+      body: BlocBuilder<BusinessBloc, BusinessState>(
+        builder: (context, state) {
+          if (state is UpdateBusinessSuccessState) {
+            return EssentialWidgetsCollection.autoScheduleTask(
+              context,
+              childWidget: Container(),
+              taskWaitDuration: Durations.long2,
+              task: () {
+                EssentialWidgetsCollection.showSuccessSnackbar(
+                    context, state.successMessage);
 
-                      Navigator.pop(context);
-                      Navigator.pushReplacementNamed(
-                        context,
-                        '/business',
-                      );
-                    },
-                  )
-                : Container(),
-            SizedBox(
-              height: screenSize.height * 0.01,
-            ),
-            Stack(
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/business');
+              },
+            );
+          }
+          if (state is UpdateBusinessFailedState) {
+            return EssentialWidgetsCollection.autoScheduleTask(
+              context,
+              childWidget: Container(),
+              taskWaitDuration: Durations.long2,
+              task: () {
+                Navigator.pushReplacementNamed(
+                    context, '/update-business-profile',
+                    arguments: widget.argus);
+                EssentialWidgetsCollection.showErrorSnackbar(
+                    context, state.failedMessage);
+              },
+            );
+          }
+          if (state is UpdateBusinessLoadingState) {
+            return const Center(child: AnimatedImageLoader(),);
+          } 
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
               children: [
-                (retailerImage != null)
-                    ? CircleAvatar(
-                        backgroundColor: Colors.transparent,
-                        radius: 80,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(80),
-                              image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: FileImage(File(retailerImage!.path)))),
-                        ),
+                (callFunc == true)
+                    ? EssentialWidgetsCollection.autoScheduleTask(
+                        context,
+                        childWidget: Container(),
+                        taskWaitDuration: Durations.medium2,
+                        task: () {
+                          Navigator.pop(context);
+                          BlocProvider.of<BusinessBloc>(context).add(
+                              SelectedBusinessDeleteEvent(
+                                  userId: SharedPreferencesHelper()
+                                      .getString("userid")!,
+                                  businessId:
+                                      (widget.argus['businessProfileData']
+                                              as BusinessListResponseData)
+                                          .id!));
+
+                          Navigator.pop(context);
+                          Navigator.pushReplacementNamed(
+                            context,
+                            '/business',
+                          );
+                        },
                       )
-                    : CircleAvatar(
-                        backgroundColor: Colors.grey[300],
-                        radius: 80,
-                        child: Image.asset(
-                          'resources/images/house-icon-removebg-preview.png',
-                          height: 80,
-                          width: 80,
+                    : Container(),
+                SizedBox(
+                  height: screenSize.height * 0.01,
+                ),
+                Stack(
+                  children: [
+                    ((widget.argus['businessProfileData']
+                                    as BusinessListResponseData)
+                                .profile !=
+                            null)
+                        ? ((retailerImage != null)
+                            ? CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                radius: 80,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(80),
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: FileImage(
+                                              File(retailerImage!.path)))),
+                                ),
+                              )
+                            : CachedNetworkImage(
+                                imageUrl:
+                                    "${NetworkImagePathList.imagePath}${(widget.argus['businessProfileData'] as BusinessListResponseData).profile}",
+                                imageBuilder: (context, imageProvider) =>
+                                    CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  radius: 80,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(80),
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: imageProvider)),
+                                  ),
+                                ),
+                                placeholder: (context, url) => CircleAvatar(
+                                  backgroundColor: Colors.grey[300],
+                                  radius: 45,
+                                  child: const AnimatedImageLoader(),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    CircleAvatar(
+                                  backgroundColor: Colors.grey[300],
+                                  radius: 80,
+                                  child: Image.asset(
+                                    'resources/images/house-icon-removebg-preview.png',
+                                    height: 80,
+                                    width: 80,
+                                  ),
+                                ),
+                              ))
+                        : ((retailerImage != null)
+                            ? CircleAvatar(
+                                backgroundColor: Colors.transparent,
+                                radius: 80,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(80),
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: FileImage(
+                                              File(retailerImage!.path)))),
+                                ),
+                              )
+                            : CircleAvatar(
+                                backgroundColor: Colors.grey[300],
+                                radius: 80,
+                                child: Image.asset(
+                                  'resources/images/house-icon-removebg-preview.png',
+                                  height: 80,
+                                  width: 80,
+                                ),
+                              )),
+                    Positioned(
+                      top: screenSize.height * 0.11,
+                      left: screenSize.width * 0.26,
+                      child: CircleAvatar(
+                          backgroundColor:
+                              const Color.fromARGB(255, 31, 1, 102),
+                          radius: 23,
+                          child: IconButton(
+                              onPressed: () async {
+                                EssentialWidgetsCollection.showAlertDialog(
+                                    context,
+                                    icon: const Text(
+                                      'Choose an Option',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    title: TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Colors.black,
+                                          alignment: Alignment.centerLeft,
+                                          visualDensity: const VisualDensity(
+                                              horizontal: 0, vertical: -4),
+                                          textStyle: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        onPressed: () async {
+                                          retailerImage =
+                                              await _picker.pickImage(
+                                                  maxHeight: 480,
+                                                  maxWidth: 640,
+                                                  source: ImageSource.gallery);
+                                          debugPrint(
+                                              "Captured Image From gallery :- ${retailerImage!.path}");
+                                          setState(() {
+                                            retailerImageFile =
+                                                retailerImage!.path;
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text("Choose from gallery"
+                                            .toTitleCase())),
+                                    content: TextButton(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Colors.black,
+                                          alignment: Alignment.centerLeft,
+                                          visualDensity: const VisualDensity(
+                                              horizontal: 0, vertical: -4),
+                                          textStyle: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                        onPressed: () async {
+                                          retailerImage =
+                                              await _picker.pickImage(
+                                                  maxHeight: 480,
+                                                  maxWidth: 640,
+                                                  source: ImageSource.camera);
+                                          debugPrint(
+                                              "Captured Image From Camera :- ${retailerImage!.path}");
+                                          setState(() {
+                                            retailerImageFile =
+                                                retailerImage!.path;
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "Take a Picture".toTitleCase(),
+                                        )));
+                              },
+                              icon: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                                size: 23,
+                              ))),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              // right: screenSize.width * 0.55,
+                              top: screenSize.height * 0.01),
+                          child: const Text(
+                            'Business Name',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
                         ),
                       ),
-                Positioned(
-                  top: screenSize.height * 0.11,
-                  left: screenSize.width * 0.26,
-                  child: CircleAvatar(
-                      backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-                      radius: 23,
-                      child: IconButton(
-                          onPressed: () async {
-                            retailerImage = await _picker.pickImage(
-                                maxHeight: 480,
-                                maxWidth: 640,
-                                source: ImageSource.gallery);
-                            debugPrint(
-                                "Captured Image From Camera :- ${retailerImage!.path}");
-                            setState(() {
-                              retailerImageFile = retailerImage!.path;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.camera_alt,
-                            color: Colors.white,
-                            size: 23,
-                          ))),
-                )
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30.0),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.55,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'Business Name',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  TextFormField(
-                    key: _formKey,
-                    controller: businessNameController,
-                    textCapitalization: TextCapitalization.words,
-                    style: const TextStyle(color: Colors.black),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Business name can\'t be empty';
-                      } else {
-                        return null;
-                      }
-                    },
-                    onChanged: (value) {
-                      // if (_formKey.currentState!.validate()) {
-                      //   print("Validated");
-                      // } else {
-                      //   print("Not Validated");
-                      // }
-                    },
-                    keyboardType: TextInputType.name,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      hintText: 'Kiran',
-                      hintStyle: const TextStyle(color: Colors.black),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 31, 1, 102),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      TextFormField(
+                        key: _formKey,
+                        controller: businessNameController,
+                        textCapitalization: TextCapitalization.words,
+                        style: const TextStyle(color: Colors.black),
+                        onChanged: (value) {
+                          BlocProvider.of<BusinessBloc>(context).add(
+                              UpdateBusinessTextChangedEvent(
+                                  businessName: businessNameController.text,
+                                  businessContactNumber:
+                                      businessContactController.text,
+                                  businessCountry: selectedCountry,
+                                  businessType: businessTypeController.text,
+                                  businessAddress:
+                                      businessAddressController.text,
+                                  businessWebsite:
+                                      businessWebsiteController.text,
+                                  businessEmail: businessEmailController.text,
+                                  businessTaxNumber:
+                                      businessTaxController.text));
+                        },
+                        keyboardType: TextInputType.name,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          errorText:
+                              (state is UpdateBusinessTextChangedErrorState)
+                                  ? state.businessNameError
+                                  : null,
+                          errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 31, 1, 102),
+                              ),
+                              borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              // right: screenSize.width * 0.55,
+                              top: screenSize.height * 0.01),
+                          child: const Text(
+                            'Mobile number',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
                           ),
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.55,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'Mobile number',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Flexible(
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      InkWell(
+                        onTap: () => (sendUpdateContact != null)
+                            ? _navigateAndGetVerifiedContactUpdate(context)
+                            : _navigateAndGetVerifiedContact(context),
                         child: TextFormField(
                           controller: businessContactController,
                           textCapitalization: TextCapitalization.words,
+                          enabled: false,
+                          maxLength: 10,
                           style: const TextStyle(color: Colors.black),
-                          keyboardType: TextInputType.name,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
                           cursorColor: Colors.black,
                           decoration: InputDecoration(
-                            // hintText: '+919867544367',
-                            // hintStyle: const TextStyle(color: Colors.grey),
+                            suffixIcon: const Icon(Icons.send_to_mobile),
+                            counterText: '',
+                            errorText:
+                                (state is UpdateBusinessTextChangedErrorState)
+                                    ? state.businessContactNumberError
+                                    : null,
+                            errorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(color: Colors.red),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            hintText: '+919867544367',
+                            hintStyle: const TextStyle(color: Colors.grey),
                             enabledBorder: OutlineInputBorder(
                                 borderSide:
                                     const BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            disabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 31, 1, 102),
+                                ),
                                 borderRadius: BorderRadius.circular(8.0)),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -435,346 +610,478 @@ class _UpdateBusinessProfileScreenState
                           ),
                         ),
                       ),
-                      IconButton(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.deepPurple,
-                          foregroundColor: Colors.white,
+                      SizedBox(
+                        height: screenSize.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              // right: screenSize.width * 0.5,
+                              top: screenSize.height * 0.01),
+                          child: const Text(
+                            'Business Address',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
                         ),
-                        onPressed: () {},
-                        icon: const Icon(Icons.send_to_mobile),
-                      )
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      DropdownButtonFormField<CountryResponseData>(
+                        isExpanded: true,
+                        value: selectedCountry,
+                        decoration: InputDecoration(
+                          errorText:
+                              (state is UpdateBusinessTextChangedErrorState)
+                                  ? state.businessCountryError
+                                  : null,
+                          errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          border: OutlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Colors.deepPurple),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          // hintText: 'India (IN)',
+                          // hintStyle: const TextStyle(color: Colors.black),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          // focusedBorder: OutlineInputBorder(
+                          //     borderSide: const BorderSide(color: Colors.grey),
+                          //     borderRadius: BorderRadius.circular(8.0)),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                        items: countryList
+                            ?.map<DropdownMenuItem<CountryResponseData>>((c) {
+                          return DropdownMenuItem(
+                              value: c, child: Text(c.name!));
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedCountry = value;
+                          });
+                          BlocProvider.of<BusinessBloc>(context).add(
+                              UpdateBusinessTextChangedEvent(
+                                  businessName: businessNameController.text,
+                                  businessContactNumber:
+                                      businessContactController.text,
+                                  businessCountry: selectedCountry,
+                                  businessType: businessTypeController.text,
+                                  businessAddress:
+                                      businessAddressController.text,
+                                  businessWebsite:
+                                      businessWebsiteController.text,
+                                  businessEmail: businessEmailController.text,
+                                  businessTaxNumber:
+                                      businessTaxController.text));
+                        },
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              // right: screenSize.width * 0.4,
+                              top: screenSize.height * 0.01),
+                          child: const Text(
+                            'What your business do?',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      InkWell(
+                        onTap: () => (sendUpdateBusinessType != null)
+                            ? _navigateAndGetResultBusinessTypeUpdate(context)
+                            : _navigateAndGetResultBusinessType(context),
+                        child: TextFormField(
+                          controller: businessTypeController,
+                          enableInteractiveSelection: false,
+                          enabled: false,
+                          // onTap: () {
+                          //   showGroupsPopup(context);
+                          // },
+                          textCapitalization: TextCapitalization.words,
+                          style: const TextStyle(color: Colors.black),
+                          keyboardType: TextInputType.name,
+                          cursorColor: Colors.black,
+                          decoration: InputDecoration(
+                            errorText:
+                                (state is UpdateBusinessTextChangedErrorState)
+                                    ? state.businessTypeError
+                                    : null,
+                            errorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(color: Colors.red),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            // hintText: 'Education and Training',
+                            // hintStyle: const TextStyle(color: Colors.black),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            // focusedBorder: OutlineInputBorder(
+                            //     borderSide: const BorderSide(color: Colors.grey),
+                            //     borderRadius: BorderRadius.circular(8.0)),
+                            disabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              // right: screenSize.width * 0.5,
+                              top: screenSize.height * 0.01),
+                          child: const Text(
+                            'Business Address',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      InkWell(
+                        onTap: () => (sendUpdateAddress != null)
+                            ? _navigateAndGetResultAddressUpdate(context)
+                            : _navigateAndGetResultAddress(context),
+                        child: TextFormField(
+                          controller: businessAddressController,
+                          enableInteractiveSelection: false,
+                          enabled: false,
+                          // onTap: () {
+                          //   showGroupsPopup(context);
+                          // },
+                          textCapitalization: TextCapitalization.words,
+                          style: const TextStyle(color: Colors.black),
+                          keyboardType: TextInputType.name,
+                          cursorColor: Colors.black,
+                          decoration: InputDecoration(
+                            errorText:
+                                (state is UpdateBusinessTextChangedErrorState)
+                                    ? state.businessAddressError
+                                    : null,
+                            errorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(color: Colors.red),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            // hintText: 'Address',
+                            // hintStyle: const TextStyle(color: Colors.grey),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            // focusedBorder: OutlineInputBorder(
+                            //     borderSide: const BorderSide(color: Colors.grey),
+                            //     borderRadius: BorderRadius.circular(8.0)),
+                            disabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            // right: screenSize.width * 0.4,
+                            top: screenSize.height * 0.01,
+                          ),
+                          child: const Text(
+                            'Business Email Address',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      TextFormField(
+                        controller: businessEmailController,
+                        onChanged: (value) {
+                          BlocProvider.of<BusinessBloc>(context).add(
+                              UpdateBusinessTextChangedEvent(
+                                  businessName: businessNameController.text,
+                                  businessContactNumber:
+                                      businessContactController.text,
+                                  businessCountry: selectedCountry,
+                                  businessType: businessTypeController.text,
+                                  businessAddress:
+                                      businessAddressController.text,
+                                  businessWebsite:
+                                      businessWebsiteController.text,
+                                  businessEmail: businessEmailController.text,
+                                  businessTaxNumber:
+                                      businessTaxController.text));
+                        },
+                        enabled: true,
+                        style: const TextStyle(color: Colors.black),
+                        keyboardType: TextInputType.name,
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                          // hintText: 'sample@gmail.com',
+                          // hintStyle: const TextStyle(color: Colors.black),
+                          errorText:
+                              (state is UpdateBusinessTextChangedErrorState)
+                                  ? state.businessEmailError
+                                  : null,
+                          errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 31, 1, 102),
+                              ),
+                              borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          right: screenSize.width * 0.47,
+                        ),
+                        child: const Text(
+                          'you will get monthly report on this mail ID',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(color: Colors.grey, fontSize: 8),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            // right: screenSize.width * 0.68,
+                            top: screenSize.height * 0.01,
+                          ),
+                          child: const Text(
+                            'Website',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      TextFormField(
+                        controller: businessWebsiteController,
+                        enableInteractiveSelection: true,
+                        enabled: true,
+                        style: const TextStyle(color: Colors.black),
+                        keyboardType: TextInputType.name,
+                        cursorColor: Colors.black,
+                        onChanged: (value) {
+                          BlocProvider.of<BusinessBloc>(context).add(
+                              UpdateBusinessTextChangedEvent(
+                                  businessName: businessNameController.text,
+                                  businessContactNumber:
+                                      businessContactController.text,
+                                  businessCountry: selectedCountry,
+                                  businessType: businessTypeController.text,
+                                  businessAddress:
+                                      businessAddressController.text,
+                                  businessWebsite:
+                                      businessWebsiteController.text,
+                                  businessEmail: businessEmailController.text,
+                                  businessTaxNumber:
+                                      businessTaxController.text));
+                        },
+                        decoration: InputDecoration(
+                          // hintText: 'Eg.www.sample.com',
+                          // hintStyle: const TextStyle(color: Colors.grey),
+                          errorText:
+                              (state is UpdateBusinessTextChangedErrorState)
+                                  ? state.businessWebsiteError
+                                  : null,
+
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 31, 1, 102),
+                              ),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.02,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            // right: screenSize.width * 0.41,
+                            top: screenSize.height * 0.01,
+                          ),
+                          child: const Text(
+                            'Business Tax Number',
+                            textAlign: TextAlign.start,
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.01,
+                      ),
+                      TextFormField(
+                        controller: businessTaxController,
+                        enableInteractiveSelection: true,
+                        enabled: true,
+                        style: const TextStyle(color: Colors.black),
+                        keyboardType: TextInputType.name,
+                        cursorColor: Colors.black,
+                        onChanged: (value) {
+                          BlocProvider.of<BusinessBloc>(context).add(
+                              UpdateBusinessTextChangedEvent(
+                                  businessName: businessNameController.text,
+                                  businessContactNumber:
+                                      businessContactController.text,
+                                  businessCountry: selectedCountry,
+                                  businessType: businessTypeController.text,
+                                  businessAddress:
+                                      businessAddressController.text,
+                                  businessWebsite:
+                                      businessWebsiteController.text,
+                                  businessEmail: businessEmailController.text,
+                                  businessTaxNumber:
+                                      businessTaxController.text));
+                        },
+                        decoration: InputDecoration(
+                          errorText:
+                              (state is UpdateBusinessTextChangedErrorState)
+                                  ? state.businessTaxNumberError
+                                  : null,
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 31, 1, 102),
+                              ),
+                              borderRadius: BorderRadius.circular(8.0)),
+                          errorBorder: OutlineInputBorder(
+                              borderSide: const BorderSide(color: Colors.red),
+                              borderRadius: BorderRadius.circular(8.0)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenSize.height * 0.06,
+                      ),
+                      (state is UpdateBusinessLoadingState)
+                          ? const Center(
+                              child: AnimatedImageLoader(),
+                            )
+                          : ((state is UpdateBusinessValidState)
+                              ? InkWell(
+                                  onTap: () async {
+                                    BlocProvider.of<BusinessBloc>(context)
+                                        .add(UpdateBusinessEvent(
+                                      businessName: businessNameController.text,
+                                      businessType: businessTypeController.text,
+                                      businessAddress:
+                                          businessAddressController.text,
+                                      businessEmail:
+                                          businessEmailController.text,
+                                      businessWebsite:
+                                          businessWebsiteController.text,
+                                      businessTaxNumber:
+                                          businessTaxController.text,
+                                      userId: SharedPreferencesHelper()
+                                          .getString("userid")!,
+                                      businessId: ((widget.argus[
+                                                          'businessProfileData']
+                                                      as BusinessListResponseData)
+                                                  .id !=
+                                              null)
+                                          ? (widget.argus['businessProfileData']
+                                                  as BusinessListResponseData)
+                                              .id!
+                                          : '',
+                                      businessContactNumber:
+                                          businessContactController.text,
+                                      businessCountry: selectedCountry!,
+                                      businessImage: (retailerImage != null)
+                                          ? retailerImage
+                                          : null,
+                                      businessImageName: (retailerImage != null)
+                                          ? retailerImage!.path
+                                          : '',
+                                    ));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.35,
+                                        vertical: screenSize.height * 0.016),
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 31, 1, 102),
+                                        borderRadius:
+                                            BorderRadius.circular(30.0)),
+                                    child: const Text(
+                                      'Save',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: screenSize.width * 0.35,
+                                      vertical: screenSize.height * 0.016),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
+                                  child: const Text(
+                                    'Save',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15),
+                                  ),
+                                )),
+                      SizedBox(
+                        height: screenSize.height * 0.04,
+                      ),
                     ],
                   ),
-                  SizedBox(
-                    height: screenSize.height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.5,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'Business Address',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  DropdownButtonFormField<CountryResponseData>(
-                    value: selectedCountry,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide:
-                              const BorderSide(color: Colors.deepPurple),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      // hintText: 'India (IN)',
-                      // hintStyle: const TextStyle(color: Colors.black),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      // focusedBorder: OutlineInputBorder(
-                      //     borderSide: const BorderSide(color: Colors.grey),
-                      //     borderRadius: BorderRadius.circular(8.0)),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                    items: countryList
-                        ?.map<DropdownMenuItem<CountryResponseData>>((c) {
-                      return DropdownMenuItem(value: c, child: Text(c.name!));
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        selectedCountry = value;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.4,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'What your business do?',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  InkWell(
-                    onTap: () => (sendUpdateBusinessType != null)
-                        ? _navigateAndGetResultBusinessTypeUpdate(context)
-                        : _navigateAndGetResultBusinessType(context),
-                    child: TextFormField(
-                      controller: businessTypeController,
-                      enableInteractiveSelection: false,
-                      enabled: false,
-                      // onTap: () {
-                      //   showGroupsPopup(context);
-                      // },
-                      textCapitalization: TextCapitalization.words,
-                      style: const TextStyle(color: Colors.black),
-                      keyboardType: TextInputType.name,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        hintText: 'Education and Training',
-                        hintStyle: const TextStyle(color: Colors.black),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        // focusedBorder: OutlineInputBorder(
-                        //     borderSide: const BorderSide(color: Colors.grey),
-                        //     borderRadius: BorderRadius.circular(8.0)),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.5,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'Business Address',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  InkWell(
-                    onTap: () => (sendUpdateAddress != null)
-                        ? _navigateAndGetResultAddressUpdate(context)
-                        : _navigateAndGetResultAddress(context),
-                    child: TextFormField(
-                      controller: businessAddressController,
-                      enableInteractiveSelection: false,
-                      enabled: false,
-                      // onTap: () {
-                      //   showGroupsPopup(context);
-                      // },
-                      textCapitalization: TextCapitalization.words,
-                      style: const TextStyle(color: Colors.black),
-                      keyboardType: TextInputType.name,
-                      cursorColor: Colors.black,
-                      decoration: InputDecoration(
-                        hintText: 'Address',
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        // focusedBorder: OutlineInputBorder(
-                        //     borderSide: const BorderSide(color: Colors.grey),
-                        //     borderRadius: BorderRadius.circular(8.0)),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: screenSize.width * 0.4,
-                      top: screenSize.height * 0.01,
-                    ),
-                    child: const Text(
-                      'Business Email Address',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  TextFormField(
-                    controller: businessEmailController,
-                    // controller: emailController,
-                    // key: _formKey,
-                    // onChanged: (value) {
-                    //   if (_formKey.currentState!.validate()) {
-                    //     print("Validated");
-                    //   } else {
-                    //     print("Not Validated");
-                    //   }
-                    // },
-                    // onTap: () {
-                    //   _formKey.currentState!.validate();
-                    // },
-                    // validator: (value) {
-                    //   if (value!.isEmpty) {
-                    //     return 'you will get monthly report on this mail ID';
-                    //   } else {
-                    //     return null;
-                    //   }
-                    // },
-                    // onTap: () {
-                    // if (_formKey.currentState!.validate()) {
-                    //   return print('validated');
-                    // } else {
-                    //   return print('Not Validated');
-                    // }
-                    // },
-                    // enableInteractiveSelection: true,
-                    enabled: true,
-                    style: const TextStyle(color: Colors.black),
-                    keyboardType: TextInputType.name,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      // hintText: 'sample@gmail.com',
-                      // hintStyle: const TextStyle(color: Colors.black),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 31, 1, 102),
-                          ),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: screenSize.width * 0.47,
-                    ),
-                    child: const Text(
-                      'you will get monthly report on this mail ID',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.grey, fontSize: 8),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: screenSize.width * 0.68,
-                      top: screenSize.height * 0.01,
-                    ),
-                    child: const Text(
-                      'Website',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  TextFormField(
-                    controller: businessWebsiteController,
-                    enableInteractiveSelection: true,
-                    enabled: true,
-                    style: const TextStyle(color: Colors.black),
-                    keyboardType: TextInputType.name,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      // hintText: 'Eg.www.sample.com',
-                      // hintStyle: const TextStyle(color: Colors.grey),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 31, 1, 102),
-                          ),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: screenSize.width * 0.41,
-                      top: screenSize.height * 0.01,
-                    ),
-                    child: const Text(
-                      'Business Tax Number',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  TextFormField(
-                    controller: businessTaxController,
-                    enableInteractiveSelection: true,
-                    enabled: true,
-                    style: const TextStyle(color: Colors.black),
-                    keyboardType: TextInputType.name,
-                    cursorColor: Colors.black,
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Color.fromARGB(255, 31, 1, 102),
-                          ),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      errorBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(8.0)),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.06,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        if (kDebugMode) {
-                          print("Validated");
-                        }
-                      } else {
-                        if (kDebugMode) {
-                          print("Not Validated");
-                        }
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.35,
-                          vertical: screenSize.height * 0.016),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 31, 1, 102),
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.04,
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -797,6 +1104,15 @@ class _UpdateBusinessProfileScreenState
         sendUpdateAddress = res;
       });
     }
+    BlocProvider.of<BusinessBloc>(context).add(UpdateBusinessTextChangedEvent(
+        businessName: businessNameController.text,
+        businessContactNumber: businessContactController.text,
+        businessCountry: selectedCountry,
+        businessType: businessTypeController.text,
+        businessAddress: businessAddressController.text,
+        businessWebsite: businessWebsiteController.text,
+        businessEmail: businessEmailController.text,
+        businessTaxNumber: businessTaxController.text));
   }
 
   _navigateAndGetResultAddressUpdate(BuildContext context) async {
@@ -820,6 +1136,15 @@ class _UpdateBusinessProfileScreenState
         sendUpdateAddress = res;
       });
     }
+    BlocProvider.of<BusinessBloc>(context).add(UpdateBusinessTextChangedEvent(
+        businessName: businessNameController.text,
+        businessContactNumber: businessContactController.text,
+        businessCountry: selectedCountry,
+        businessType: businessTypeController.text,
+        businessAddress: businessAddressController.text,
+        businessWebsite: businessWebsiteController.text,
+        businessEmail: businessEmailController.text,
+        businessTaxNumber: businessTaxController.text));
   }
 
   _navigateAndGetResultBusinessType(BuildContext context) async {
@@ -892,6 +1217,15 @@ class _UpdateBusinessProfileScreenState
         sendUpdateBusinessType = rese;
       });
     }
+    BlocProvider.of<BusinessBloc>(context).add(UpdateBusinessTextChangedEvent(
+        businessName: businessNameController.text,
+        businessContactNumber: businessContactController.text,
+        businessCountry: selectedCountry,
+        businessType: businessTypeController.text,
+        businessAddress: businessAddressController.text,
+        businessWebsite: businessWebsiteController.text,
+        businessEmail: businessEmailController.text,
+        businessTaxNumber: businessTaxController.text));
   }
 
   _navigateAndGetResultBusinessTypeUpdate(BuildContext context) async {
@@ -969,5 +1303,69 @@ class _UpdateBusinessProfileScreenState
         sendUpdateBusinessType = resa;
       });
     }
+    BlocProvider.of<BusinessBloc>(context).add(UpdateBusinessTextChangedEvent(
+        businessName: businessNameController.text,
+        businessContactNumber: businessContactController.text,
+        businessCountry: selectedCountry,
+        businessType: businessTypeController.text,
+        businessAddress: businessAddressController.text,
+        businessWebsite: businessWebsiteController.text,
+        businessEmail: businessEmailController.text,
+        businessTaxNumber: businessTaxController.text));
+  }
+
+  _navigateAndGetVerifiedContact(BuildContext context) async {
+    String outputResultVerfiedContact = "";
+    final Map<String, dynamic>? resa =
+        await Navigator.pushNamed(context, '/contact-verification', arguments: {
+      "contactData": businessContactController.text,
+    }) as Map<String, dynamic>?;
+    print("Coming data:- ${resa!['contactDataPass']}");
+
+    setState(() {
+      outputResultVerfiedContact = resa['contactDataPass'];
+      businessContactController.text = outputResultVerfiedContact;
+    });
+    if (resa != null) {
+      setState(() {
+        sendUpdateContact = resa;
+      });
+    }
+    BlocProvider.of<BusinessBloc>(context).add(UpdateBusinessTextChangedEvent(
+        businessName: businessNameController.text,
+        businessContactNumber: businessContactController.text,
+        businessCountry: selectedCountry,
+        businessType: businessTypeController.text,
+        businessAddress: businessAddressController.text,
+        businessWebsite: businessWebsiteController.text,
+        businessEmail: businessEmailController.text,
+        businessTaxNumber: businessTaxController.text));
+  }
+
+  _navigateAndGetVerifiedContactUpdate(BuildContext context) async {
+    final Map<String, dynamic>? res =
+        await Navigator.pushNamed(context, '/contact-verification', arguments: {
+      "contactData": sendUpdateContact!['contactDataPass'],
+    }) as Map<String, dynamic>?;
+
+    // Sending result back to FirstScreen
+    print("Selected Contact:- ${res!['contactDataPass'].toString()}");
+
+    businessContactController.clear();
+    businessContactController.text = res['contactDataPass'];
+    if (res != null) {
+      setState(() {
+        sendUpdateContact = res;
+      });
+    }
+    BlocProvider.of<BusinessBloc>(context).add(UpdateBusinessTextChangedEvent(
+        businessName: businessNameController.text,
+        businessContactNumber: businessContactController.text,
+        businessCountry: selectedCountry,
+        businessType: businessTypeController.text,
+        businessAddress: businessAddressController.text,
+        businessWebsite: businessWebsiteController.text,
+        businessEmail: businessEmailController.text,
+        businessTaxNumber: businessTaxController.text));
   }
 }

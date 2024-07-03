@@ -5,10 +5,10 @@ import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_event.dart';
 import 'package:dkapp/module/business_type/model/business_type_list_response_model.dart';
+import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../business/business_bloc/business_bloc.dart';
 import '../business/business_bloc/business_state.dart';
@@ -74,7 +74,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                   task: () {
                     EssentialWidgetsCollection.showSuccessSnackbar(
                         context, state.successMessage);
-                
+
                     Navigator.pop(context);
                     Navigator.pushNamed(context, '/dashboard');
                   },
@@ -86,8 +86,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                   childWidget: Container(),
                   taskWaitDuration: Durations.long2,
                   task: () {
-                    Navigator.pushReplacementNamed(
-                        context, '/add-new-business',
+                    Navigator.pushReplacementNamed(context, '/add-new-business',
                         arguments: widget.argus);
                     EssentialWidgetsCollection.showErrorSnackbar(
                         context, state.failedMessage);
@@ -165,15 +164,18 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 30.0),
                         child: Column(
                           children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right: screenSize.width * 0.55,
-                                  top: screenSize.height * 0.01),
-                              child: const Text(
-                                'Business Name',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    // right: screenSize.width * 0.55,
+                                    top: screenSize.height * 0.01),
+                                child: const Text(
+                                  'Business Name',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -227,15 +229,18 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                             SizedBox(
                               height: screenSize.height * 0.02,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right: screenSize.width * 0.4,
-                                  top: screenSize.height * 0.01),
-                              child: const Text(
-                                'What your business do?',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    // right: screenSize.width * 0.4,
+                                    top: screenSize.height * 0.01),
+                                child: const Text(
+                                  'What your business do?',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -288,15 +293,18 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                             SizedBox(
                               height: screenSize.height * 0.02,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  right: screenSize.width * 0.5,
-                                  top: screenSize.height * 0.01),
-                              child: const Text(
-                                'Business Address',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                    // right: screenSize.width * 0.5,
+                                    top: screenSize.height * 0.01),
+                                child: const Text(
+                                  'Business Address',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -348,16 +356,19 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                             SizedBox(
                               height: screenSize.height * 0.02,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                right: screenSize.width * 0.4,
-                                top: screenSize.height * 0.01,
-                              ),
-                              child: const Text(
-                                'Business Email Address',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  // right: screenSize.width * 0.4,
+                                  top: screenSize.height * 0.01,
+                                ),
+                                child: const Text(
+                                  'Business Email Address',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -421,16 +432,19 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                             SizedBox(
                               height: screenSize.height * 0.02,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                right: screenSize.width * 0.68,
-                                top: screenSize.height * 0.01,
-                              ),
-                              child: const Text(
-                                'Website',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  // right: screenSize.width * 0.68,
+                                  top: screenSize.height * 0.01,
+                                ),
+                                child: const Text(
+                                  'Website',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -484,16 +498,19 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                             SizedBox(
                               height: screenSize.height * 0.02,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                right: screenSize.width * 0.41,
-                                top: screenSize.height * 0.01,
-                              ),
-                              child: const Text(
-                                'Business Tax Number',
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  // right: screenSize.width * 0.41,
+                                  top: screenSize.height * 0.01,
+                                ),
+                                child: const Text(
+                                  'Business Tax Number',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -552,10 +569,6 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                                 : ((state is AddNewBusinessValidState)
                                     ? InkWell(
                                         onTap: () async {
-                                          SharedPreferences prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-
                                           BlocProvider.of<BusinessBloc>(context)
                                               .add(AddNewBusinessEvent(
                                                   businessName:
@@ -576,8 +589,10 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                                                   businessTaxNumber:
                                                       businessTaxController
                                                           .text,
-                                                  userId: prefs
-                                                      .getString("userid")!));
+                                                  userId:
+                                                      SharedPreferencesHelper()
+                                                          .getString(
+                                                              "userid")!));
                                         },
                                         child: Container(
                                           padding: EdgeInsets.symmetric(

@@ -1,3 +1,4 @@
+import 'package:dkapp/module/business/contact_verifiction_screen.dart';
 import 'package:dkapp/module/business/manage_user_groups.dart';
 import 'package:dkapp/module/customers/add_customer_screen.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_bloc.dart';
@@ -994,6 +995,25 @@ class RouteAccessGenerator {
               argus: const {},
             ),
           ),
+        );
+      case '/contact-verification':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: ContactVerificationScreen(
+              argus: arguments,
+            ),
+            fullscreenDialog: true
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: ContactVerificationScreen(
+            argus: const {},
+          ),
+           fullscreenDialog: true
         );
 
       case '/upi-payment':

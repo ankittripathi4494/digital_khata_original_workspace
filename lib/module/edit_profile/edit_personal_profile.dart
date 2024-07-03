@@ -328,14 +328,17 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.63,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'Your Name',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          // right: screenSize.width * 0.56,
+                          top: screenSize.height * 0.01),
+                      child: const Text(
+                        'Your Name',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -378,14 +381,17 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                   SizedBox(
                     height: screenSize.height * 0.02,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.56,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'Mobile Number',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                  Align(
+                     alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          // right: screenSize.width * 0.56,
+                          top: screenSize.height * 0.01),
+                      child: const Text(
+                        'Mobile Number',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
                     ),
                   ),
                   TextFormField(
@@ -430,20 +436,24 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                   SizedBox(
                     height: screenSize.height * 0.02,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: screenSize.width * 0.7,
-                        top: screenSize.height * 0.01),
-                    child: const Text(
-                      'Country',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                  Align(
+                     alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          // right: screenSize.width * 0.7,
+                          top: screenSize.height * 0.01),
+                      child: const Text(
+                        'Country',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
                     ),
                   ),
                   SizedBox(
                     height: screenSize.height * 0.01,
                   ),
                   DropdownButtonFormField<CountryResponseData>(
+                    isExpanded: true,
                     value: selectedCountry,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
@@ -459,7 +469,9 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     ),
                     items: countryList
                         ?.map<DropdownMenuItem<CountryResponseData>>((c) {
-                      return DropdownMenuItem(value: c, child: Text(c.name!));
+                      return DropdownMenuItem(value: c, child: Text(c.name!, 
+                      
+                      overflow: TextOverflow.ellipsis,));
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
@@ -470,15 +482,18 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                   SizedBox(
                     height: screenSize.height * 0.02,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: screenSize.width * 0.57,
-                      top: screenSize.height * 0.01,
-                    ),
-                    child: const Text(
-                      'Email Address',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                  Align(
+                     alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        // right: screenSize.width * 0.57,
+                        top: screenSize.height * 0.01,
+                      ),
+                      child: const Text(
+                        'Email Address',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -517,15 +532,18 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                   SizedBox(
                     height: screenSize.height * 0.02,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      right: screenSize.width * 0.59,
-                      top: screenSize.height * 0.01,
-                    ),
-                    child: const Text(
-                      'Date of Birth',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                  Align(
+                     alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        // right: screenSize.width * 0.59,
+                        top: screenSize.height * 0.01,
+                      ),
+                      child: const Text(
+                        'Date of Birth',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(color: Colors.black, fontSize: 18),
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -588,8 +606,9 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                       // updatePersonalProfileImage();
                     },
                     child: Container(
+                     
                       padding: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.38,
+                          horizontal: screenSize.width * 0.35,
                           vertical: screenSize.height * 0.016),
                       decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 31, 1, 102),
@@ -688,4 +707,5 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
           context, 'Failed to get platform version.');
     }
   }
+
 }

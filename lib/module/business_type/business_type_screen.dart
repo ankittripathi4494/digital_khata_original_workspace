@@ -40,43 +40,52 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
     if ((widget.argus.containsKey('selectedData')) &&
         (!widget.argus.containsKey('choices'))) {
       print(widget.argus['selectedData']);
-      BlocProvider.of<BusinessTypeBloc>(context)
-          .add(BusinessTypeListSelectedFilterEvent(
-        userId: prefs.getString("userid")!,
-        searchText: searchTextController.text,
-        selectedDataList: List<BusinessTypeListResponseData>.from(
-            widget.argus['selectedData']),
-        choiceList: [],
-      ));
+      BlocProvider.of<BusinessTypeBloc>(context).add(
+          BusinessTypeListSelectedFilterEvent(
+              userId: prefs.getString("userid")!,
+              searchText: searchTextController.text,
+              selectedDataList: List<BusinessTypeListResponseData>.from(
+                  widget.argus['selectedData']),
+              choiceList: [],
+              choiceAndType: ''));
     } else if ((!widget.argus.containsKey('selectedData')) &&
         (widget.argus.containsKey('choices'))) {
       print(widget.argus['choices']);
-      BlocProvider.of<BusinessTypeBloc>(context)
-          .add(BusinessTypeListSelectedFilterEvent(
-        userId: prefs.getString("userid")!,
-        searchText: searchTextController.text,
-        selectedDataList: [],
-        choiceList: List<String>.from(widget.argus['choices']),
-      ));
+      BlocProvider.of<BusinessTypeBloc>(context).add(
+          BusinessTypeListSelectedFilterEvent(
+              userId: prefs.getString("userid")!,
+              searchText: searchTextController.text,
+              selectedDataList: [],
+              choiceList: List<String>.from(widget.argus['choices']),
+              choiceAndType: ''));
     } else if ((widget.argus.containsKey('selectedData')) &&
         (widget.argus.containsKey('choices'))) {
       print(widget.argus['choices']);
 
-      BlocProvider.of<BusinessTypeBloc>(context)
-          .add(BusinessTypeListSelectedFilterEvent(
-        userId: prefs.getString("userid")!,
-        searchText: searchTextController.text,
-        selectedDataList: List<BusinessTypeListResponseData>.from(
-            widget.argus['selectedData']),
-        choiceList: List<String>.from(widget.argus['choices']),
-      ));
+      BlocProvider.of<BusinessTypeBloc>(context).add(
+          BusinessTypeListSelectedFilterEvent(
+              userId: prefs.getString("userid")!,
+              searchText: searchTextController.text,
+              selectedDataList: List<BusinessTypeListResponseData>.from(
+                  widget.argus['selectedData']),
+              choiceList: List<String>.from(widget.argus['choices']),
+              choiceAndType: ''));
+    } else if ((widget.argus.containsKey('choicesAndType'))) {
+      
+      BlocProvider.of<BusinessTypeBloc>(context).add(
+          BusinessTypeListSelectedFilterEvent(
+              userId: prefs.getString("userid")!,
+              searchText: searchTextController.text,
+              selectedDataList: [],
+              choiceList: [],
+              choiceAndType: widget.argus['choicesAndType'].toString()));
     } else {
       BlocProvider.of<BusinessTypeBloc>(context).add(BusinessTypeListEvent(
-        userId: prefs.getString("userid")!,
-        searchText: searchTextController.text,
-        selectedDataList: [],
-        choiceList: [],
-      ));
+          userId: prefs.getString("userid")!,
+          searchText: searchTextController.text,
+          selectedDataList: [],
+          choiceList: [],
+          choiceAndType: ''));
     }
   }
 
@@ -104,13 +113,13 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
                   Expanded(
                     child: TextFormField(
                       onChanged: (value) {
-                        BlocProvider.of<BusinessTypeBloc>(context)
-                            .add(BusinessTypeListSelectedFilterEvent(
-                          userId: userId,
-                          searchText: searchTextController.text,
-                          selectedDataList: [],
-                          choiceList: [],
-                        ));
+                        BlocProvider.of<BusinessTypeBloc>(context).add(
+                            BusinessTypeListSelectedFilterEvent(
+                                userId: userId,
+                                searchText: searchTextController.text,
+                                selectedDataList: [],
+                                choiceList: [],
+                                choiceAndType: ''));
                       },
                       controller: searchTextController,
                       style: const TextStyle(

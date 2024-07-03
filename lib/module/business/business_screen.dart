@@ -13,6 +13,7 @@ import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
 import 'package:dkapp/module/business/business_bloc/business_event.dart';
 import 'package:dkapp/module/business/business_bloc/business_state.dart';
 import 'package:dkapp/utils/image_list.dart';
+import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +30,15 @@ class BusinessScreen extends StatefulWidget {
 }
 
 class _BusinessScreenState extends State<BusinessScreen> {
+  SharedPreferencesHelper sph = SharedPreferencesHelper();
   // int currentIndex = 0;
   late int currentPageIndexValue = 2;
+  @override
+  void initState() {
+   
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -86,7 +94,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
             ],
           ),
           body: BlocBuilder<BusinessBloc, BusinessState>(
-            bloc: BusinessBloc()..add(FetchSelectedBusinessEvent()),
+            bloc: BusinessBloc()..add(FetchSelectedBusinessEvent(userId: sph.getString("userid")!)),
             builder: (context, state) {
               if (state is FetchSelectedBusinessSuccessState) {
                 return Container(
@@ -98,155 +106,164 @@ class _BusinessScreenState extends State<BusinessScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Stack(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/update-business-profile',
-                                    arguments: {
-                                      "businessProfileData":
-                                          state.selectedBusinessData
-                                    });
-                              },
-                              child: Container(
-                                decoration:
-                                    const BoxDecoration(color: Colors.white),
-                                width: screenSize.width,
-                                child: ListTile(
-                                  minLeadingWidth: 10.0,
-                                  leading: (state
-                                              .selectedBusinessData!.profile ==
-                                          null)
-                                      ? CircleAvatar(
-                                          radius: 30,
-                                          backgroundColor: Colors.blue[100],
-                                          child: Image.asset(
-                                            "resources/images/house-icon-removebg-preview.png",
-                                            height: screenSize.height * 0.09,
-                                            width: screenSize.width * 0.09,
-                                          ),
-                                        )
-                                      : CachedNetworkImage(
-                                          imageUrl:
-                                              "${NetworkImagePathList.imagePath}${state.selectedBusinessData!.profile!}",
-                                          imageBuilder:
-                                              (context, imageProvider) =>
-                                                  CircleAvatar(
-                                            backgroundColor: Colors.transparent,
-                                            radius: 30,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(80),
-                                                  image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: imageProvider)),
-                                            ),
-                                          ),
-                                          placeholder: (context, url) =>
-                                              CircleAvatar(
-                                            backgroundColor: Colors.grey[300],
-                                            radius: 30,
-                                            child:
-                                                const AnimatedImagePlaceholderLoader(),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor: Colors.blue[100],
-                                            child: Image.asset(
-                                              "resources/images/house-icon-removebg-preview.png",
-                                              height: screenSize.height * 0.09,
-                                              width: screenSize.width * 0.09,
-                                            ),
-                                          ),
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 0.0, vertical: 0.0),
+                          visualDensity:
+                              const VisualDensity(horizontal: 0, vertical: -4),
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/update-business-profile',
+                                arguments: {
+                                  "businessProfileData":
+                                      state.selectedBusinessData
+                                });
+                          },
+                          leading: (state.selectedBusinessData!.profile == null)
+                              ? Stack(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(7),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue[100],
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Image.asset(
+                                        "resources/images/house-icon-removebg-preview.png",
+                                        height: 50,
+                                        width: 50,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: -1,
+                                      right: -1.5,
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.blue,
+                                        radius: 12,
+                                        child: Center(
+                                          child: IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(
+                                                Icons.camera_alt,
+                                                size: 8,
+                                                color: Colors.white,
+                                              )),
                                         ),
-                                  horizontalTitleGap: screenSize.width * 0.07,
-                                  title: Row(
+                                      ),
+                                    )
+                                  ],
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl:
+                                      "${NetworkImagePathList.imagePath}${state.selectedBusinessData!.profile!}",
+                                  imageBuilder: (context, imageProvider) =>
+                                      CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    radius: 45,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(80),
+                                          image: DecorationImage(
+                                              fit: BoxFit.cover,
+                                              image: imageProvider)),
+                                    ),
+                                  ),
+                                  placeholder: (context, url) => CircleAvatar(
+                                    backgroundColor: Colors.grey[300],
+                                    radius: 45,
+                                    child:
+                                        const AnimatedImagePlaceholderLoader(),
+                                  ),
+                                  errorWidget: (context, url, error) => Stack(
                                     children: [
-                                      Text(
-                                        state.selectedBusinessData!.bName ?? '',
-                                        style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                          size: 20,
+                                      Container(
+                                        padding: const EdgeInsets.all(7),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue[100],
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Image.asset(
+                                          "resources/images/house-icon-removebg-preview.png",
+                                          height: 50,
+                                          width: 50,
                                         ),
                                       ),
+                                      Positioned(
+                                        bottom: -1,
+                                        right: -1.5,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.blue,
+                                          radius: 12,
+                                          child: Center(
+                                            child: IconButton(
+                                                onPressed: () {},
+                                                icon: const Icon(
+                                                  Icons.camera_alt,
+                                                  size: 8,
+                                                  color: Colors.white,
+                                                )),
+                                          ),
+                                        ),
+                                      )
                                     ],
                                   ),
-                                  subtitle: ((state.selectedBusinessData!
-                                                  .mobile !=
+                                ),
+                          title: Row(
+                            children: [
+                              Text(
+                                state.selectedBusinessData!.bName ?? '',
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          subtitle: ((state.selectedBusinessData!.mobile !=
+                                      '') &&
+                                  (state.selectedBusinessData!.email != ''))
+                              ? Text(
+                                  '${state.selectedBusinessData!.mobile ?? ''}\n${state.selectedBusinessData!.email ?? ''}',
+                                  style: const TextStyle(color: Colors.grey),
+                                )
+                              : (((state.selectedBusinessData!.mobile != '') &&
+                                      (state.selectedBusinessData!.email == ''))
+                                  ? Text(
+                                      state.selectedBusinessData!.mobile!,
+                                      style:
+                                          const TextStyle(color: Colors.grey),
+                                    )
+                                  : (((state.selectedBusinessData!.mobile ==
                                               '') &&
                                           (state.selectedBusinessData!.email !=
                                               ''))
                                       ? Text(
-                                          '${state.selectedBusinessData!.mobile ?? ''}\n${state.selectedBusinessData!.email ?? ''}',
+                                          state.selectedBusinessData!.email!,
                                           style: const TextStyle(
                                               color: Colors.grey),
                                         )
-                                      : (((state.selectedBusinessData!.mobile !=
-                                                  '') &&
-                                              (state.selectedBusinessData!
-                                                      .email ==
-                                                  ''))
-                                          ? Text(
-                                              state.selectedBusinessData!
-                                                  .mobile!,
-                                              style: const TextStyle(
-                                                  color: Colors.grey),
-                                            )
-                                          : (((state.selectedBusinessData!
-                                                          .mobile ==
-                                                      '') &&
-                                                  (state.selectedBusinessData!
-                                                          .email !=
-                                                      ''))
-                                              ? Text(
-                                                  state.selectedBusinessData!
-                                                      .email!,
-                                                  style: const TextStyle(
-                                                      color: Colors.grey),
-                                                )
-                                              : Container())),
-                                  trailing: IconButton(
-                                    icon: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      color: Colors.black,
-                                      size: 20,
-                                    ),
-                                    onPressed: () {},
-                                  ),
-                                ),
-                              ),
+                                      : Container())),
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black,
+                              size: 20,
                             ),
-                            Positioned(
-                              left: screenSize.width * 0.14,
-                              top: screenSize.height * 0.044,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.blue,
-                                radius: 12,
-                                child: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.camera_alt,
-                                      size: 10,
-                                      color: Colors.white,
-                                    )),
-                              ),
-                            )
-                          ],
+                            onPressed: () {},
+                          ),
                         ),
                         InkWell(
                           onTap: () async {
-                            var callUrl = "https://financepe.in/";
+                            var callUrl = "http://vardanindia.in/";
 
                             var url = Uri.parse(callUrl);
                             if (await canLaunchUrl(url)) {
@@ -274,84 +291,69 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                 ),
                               ],
                             ),
-                            child: const Column(
-                              children: [
-                                Text(
-                                  'Digital Khata is introducing new changes to its ',
-                                  style: TextStyle(
-                                      color: Colors.deepOrange,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Text(
-                                  'subscription. Tap to learn more',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.deepOrange,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
+                            child: const Text(
+                              'Digital Khata is introducing new changes to its subscription. Tap to learn more',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.deepOrange,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.pushNamed(context, '/subscription');
-                          },
-                          child: Container(
-                            // color: Colors.white, surfaceTintColor: Colors.white,
-                            margin: EdgeInsets.symmetric(
-                                vertical: screenSize.height * 0.003,
-                                horizontal: screenSize.width * 0.045),
-                            padding: EdgeInsets.symmetric(
-                              vertical: screenSize.height * 0.02,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5.0),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  offset: Offset(0.0, 1.0), //(x,y)
-                                  blurRadius: 6.0,
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.05),
-                                  child: const Text(
-                                    'Premium',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.lock,
-                                      size: 15,
+                        Container(
+                          // color: Colors.white, surfaceTintColor: Colors.white,
+                          margin: EdgeInsets.symmetric(
+                              vertical: screenSize.height * 0.003,
+                              horizontal: screenSize.width * 0.045),
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenSize.height * 0.02,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0), //(x,y)
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: screenSize.width * 0.05),
+                                child: const Text(
+                                  'Premium',
+                                  style: TextStyle(
                                       color: Color.fromARGB(255, 31, 1, 102),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'Unlock Premium Features',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color.fromARGB(255, 31, 1, 102),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              ListTile(
+                                leading: const Icon(
+                                  Icons.lock,
+                                  size: 15,
+                                  color: Color.fromARGB(255, 31, 1, 102),
+                                ),
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Flexible(
+                                      child: Text(
+                                        'Unlock Premium Features',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color:
+                                              Color.fromARGB(255, 31, 1, 102),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: screenSize.width * 0.06,
                                     ),
                                     ElevatedButton(
                                         style: ElevatedButton.styleFrom(
@@ -361,27 +363,30 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                             backgroundColor:
                                                 const Color.fromARGB(
                                                     255, 255, 106, 0)),
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, '/subscription');
+                                        },
                                         child: const Text(
                                           'Buy Premium',
                                           style: TextStyle(color: Colors.white),
                                         ))
                                   ],
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.05,
-                                      vertical: screenSize.height * 0.006),
-                                  child: const Text(
-                                    'You can add upto 10 customers in your curent plan ',
-                                    style: TextStyle(
-                                      color: Colors.deepOrange,
-                                      fontSize: 14,
-                                    ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: screenSize.width * 0.05,
+                                    vertical: screenSize.height * 0.006),
+                                child: const Text(
+                                  'You can add upto 10 customers in your curent plan ',
+                                  style: TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 14,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         InkWell(
@@ -422,37 +427,39 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'Tap up your whatsapp status',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color.fromARGB(255, 31, 1, 102),
+                                ListTile(
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Flexible(
+                                        child: Text(
+                                          'Tap up your whatsapp status',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: screenSize.width * 0.06,
-                                    ),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 255, 106, 0)),
-                                        onPressed: () {},
-                                        child: const Text(
-                                          'Buy (50 Left)',
-                                          style: TextStyle(color: Colors.white),
-                                        ))
-                                  ],
-                                ),
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 255, 106, 0)),
+                                          onPressed: () {},
+                                          child: const Text(
+                                            'Buy (50 Left)',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ))
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -495,37 +502,39 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'Tap up your whatsapp status',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color.fromARGB(255, 31, 1, 102),
+                                ListTile(
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Flexible(
+                                        child: Text(
+                                          'Tap up your whatsapp status',
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: screenSize.width * 0.06,
-                                    ),
-                                    ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            backgroundColor:
-                                                const Color.fromARGB(
-                                                    255, 255, 106, 0)),
-                                        onPressed: () {},
-                                        child: const Text(
-                                          'Buy (0 Left)',
-                                          style: TextStyle(color: Colors.white),
-                                        ))
-                                  ],
-                                ),
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              backgroundColor:
+                                                  const Color.fromARGB(
+                                                      255, 255, 106, 0)),
+                                          onPressed: () {},
+                                          child: const Text(
+                                            'Buy (0 Left)',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ))
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
                           ),

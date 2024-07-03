@@ -97,6 +97,12 @@ class EssentialWidgetsCollection {
       context: context,
       builder: (context) {
         return AlertDialog(
+          titlePadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+          iconPadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+          actionsPadding:
+              const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
           icon: (icon != null) ? icon : null,
           title: (title != null) ? title : null,
           content: (content != null) ? content : null,

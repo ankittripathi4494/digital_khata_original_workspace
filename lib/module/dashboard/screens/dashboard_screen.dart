@@ -96,12 +96,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           return Container(
                             margin: const EdgeInsets.symmetric(horizontal: 20),
                             child: AlertDialog(
+                              titlePadding: EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 20),
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 20),
+                              buttonPadding: EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 20),
+                              actionsPadding: EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 20),
                               backgroundColor: Colors.white,
                               insetPadding: EdgeInsets.zero,
-                              titlePadding: const EdgeInsets.only(
-                                  right: 150.0,
-                                  left: 40.0,
-                                  top: 10.0), // Adjust width here
+                              // titlePadding: const EdgeInsets.only(
+                              //     right: 150.0,
+                              //     left: 40.0,
+                              //     top: 10.0), // Adjust width here
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(0.0)),
                               title: const Text('Select Business'),
@@ -114,6 +122,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       borderRadius: BorderRadius.circular(20)),
                                   width: MediaQuery.of(context).size.width,
                                   child: ListView.builder(
+                                    padding: EdgeInsets.zero,
                                     shrinkWrap: true,
                                     itemCount: state.successData?.length,
                                     itemBuilder: (context, index) {
@@ -124,6 +133,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       return Material(
                                         color: Colors.white,
                                         child: ListTile(
+                                          dense: true,
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 0.0, vertical: 0.0),
+                                          visualDensity: VisualDensity(
+                                              horizontal: 0, vertical: -4),
                                           onTap: () {
                                             BlocProvider.of<BusinessBloc>(
                                                     context)
@@ -3626,7 +3640,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                   subtitle: Text(cd.mobile ?? ''),
                   trailing: Column(
-                    children: const[
+                    children: const [
                       Text(
                         '\u{20B9} ${0}',
                         style: TextStyle(

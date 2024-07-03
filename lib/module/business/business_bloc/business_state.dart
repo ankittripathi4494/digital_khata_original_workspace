@@ -62,6 +62,49 @@ class AddNewBusinessTextChangedErrorState extends BusinessState {
   });
 }
 
+//! States for Update Business Event
+
+class UpdateBusinessLoadingState extends BusinessState {}
+
+class UpdateBusinessSuccessState extends BusinessState {
+  late final String successMessage;
+  UpdateBusinessSuccessState({
+    required this.successMessage,
+  });
+}
+
+class UpdateBusinessFailedState extends BusinessState {
+  late final String failedMessage;
+  UpdateBusinessFailedState({
+    required this.failedMessage,
+  });
+}
+
+//! States for Update Business Text Change Event
+
+class UpdateBusinessValidState extends BusinessState {}
+
+class UpdateBusinessTextChangedErrorState extends BusinessState {
+  late String? businessNameError;
+  late String? businessTypeError;
+  late String? businessAddressError;
+  late String? businessEmailError;
+  late String? businessWebsiteError;
+  late String? businessTaxNumberError;
+  late String? businessContactNumberError;
+  late String? businessCountryError;
+  UpdateBusinessTextChangedErrorState({
+    this.businessNameError,
+    this.businessTypeError,
+    this.businessAddressError,
+    this.businessEmailError,
+    this.businessWebsiteError,
+    this.businessTaxNumberError,
+    this.businessContactNumberError,
+    this.businessCountryError,
+  });
+}
+
 //! States for Fetch Selected Business Event
 
 class FetchSelectedBusinessLoadingState extends BusinessState {}
@@ -91,7 +134,6 @@ class DeleteSelectedBusinessSuccessState extends BusinessState {
     required this.successData,
     required this.selectedBusinessData,
   });
-  
 }
 
 class DeleteSelectedBusinessFailedState extends BusinessState {

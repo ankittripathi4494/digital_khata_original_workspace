@@ -184,59 +184,7 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                   SizedBox(
                     height: screenSize.height / 1.9,
                   ),
-                  // Directionality(
-                  //   textDirection: TextDirection.ltr,
-                  //   child: Pinput(
-                  //     controller: otpController,
-                  //     length: 6,
-                  //     defaultPinTheme: PinTheme(
-                  //         textStyle: const TextStyle(
-                  //             color: Color.fromARGB(255, 31, 1, 102),
-                  //             fontSize: 20.0),
-                  //         height: 56,
-                  //         width: 56,
-                  //         // height: screenSize.height * 0.05,
-                  //         // width: screenSize.width * 0.7,
-                  //         // padding: const EdgeInsets.all(20.0),
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(8.0),
-                  //           border: Border.all(
-                  //             color: Colors.grey,
-                  //           ),
-                  //         )),
-                  //     focusedPinTheme: PinTheme(
-                  //         textStyle: const TextStyle(
-                  //             color: Color.fromARGB(255, 31, 1, 102),
-                  //             fontSize: 20.0),
-                  //         height: 56,
-                  //         width: 56,
-                  //         // height: screenSize.height * 0.05,
-                  //         // width: screenSize.width * 0.7,
-                  //         padding: const EdgeInsets.all(20.0),
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(8.0),
-                  //           border: Border.all(
-                  //             color: const Color.fromARGB(255, 31, 1, 102),
-                  //           ),
-                  //         )),
-                  //     submittedPinTheme: PinTheme(
-                  //         textStyle: const TextStyle(
-                  //             color: Color.fromARGB(255, 31, 1, 102),
-                  //             fontSize: 20.0),
-                  //         height: 56,
-                  //         width: 56,
-                  //         // height: screenSize.height * 0.05,
-                  //         // width: screenSize.width * 0.7,
-                  //         padding: const EdgeInsets.all(20.0),
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(8.0),
-                  //           border: Border.all(
-                  //             color: const Color.fromARGB(255, 31, 1, 102),
-                  //           ),
-                  //         )),
-                  //   ),
-                  // )
-                ],
+                 ],
               ),
             ),
           ),
@@ -385,4 +333,5 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
           context, 'Failed to get platform version.');
     }
   }
+
 }
