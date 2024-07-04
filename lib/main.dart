@@ -1,15 +1,12 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:dkapp/global_widget/animated_loading_widget.dart';
-import 'package:toastification/toastification.dart';
-import 'module/business/user_group_bloc/user_group_bloc.dart';
-import 'module/customers/customer_bloc/customer_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'Localization/app_localizations_setup.dart';
 import 'firebase_options.dart';
 import 'global_blocs/internet/internet_cubit.dart';
@@ -17,7 +14,9 @@ import 'global_blocs/locale/locale_cubit.dart';
 import 'global_blocs/locale/locale_state.dart';
 import 'module/account/account_bloc/account_bloc.dart';
 import 'module/business/business_bloc/business_bloc.dart';
+import 'module/business/user_group_bloc/user_group_bloc.dart';
 import 'module/business_type/business_type_bloc/business_type_bloc.dart';
+import 'module/customers/customer_bloc/customer_bloc.dart';
 import 'module/login/login_bloc/login_bloc.dart';
 import 'route_access_file.dart';
 import 'utils/firebase_messaging_helper.dart';
@@ -114,20 +113,18 @@ class _MyAppState extends State<MyApp> {
                   Locale? appLocale = localeState is SelectedLocale
                       ? localeState.locale
                       : locale;
-                  return ToastificationWrapper(
-                    child: MaterialApp(
-                      navigatorKey: navigatorKey,
-                      supportedLocales: AppLocalizationsSetup.supportedLocales,
-                      localizationsDelegates:
-                          AppLocalizationsSetup.localizationsDelegates,
-                      localeResolutionCallback:
-                          AppLocalizationsSetup.localeResolutionCallback,
-                      locale: appLocale,
-                      title: 'Digital Khata',
-                      debugShowCheckedModeBanner: false,
-                      initialRoute: '/',
-                      onGenerateRoute: RouteAccessGenerator.routerFunc,
-                    ),
+                  return MaterialApp(
+                    navigatorKey: navigatorKey,
+                    supportedLocales: AppLocalizationsSetup.supportedLocales,
+                    localizationsDelegates:
+                        AppLocalizationsSetup.localizationsDelegates,
+                    localeResolutionCallback:
+                        AppLocalizationsSetup.localeResolutionCallback,
+                    locale: appLocale,
+                    title: 'Digital Khata',
+                    debugShowCheckedModeBanner: false,
+                    initialRoute: '/',
+                    onGenerateRoute: RouteAccessGenerator.routerFunc,
                   );
                 },
               ),

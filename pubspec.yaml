@@ -77,7 +77,6 @@ dependencies:
   flutter_native_contact_picker: ^0.0.6
   dropdown_button2: ^2.3.9
   contacts_service: ^0.6.3
-  toastification: ^2.0.0
   talker: ^4.3.2
   awesome_snackbar_content: ^0.1.3
 
