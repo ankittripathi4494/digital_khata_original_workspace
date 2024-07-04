@@ -406,7 +406,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     });
 
     on<FetchSelectedBusinessEvent>((event, emit) async {
-      emit(BusinessListLoadingState());
+      emit(FetchSelectedBusinessLoadingState());
 
       var map = {};
       try {

@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
@@ -94,16 +95,17 @@ class _UpdateBusinessProfileScreenState
             // selectedCountry = countryList!.first;
           });
         } else {
-          EssentialWidgetsCollection.showErrorSnackbar(
-              context, title: null, description: jsonResponse.message!);
+          EssentialWidgetsCollection.showErrorSnackbar(context,
+              title: null, description: jsonResponse.message!);
         }
       } else {
-        EssentialWidgetsCollection.showErrorSnackbar(
-            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
+        EssentialWidgetsCollection.showErrorSnackbar(context,
+            title: null,
+            description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
-      EssentialWidgetsCollection.showErrorSnackbar(
-          context, title: null, description: 'Failed to get platform version.');
+      EssentialWidgetsCollection.showErrorSnackbar(context,
+          title: null, description: 'Failed to get platform version.');
     }
     fillFormDetails();
   }
@@ -259,8 +261,9 @@ class _UpdateBusinessProfileScreenState
                         showDeletePopup(context);
                       } else {
                         LoggerUtil().errorData("Business cannot delete !!");
-                        EssentialWidgetsCollection.showErrorSnackbar(
-                            context,title: null, description:  "Business cannot delete !!");
+                        EssentialWidgetsCollection.showErrorSnackbar(context,
+                            title: null,
+                            description: "Business cannot delete !!");
                       }
                     },
                     icon: const Icon(
@@ -281,8 +284,8 @@ class _UpdateBusinessProfileScreenState
               childWidget: Container(),
               taskWaitDuration: Durations.long2,
               task: () {
-                EssentialWidgetsCollection.showSuccessSnackbar(
-                    context, title: null, description: state.successMessage);
+                EssentialWidgetsCollection.showSuccessSnackbar(context,
+                    title: null, description: state.successMessage);
 
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/business');
@@ -298,14 +301,16 @@ class _UpdateBusinessProfileScreenState
                 Navigator.pushReplacementNamed(
                     context, '/update-business-profile',
                     arguments: widget.argus);
-                EssentialWidgetsCollection.showErrorSnackbar(
-                    context, title: null, description: state.failedMessage);
+                EssentialWidgetsCollection.showErrorSnackbar(context,
+                    title: null, description: state.failedMessage);
               },
             );
           }
           if (state is UpdateBusinessLoadingState) {
-            return const Center(child: AnimatedImageLoader(),);
-          } 
+            return const Center(
+              child: AnimatedImageLoader(),
+            );
+          }
           return SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -374,7 +379,7 @@ class _UpdateBusinessProfileScreenState
                                 placeholder: (context, url) => CircleAvatar(
                                   backgroundColor: Colors.grey[300],
                                   radius: 45,
-                                  child: const AnimatedImageLoader(),
+                                  child: const AnimatedImagePlaceholderLoader(),
                                 ),
                                 errorWidget: (context, url, error) =>
                                     CircleAvatar(

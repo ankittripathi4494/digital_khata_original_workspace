@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
 import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
@@ -1198,6 +1199,9 @@ class _BusinessScreenState extends State<BusinessScreen> {
                     ),
                   ),
                 );
+              }
+              if (state is FetchSelectedBusinessLoadingState) {
+                return const Center(child: AnimatedImageLoader(),);
               }
               return Container();
             },

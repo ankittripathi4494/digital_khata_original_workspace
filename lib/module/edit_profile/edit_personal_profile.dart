@@ -1,9 +1,7 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously, avoid_print
-
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dkapp/global_widget/animated_loading_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/account/model/account_response_model.dart';
 import 'package:dkapp/module/edit_profile/model/country_response_model.dart';
@@ -70,16 +68,17 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
             countryList = jsonResponse.data;
           });
         } else {
-          EssentialWidgetsCollection.showErrorSnackbar(
-              context, title: null, description: jsonResponse.message!);
+          EssentialWidgetsCollection.showErrorSnackbar(context,
+              title: null, description: jsonResponse.message!);
         }
       } else {
-        EssentialWidgetsCollection.showErrorSnackbar(
-            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
+        EssentialWidgetsCollection.showErrorSnackbar(context,
+            title: null,
+            description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
-      EssentialWidgetsCollection.showErrorSnackbar(
-          context, title: null, description: 'Failed to get platform version.');
+      EssentialWidgetsCollection.showErrorSnackbar(context,
+          title: null, description: 'Failed to get platform version.');
     }
     fillFormDetails();
   }
@@ -204,7 +203,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                             placeholder: (context, url) => CircleAvatar(
                               backgroundColor: Colors.grey[300],
                               radius: 80,
-                              child: const AnimatedImageLoader(),
+                              child: const AnimatedImagePlaceholderLoader(),
                             ),
                             errorWidget: (context, url, error) => CircleAvatar(
                               backgroundColor: Colors.grey[300],
@@ -323,7 +322,6 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                           )
                         ],
                       )),
-            
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
@@ -382,7 +380,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     height: screenSize.height * 0.02,
                   ),
                   Align(
-                     alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(
                           // right: screenSize.width * 0.56,
@@ -437,7 +435,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     height: screenSize.height * 0.02,
                   ),
                   Align(
-                     alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(
                           // right: screenSize.width * 0.7,
@@ -469,9 +467,12 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     ),
                     items: countryList
                         ?.map<DropdownMenuItem<CountryResponseData>>((c) {
-                      return DropdownMenuItem(value: c, child: Text(c.name!, 
-                      
-                      overflow: TextOverflow.ellipsis,));
+                      return DropdownMenuItem(
+                          value: c,
+                          child: Text(
+                            c.name!,
+                            overflow: TextOverflow.ellipsis,
+                          ));
                     }).toList(),
                     onChanged: (value) {
                       setState(() {
@@ -483,7 +484,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     height: screenSize.height * 0.02,
                   ),
                   Align(
-                     alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(
                         // right: screenSize.width * 0.57,
@@ -533,7 +534,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     height: screenSize.height * 0.02,
                   ),
                   Align(
-                     alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(
                         // right: screenSize.width * 0.59,
@@ -606,7 +607,6 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                       // updatePersonalProfileImage();
                     },
                     child: Container(
-                     
                       padding: EdgeInsets.symmetric(
                           horizontal: screenSize.width * 0.35,
                           vertical: screenSize.height * 0.016),
@@ -653,12 +653,13 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
         updatePersonalProfile();
         // Navigator.pop(context);
       } else {
-        EssentialWidgetsCollection.showErrorSnackbar(
-            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
+        EssentialWidgetsCollection.showErrorSnackbar(context,
+            title: null,
+            description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
-      EssentialWidgetsCollection.showErrorSnackbar(
-          context, title: null, description: 'Failed to get platform version.');
+      EssentialWidgetsCollection.showErrorSnackbar(context,
+          title: null, description: 'Failed to get platform version.');
     }
   }
 
@@ -692,20 +693,20 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
           }
 
           Navigator.pushReplacementNamed(context, '/accounts');
-          EssentialWidgetsCollection.showSuccessSnackbar(
-              context, title: null, description: jsonResponse.message!);
+          EssentialWidgetsCollection.showSuccessSnackbar(context,
+              title: null, description: jsonResponse.message!);
         } else {
-          EssentialWidgetsCollection.showErrorSnackbar(
-              context, title: null, description: jsonResponse.message!);
+          EssentialWidgetsCollection.showErrorSnackbar(context,
+              title: null, description: jsonResponse.message!);
         }
       } else {
-        EssentialWidgetsCollection.showErrorSnackbar(
-            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
+        EssentialWidgetsCollection.showErrorSnackbar(context,
+            title: null,
+            description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
-      EssentialWidgetsCollection.showErrorSnackbar(
-          context, title: null, description: 'Failed to get platform version.');
+      EssentialWidgetsCollection.showErrorSnackbar(context,
+          title: null, description: 'Failed to get platform version.');
     }
   }
-
 }
