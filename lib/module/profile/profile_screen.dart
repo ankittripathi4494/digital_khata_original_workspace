@@ -100,6 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return BlocBuilder<CustomerBloc, CustomerState>(
       builder: (context, state) {
         if (state is SelectedCustomerDetailsLoadedState) {
@@ -108,6 +109,8 @@ class _ProfileScreenState extends State<ProfileScreen>
               backgroundColor: Colors.blue,
               iconTheme: const IconThemeData(color: Colors.white),
               title: ListTile(
+                contentPadding: const EdgeInsets.all(0),
+                visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
                 onTap: () {
                   Navigator.pushNamed(context, '/customer-screen-full-details',
                       arguments: {
@@ -892,94 +895,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ],
               ),
             ),
-            floatingActionButton: (tabIndex == 1)
-                ? FloatingActionButton.large(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0)),
-                    backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-                    onPressed: () {
-                      showModalBottomSheet<void>(
-                        backgroundColor: Colors.white,
-                        scrollControlDisabledMaxHeightRatio: 0.3,
-                        showDragHandle: true,
-                        context: context,
-                        builder: (BuildContext context) {
-                          return SizedBox(
-                            width: screenSize.width,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Container(
-                                //   width: screenSize.width,
-                                //   decoration: const BoxDecoration(),
-                                //   child: const Center(
-                                //     child: Text(
-                                //       'Payment Providers',
-                                //       style: TextStyle(
-                                //           color: Colors.black,
-                                //           fontSize: 23,
-                                //           fontWeight: FontWeight.bold),
-                                //     ),
-                                //   ),
-                                // ),
-                                SizedBox(
-                                  height: screenSize.height * 0.03,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/upi-payment');
-                                  },
-                                  child: const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    child: Text(
-                                      'Recurring Transaction',
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 20),
-                                    ),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  child: Text(
-                                    'Recurring Invoice',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 20),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  child: Text(
-                                    'Recurring Bill',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 20),
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0),
-                                  child: Text(
-                                    'EMI',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 20),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 50,
-                    ))
-                : (tabIndex == 2)
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton: keyboardIsOpened
+                ? null
+                : ((tabIndex == 1)
                     ? FloatingActionButton.large(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50.0)),
@@ -987,7 +907,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         onPressed: () {
                           showModalBottomSheet<void>(
                             backgroundColor: Colors.white,
-                            scrollControlDisabledMaxHeightRatio: 0.2,
+                            scrollControlDisabledMaxHeightRatio: 0.3,
                             showDragHandle: true,
                             context: context,
                             builder: (BuildContext context) {
@@ -997,6 +917,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    // Container(
+                                    //   width: screenSize.width,
+                                    //   decoration: const BoxDecoration(),
+                                    //   child: const Center(
+                                    //     child: Text(
+                                    //       'Payment Providers',
+                                    //       style: TextStyle(
+                                    //           color: Colors.black,
+                                    //           fontSize: 23,
+                                    //           fontWeight: FontWeight.bold),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     SizedBox(
                                       height: screenSize.height * 0.03,
                                     ),
@@ -1009,7 +942,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 20.0, vertical: 10.0),
                                         child: Text(
-                                          'Invoice',
+                                          'Recurring Transaction',
                                           style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 20),
@@ -1020,7 +953,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 20.0, vertical: 10.0),
                                       child: Text(
-                                        'Bill',
+                                        'Recurring Invoice',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      child: Text(
+                                        'Recurring Bill',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20),
+                                      ),
+                                    ),
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      child: Text(
+                                        'EMI',
                                         style: TextStyle(
                                             color: Colors.black, fontSize: 20),
                                       ),
@@ -1036,7 +987,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           color: Colors.white,
                           size: 50,
                         ))
-                    : (tabIndex == 3)
+                    : (tabIndex == 2)
                         ? FloatingActionButton.large(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50.0)),
@@ -1045,7 +996,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             onPressed: () {
                               showModalBottomSheet<void>(
                                 backgroundColor: Colors.white,
-                                scrollControlDisabledMaxHeightRatio: 0.3,
+                                scrollControlDisabledMaxHeightRatio: 0.2,
                                 showDragHandle: true,
                                 context: context,
                                 builder: (BuildContext context) {
@@ -1057,19 +1008,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        // Container(
-                                        //   width: screenSize.width,
-                                        //   decoration: const BoxDecoration(),
-                                        //   child: const Center(
-                                        //     child: Text(
-                                        //       'Payment Providers',
-                                        //       style: TextStyle(
-                                        //           color: Colors.black,
-                                        //           fontSize: 23,
-                                        //           fontWeight: FontWeight.bold),
-                                        //     ),
-                                        //   ),
-                                        // ),
                                         SizedBox(
                                           height: screenSize.height * 0.03,
                                         ),
@@ -1083,39 +1021,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 horizontal: 20.0,
                                                 vertical: 10.0),
                                             child: Text(
-                                              'Recurring Transaction',
+                                              'Invoice',
                                               style: TextStyle(
                                                   color: Colors.black,
                                                   fontSize: 20),
                                             ),
                                           ),
                                         ),
-
                                         const Padding(
                                           padding: EdgeInsets.symmetric(
                                               horizontal: 20.0, vertical: 10.0),
                                           child: Text(
-                                            'EMI',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20),
-                                          ),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 20.0, vertical: 10.0),
-                                          child: Text(
-                                            'EMI',
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 20),
-                                          ),
-                                        ),
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 20.0, vertical: 10.0),
-                                          child: Text(
-                                            'EMI',
+                                            'Bill',
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 20),
@@ -1132,105 +1049,243 @@ class _ProfileScreenState extends State<ProfileScreen>
                               color: Colors.white,
                               size: 50,
                             ))
-                        : (tabIndex == 4)
-                            ? Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                      child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.04,
-                                    ),
-                                    child: Card(
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: screenSize.width * 0.04,
-                                      ),
-                                      elevation: 10.0,
-                                      color: Colors.white,
-                                      surfaceTintColor: Colors.white,
-                                      shadowColor: Colors.white,
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                          fillColor: const Color.fromARGB(
-                                              255, 255, 255, 255),
-                                          filled: true,
-                                          hintText: 'Type a private note',
-                                          hintStyle: const TextStyle(
-                                              color: Colors.grey),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide.none,
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0)),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide.none,
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0)),
+                        : (tabIndex == 3)
+                            ? FloatingActionButton.large(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50.0)),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 31, 1, 102),
+                                onPressed: () {
+                                  showModalBottomSheet<void>(
+                                    backgroundColor: Colors.white,
+                                    scrollControlDisabledMaxHeightRatio: 0.3,
+                                    showDragHandle: true,
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return SizedBox(
+                                        width: screenSize.width,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // Container(
+                                            //   width: screenSize.width,
+                                            //   decoration: const BoxDecoration(),
+                                            //   child: const Center(
+                                            //     child: Text(
+                                            //       'Payment Providers',
+                                            //       style: TextStyle(
+                                            //           color: Colors.black,
+                                            //           fontSize: 23,
+                                            //           fontWeight: FontWeight.bold),
+                                            //     ),
+                                            //   ),
+                                            // ),
+                                            SizedBox(
+                                              height: screenSize.height * 0.03,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.pushNamed(
+                                                    context, '/upi-payment');
+                                              },
+                                              child: const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 20.0,
+                                                    vertical: 10.0),
+                                                child: Text(
+                                                  'Recurring Transaction',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20),
+                                                ),
+                                              ),
+                                            ),
+
+                                            const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 10.0),
+                                              child: Text(
+                                                'EMI',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 20),
+                                              ),
+                                            ),
+                                            const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 10.0),
+                                              child: Text(
+                                                'EMI',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 20),
+                                              ),
+                                            ),
+                                            const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 10.0),
+                                              child: Text(
+                                                'EMI',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 20),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
+                                      );
+                                    },
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.add,
+                                  color: Colors.white,
+                                  size: 50,
+                                ))
+                            : (tabIndex == 4)
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                          child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: screenSize.width * 0.04,
+                                        ),
+                                        child: Card(
+                                          margin: EdgeInsets.symmetric(
+                                            horizontal: screenSize.width * 0.04,
+                                          ),
+                                          elevation: 10.0,
+                                          color: Colors.white,
+                                          surfaceTintColor: Colors.white,
+                                          shadowColor: Colors.white,
+                                          child: TextFormField(
+                                            decoration: InputDecoration(
+                                              fillColor: const Color.fromARGB(
+                                                  255, 255, 255, 255),
+                                              filled: true,
+                                              hintText: 'Type a private note',
+                                              hintStyle: const TextStyle(
+                                                  color: Colors.grey),
+                                              border: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0)),
+                                              enabledBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide.none,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0)),
+                                              focusedBorder: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0)),
+                                            ),
+                                          ),
+                                        ),
+                                      )),
+                                      // SizedBox(
+                                      //   width: screenSize.width * 0.04,
+                                      // ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 6.0),
+                                        decoration: BoxDecoration(
+                                            color: Colors.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(10.0)),
+                                        child: IconButton(
+                                            style: IconButton.styleFrom(
+                                                backgroundColor: Colors.blue),
+                                            onPressed: () {},
+                                            icon: const Icon(
+                                              Icons.share,
+                                              color: Colors.white,
+                                            )),
+                                      )
+                                    ],
+                                  )
+                                : Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.05,
+                                        vertical: 10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Material(
+                                          elevation: 10,
+                                          color: Colors.transparent,
+                                          child: TextButton(
+                                              style: TextButton.styleFrom(
+                                                minimumSize: Size(
+                                                    screenSize.width * 0.4,
+                                                    screenSize.height * 0.06),
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 31, 1, 102),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, '/cash-in-screen',
+                                                    arguments: {
+                                                      'customerData': state
+                                                          .selectedCustomerDetailedData,
+                                                      'selectedBusiness': (widget
+                                                                  .argus[
+                                                              'selectedBusiness']
+                                                          as BusinessListResponseData)
+                                                    });
+                                              },
+                                              child: const Text(
+                                                'Add Cash In',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
+                                        ),
+                                        Material(
+                                          elevation: 10,
+                                          color: Colors.transparent,
+                                          child: TextButton(
+                                              style: TextButton.styleFrom(
+                                                minimumSize: Size(
+                                                    screenSize.width * 0.4,
+                                                    screenSize.height * 0.06),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pushNamed(
+                                                    context, '/cash-out-screen',
+                                                    arguments: {
+                                                      'customerData': state
+                                                          .selectedCustomerDetailedData,
+                                                      'selectedBusiness': (widget
+                                                                  .argus[
+                                                              'selectedBusiness']
+                                                          as BusinessListResponseData)
+                                                    });
+                                              },
+                                              child: const Text(
+                                                'Add Cash Out',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
+                                        )
+                                      ],
                                     ),
                                   )),
-                                  // SizedBox(
-                                  //   width: screenSize.width * 0.04,
-                                  // ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 6.0),
-                                    decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    child: IconButton(
-                                        style: IconButton.styleFrom(
-                                            backgroundColor: Colors.blue),
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Icons.share,
-                                          color: Colors.white,
-                                        )),
-                                  )
-                                ],
-                              )
-                            : Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: screenSize.width * 0.05),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    TextButton(
-                                        style: TextButton.styleFrom(
-                                          minimumSize: Size(
-                                              screenSize.width * 0.4,
-                                              screenSize.height * 0.06),
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 31, 1, 102),
-                                        ),
-                                        onPressed: () {},
-                                        child: const Text(
-                                          'Add Cash In',
-                                          style: TextStyle(color: Colors.white),
-                                        )),
-                                    TextButton(
-                                        style: TextButton.styleFrom(
-                                          minimumSize: Size(
-                                              screenSize.width * 0.4,
-                                              screenSize.height * 0.06),
-                                          backgroundColor: Colors.red,
-                                        ),
-                                        onPressed: () {},
-                                        child: const Text(
-                                          'Add Cash Out',
-                                          style: TextStyle(color: Colors.white),
-                                        ))
-                                  ],
-                                ),
-                              ),
           );
         }
         return const Center(

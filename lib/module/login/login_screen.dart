@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return BlocListener<InternetCubit, InternetState>(
       bloc: InternetCubit(),
       listener: (context, state) {
@@ -506,43 +507,47 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          floatingActionButton: Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: screenSize.width * 0.06,
-                vertical: screenSize.height * 0.01),
-            // width: screenSize.width,
-            decoration: const BoxDecoration(color: Colors.blue),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  height: 46.0,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(0.0)),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: keyboardIsOpened
+              ? null
+              : Container(
                   margin: EdgeInsets.symmetric(
-                      horizontal: screenSize.width * 0.001,
-                      vertical: screenSize.height * 0.001),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: screenSize.width * 0.01,
-                  ),
-                  child: Image.asset(
-                    "resources/images/google-removebg-preview.png",
-                    height: screenSize.height * 0.1,
-                    width: screenSize.width * 0.1,
+                      horizontal: screenSize.width * 0.06,
+                      vertical: screenSize.height * 0.01),
+                  // width: screenSize.width,
+                  decoration: const BoxDecoration(color: Colors.blue),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 46.0,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(0.0)),
+                        margin: EdgeInsets.symmetric(
+                            horizontal: screenSize.width * 0.001,
+                            vertical: screenSize.height * 0.001),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenSize.width * 0.01,
+                        ),
+                        child: Image.asset(
+                          "resources/images/google-removebg-preview.png",
+                          height: screenSize.height * 0.1,
+                          width: screenSize.width * 0.1,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: screenSize.width * 0.2),
+                        child: const Text(
+                          'Sign with Google',
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.w500),
+                        ),
+                      )
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(right: screenSize.width * 0.2),
-                  child: const Text(
-                    'Sign with Google',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w500),
-                  ),
-                )
-              ],
-            ),
-          ),
         ),
       ),
     );

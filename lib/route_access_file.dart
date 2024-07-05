@@ -2,6 +2,8 @@ import 'package:dkapp/module/business/contact_verifiction_screen.dart';
 import 'package:dkapp/module/business/manage_user_groups.dart';
 import 'package:dkapp/module/customers/add_customer_screen.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_bloc.dart';
+import 'package:dkapp/module/profile/cashin_screen.dart';
+import 'package:dkapp/module/profile/cashout_screen.dart';
 import 'package:dkapp/module/profile/edit_customer_profile_screen.dart';
 import 'package:dkapp/module/profile/profile_detail_screeen.dart';
 import 'package:dkapp/module/profile/profile_screen.dart';
@@ -53,6 +55,7 @@ import 'module/privacy_policy/privacy_policy_screen.dart';
 import 'module/privacy_policy/terms_condition_screen.dart';
 import 'module/product/product_detail_screen.dart';
 import 'module/product/product_screen.dart';
+import 'module/profile/transactions/transactions_bloc.dart';
 import 'module/purchases/my_purchases_screen.dart';
 import 'module/recurring/recurring_bill_screen.dart';
 import 'module/recurring/recurring_invoice_screen.dart';
@@ -999,23 +1002,66 @@ class RouteAccessGenerator {
       case '/contact-verification':
         if (arguments is Map<String, dynamic>) {
           return PageTransition(
+              duration: const Duration(milliseconds: 500),
+              type: PageTransitionType.fade,
+              child: ContactVerificationScreen(
+                argus: arguments,
+              ),
+              fullscreenDialog: true);
+        }
+        return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
             child: ContactVerificationScreen(
-              argus: arguments,
+              argus: const {},
             ),
-            fullscreenDialog: true
+            fullscreenDialog: true);
+      case '/cash-in-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => TransactionsBloc(),
+              child: CashInScreen(
+                argus: arguments,
+              ),
+            ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: ContactVerificationScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => TransactionsBloc(),
+            child: CashInScreen(
+              argus: const {},
+            ),
           ),
-           fullscreenDialog: true
         );
-
+      case '/cash-out-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => TransactionsBloc(),
+              child: CashOutScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => TransactionsBloc(),
+            child: CashOutScreen(
+              argus: const {},
+            ),
+          ),
+        );
       case '/upi-payment':
         if (arguments is Map<String, dynamic>) {
           return PageTransition(

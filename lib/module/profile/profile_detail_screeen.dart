@@ -8,7 +8,6 @@ import 'package:dkapp/module/customers/model/selected_customer_response_model.da
 import 'package:dkapp/utils/exceptions.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +22,8 @@ class ProfileDetailScreen extends StatefulWidget {
   State<ProfileDetailScreen> createState() => _ProfileDetailScreenState();
 }
 
-class _ProfileDetailScreenState extends State<ProfileDetailScreen> with TickerProviderStateMixin {
+class _ProfileDetailScreenState extends State<ProfileDetailScreen>
+    with TickerProviderStateMixin {
   TextEditingController billingCycleController = TextEditingController();
 
   ScrollController? _scrollController;
@@ -60,7 +60,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with TickerPr
   @override
   void initState() {
     super.initState();
-    
+
     _scrollController = ScrollController()..addListener(_scrollListener);
   }
 
@@ -809,7 +809,6 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen> with TickerPr
                         child: Column(
                           children: [
                             headingWidget(),
-                            TabBar(tabs: [])
                           ],
                         ),
                       ),

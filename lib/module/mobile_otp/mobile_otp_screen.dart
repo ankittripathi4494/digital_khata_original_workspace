@@ -66,6 +66,7 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+     bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return BlocListener<InternetCubit, InternetState>(
       bloc: InternetCubit(),
       listener: (context, state) {
@@ -188,7 +189,10 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
               ),
             ),
           ),
-          floatingActionButton: Column(
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton:  keyboardIsOpened
+            ? null
+            :Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               (showResendButton == true)
