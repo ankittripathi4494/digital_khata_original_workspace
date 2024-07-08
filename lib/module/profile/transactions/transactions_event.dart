@@ -3,7 +3,7 @@ import 'package:image_picker/image_picker.dart';
 
 class TransactionsEvent {}
 
-class AddCashInTransactionEvent extends TransactionsEvent {
+class AddCashTransactionEvent extends TransactionsEvent {
   late final String customerId;
   late final String userId;
   late final String businessId;
@@ -11,7 +11,8 @@ class AddCashInTransactionEvent extends TransactionsEvent {
   late final String transactionAmount;
   late final String transactionNotes;
   late final XFile? transactionImages;
-  AddCashInTransactionEvent({
+  late final bool samePageRedirection;
+  AddCashTransactionEvent({
     required this.customerId,
     required this.userId,
     required this.businessId,
@@ -19,24 +20,19 @@ class AddCashInTransactionEvent extends TransactionsEvent {
     required this.transactionAmount,
     required this.transactionNotes,
     required this.transactionImages,
+    required this.samePageRedirection,
   });
 }
 
-class AddCashOutTransactionEvent extends TransactionsEvent {
+class TransactionListFetchEvent extends TransactionsEvent {
   late final String customerId;
   late final String userId;
   late final String businessId;
-  late final String transactionType;
-  late final String transactionAmount;
-  late final String transactionNotes;
-  late final XFile? transactionImages;
-  AddCashOutTransactionEvent({
+  TransactionListFetchEvent({
     required this.customerId,
     required this.userId,
     required this.businessId,
-    required this.transactionType,
-    required this.transactionAmount,
-    required this.transactionNotes,
-    required this.transactionImages,
   });
 }
+
+

@@ -1,7 +1,16 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, avoid_print
 
 import 'dart:async' as t1;
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
+import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
+import 'package:dkapp/module/profile/transactions/transactions_event.dart';
+import 'package:dkapp/module/profile/transactions/transactions_state.dart';
+import 'package:dkapp/utils/image_list.dart';
+import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,12 +29,33 @@ class CashOutScreen extends StatefulWidget {
 }
 
 class _CashOutScreenState extends State<CashOutScreen> {
+  SharedPreferencesHelper sph = SharedPreferencesHelper();
   final ImagePicker _picker = ImagePicker();
   TextEditingController amountController = TextEditingController();
   TextEditingController notesController = TextEditingController();
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   XFile? attachImage;
+
+  @override
+  void initState() {
+    fetchTransactionData();
+    super.initState();
+  }
+
+  fetchTransactionData() {
+    if (widget.argus.containsKey('transactionData')) {
+      setState(() {
+        amountController.text =
+            (widget.argus['transactionData'] as TransactionListResponseData)
+                .transAmount!;
+        notesController.text =
+            (widget.argus['transactionData'] as TransactionListResponseData)
+                .notes!;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -65,423 +95,611 @@ class _CashOutScreenState extends State<CashOutScreen> {
                     foregroundColor: Colors.white,
                     textStyle:
                         const TextStyle(fontSize: 14, letterSpacing: 1.2)),
-                onPressed: () {},
+                onPressed: () {
+                  if (attachImage != null) {
+                    if (amountController.text.isNotEmpty) {
+                      BlocProvider.of<TransactionsBloc>(context).add(
+                          AddCashTransactionEvent(
+                              samePageRedirection: false,
+                              customerId: (widget.argus['customerData']
+                                      as SelectedCustomerResponseData)
+                                  .id!,
+                              businessId: (widget.argus['selectedBusiness']
+                                      as BusinessListResponseData)
+                                  .id!,
+                              userId: sph.getString("userid")!,
+                              transactionType: 'D',
+                              transactionAmount: amountController.text,
+                              transactionNotes: notesController.text,
+                              transactionImages: attachImage));
+                    } else {
+                      EssentialWidgetsCollection.showErrorSnackbar(context,
+                          description:
+                              "Please fill amount to complete transaction");
+                    }
+                  } else {
+                    EssentialWidgetsCollection.showErrorSnackbar(context,
+                        description:
+                            "Please upload image attachment for transaction proof");
+                  }
+                },
                 child: Text(
                   "Save".toUpperCase(),
                 ))
           ],
         ),
-        body: Container(
-          margin: const EdgeInsets.all(15),
-          child: SingleChildScrollView(
-            child: Form(
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      vertical: screenSize.height * 0.008,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Amount Received",
-                            style: TextStyle(
-                                fontSize: 20,
-                                letterSpacing: 1.2,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 10),
-                            height: 50,
-                            child: TextFormField(
-                              controller: amountController,
-                              keyboardType: TextInputType.number,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  letterSpacing: 1.2,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                              onChanged: (value) {},
-                              decoration: InputDecoration(
-                                filled: false,
-                                fillColor: Colors.grey.shade300,
-                                counterText: '',
-                                prefixIcon: const Icon(
-                                  Icons.currency_rupee,
-                                  size: 20,
-                                ),
-                                prefixIconColor: Colors.black,
-                                hintText: "0",
-                                hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                    letterSpacing: 1.2,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                errorText: null,
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                OutlinedButton.icon(
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.black,
-                                    iconColor: Colors.blue,
-                                  ),
-                                  onPressed: () {
-                                    showDatePicker(
-                                      context: context,
-                                      initialDate: DateTime.now(),
-                                      firstDate: DateTime(2000),
-                                      lastDate: DateTime(2101),
-                                    ).then((c) {
-                                      if (c != null) {
-                                        setState(() {
-                                          selectedDate = c;
-                                        });
-                                      }
-                                      showTimePicker(
-                                        context: context,
-                                        initialTime: TimeOfDay.now(),
-                                      ).then((t) {
-                                        if (t != null) {
-                                          setState(() {
-                                            selectedTime = t;
-                                          });
-                                        }
-                                      });
-                                    });
-                                  },
-                                  label: Text(i.DateFormat('MM-dd-y hh:mm a')
-                                      .format(((selectedDate != null) &&
-                                              (selectedTime != null))
-                                          ? _combineDateTime(
-                                              selectedDate!, selectedTime!)
-                                          : DateTime.now())),
-                                  icon: const Icon(
-                                    Icons.calendar_month,
-                                  ),
-                                ),
-                                TextButton.icon(
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: Colors.blue,
-                                  ),
-                                  onPressed: () {},
-                                  label: const Text("Link"),
-                                  icon: const Icon(Icons.link),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                      vertical: screenSize.height * 0.008,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 0),
-                      child: DividerTheme(
-                        data: const DividerThemeData(
-                            color: Colors.green, thickness: 1),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ListTile(
-                              onTap: () {
-                                EssentialWidgetsCollection.showAlertDialog(
+        body: BlocBuilder<TransactionsBloc, TransactionsState>(
+          builder: (context, state) {
+            return Container(
+              margin: const EdgeInsets.all(15),
+              child: SingleChildScrollView(
+                child: Form(
+                  child: Column(
+                    children: [
+                      (state is AddNewCashTransactionSuccessState)
+                          ? EssentialWidgetsCollection.autoScheduleTask(
+                              context,
+                              taskWaitDuration: Durations.medium3,
+                              task: () {
+                                print(
+                                    "Same Page Redirection:- ${state.samePageRedirection}");
+                                if (state.samePageRedirection == true) {
+                                  setState(() {
+                                    amountController.clear();
+                                    attachImage = null;
+                                    notesController.clear();
+                                  });
+                                  Navigator.pushReplacementNamed(
+                                      context, '/cash-out-screen',
+                                      arguments: widget.argus);
+                                } else {
+                                  Navigator.pushReplacementNamed(
+                                      context, '/customer-screen-details',
+                                      arguments: widget.argus);
+                                }
+                                EssentialWidgetsCollection.showSuccessSnackbar(
                                     context,
-                                    icon: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          "Choose Option",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              letterSpacing: 1.2,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black),
-                                        ),
-                                        Divider(
-                                            color: Colors.green, thickness: 2)
-                                      ],
-                                    ),
-                                    title: TextButton.icon(
-                                      onPressed: () async {
-                                        _picker
-                                            .pickImage(
-                                                maxHeight: 480,
-                                                maxWidth: 640,
-                                                source: ImageSource.camera)
-                                            .then((c) {
-                                          setState(() {
-                                            attachImage = c;
-                                          });
-                                          debugPrint(
-                                              "Captured Image From Camera :- ${attachImage!.path}");
-                                          Navigator.pop(context);
-                                        });
-                                      },
-                                      label: const Text(
-                                        "Camera",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            letterSpacing: 1.2,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black),
-                                      ),
-                                      icon: const Icon(
-                                        Icons.camera,
-                                        size: 25,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    content: TextButton.icon(
-                                        onPressed: () {
-                                          _picker
-                                              .pickImage(
-                                                  maxHeight: 480,
-                                                  maxWidth: 640,
-                                                  source: ImageSource.gallery)
-                                              .then((c) {
-                                            setState(() {
-                                              attachImage = c;
-                                            });
-                                            debugPrint(
-                                                "Captured Image From gallery :- ${attachImage!.path}");
-                                            Navigator.pop(context);
-                                          });
-                                        },
-                                        icon: const Icon(
-                                          Icons.image_search,
-                                          size: 25,
-                                          color: Colors.black,
-                                        ),
-                                        label: const Text(
-                                          "Gallery",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              letterSpacing: 1.2,
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.black),
-                                        )));
+                                    description: "Transaction Successfull");
                               },
-                              contentPadding: const EdgeInsets.all(0),
-                              visualDensity: const VisualDensity(
-                                  horizontal: 0, vertical: -4),
-                              leading: const Icon(
-                                Icons.image,
-                                size: 25,
-                                color: Colors.black,
-                              ),
-                              title: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Attachment",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        letterSpacing: 1.2,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                  ),
-                                  (attachImage != null)
-                                      ? Image.file(
-                                          File(attachImage!.path),
-                                          width: 100,
-                                          height: 100,
-                                        )
-                                      : Container()
-                                ],
-                              ),
+                            )
+                          : Container(),
+                      (state is AddNewCashTransactionFailedState)
+                          ? EssentialWidgetsCollection.autoScheduleTask(
+                              context,
+                              taskWaitDuration: Durations.medium3,
+                              task: () {
+                                Navigator.pushReplacementNamed(
+                                    context, '/cash-out-screen',
+                                    arguments: widget.argus);
+                                EssentialWidgetsCollection.showErrorSnackbar(
+                                    context,
+                                    description: state.failedMessage);
+                              },
+                            )
+                          : Container(),
+                      (state is AddNewCashTransactionLoadingState)
+                          ? const AnimatedImagePlaceholderLoader()
+                          : Container(),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.008,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 203, 202, 202),
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 6.0,
                             ),
-                            const Divider(),
-                            ListTile(
-                              contentPadding: const EdgeInsets.all(0),
-                              visualDensity: const VisualDensity(
-                                  horizontal: 0, vertical: -4),
-                              leading: const Icon(
-                                Icons.chat,
-                                size: 25,
-                                color: Colors.black,
-                              ),
-                              title: const Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: Text(
-                                  "Notes/ Remarks",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      letterSpacing: 1.2,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black),
-                                ),
-                              ),
-                              subtitle: TextFormField(
-                                controller: notesController,
-                                keyboardType: TextInputType.multiline,
-                                maxLines: null, // Set this
-
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    letterSpacing: 1.2,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300),
-                                onChanged: (value) {},
-                                decoration: InputDecoration(
-                                  isDense: true,
-                                  contentPadding: EdgeInsets.zero,
-                                  filled: false,
-                                  fillColor: Colors.grey.shade300,
-                                  counterText: '',
-                                  hintText: "Add your notes here..",
-                                  hintStyle: const TextStyle(
-                                      color: Colors.black,
-                                      letterSpacing: 1.2,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w300),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.transparent, width: 2),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.transparent, width: 2),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.transparent, width: 2),
-                                  ),
-                                  errorText: null,
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Colors.transparent, width: 2),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const Divider(),
-                            TextButton.icon(
-                              style: TextButton.styleFrom(
-                                  iconColor: Colors.blue,
-                                  foregroundColor: Colors.blue),
-                              onPressed: () async {},
-                              label: const Text(
-                                "Add Custom Properties",
+                          ],
+                        ),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Amount Received",
                                 style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 20,
                                     letterSpacing: 1.2,
                                     fontWeight: FontWeight.w300,
                                     color: Colors.black),
                               ),
-                              icon: const Icon(
-                                Icons.add_circle_outline,
-                                size: 25,
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 10),
+                                height: 50,
+                                child: TextFormField(
+                                  controller: amountController,
+                                  keyboardType: TextInputType.number,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      letterSpacing: 1.2,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  onChanged: (value) {},
+                                  decoration: InputDecoration(
+                                    filled: false,
+                                    fillColor: Colors.grey.shade300,
+                                    counterText: '',
+                                    prefixIcon: const Icon(
+                                      Icons.currency_rupee,
+                                      size: 20,
+                                    ),
+                                    prefixIconColor: Colors.black,
+                                    hintText: "0",
+                                    hintStyle: const TextStyle(
+                                        color: Colors.black,
+                                        letterSpacing: 1.2,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 31, 1, 102),
+                                          width: 2),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 31, 1, 102),
+                                          width: 2),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 31, 1, 102),
+                                          width: 2),
+                                    ),
+                                    errorText: null,
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 31, 1, 102),
+                                          width: 2),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              height: 50,
-                              width: screenSize.width,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      elevation: 10,
-                                      foregroundColor: Colors.blue,
-                                      side: const BorderSide(
-                                        color: Colors.blue,
-                                      )),
-                                  onPressed: () {},
-                                  child: const Text("Save & Add More")),
-                            ),
-                            const SizedBox(
-                              height: 20,
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    OutlinedButton.icon(
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: Colors.black,
+                                        iconColor: Colors.blue,
+                                      ),
+                                      onPressed: () {
+                                        showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(2000),
+                                          lastDate: DateTime(2101),
+                                        ).then((c) {
+                                          if (c != null) {
+                                            setState(() {
+                                              selectedDate = c;
+                                            });
+                                          }
+                                          showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                          ).then((t) {
+                                            if (t != null) {
+                                              setState(() {
+                                                selectedTime = t;
+                                              });
+                                            }
+                                          });
+                                        });
+                                      },
+                                      label: Text(
+                                          i.DateFormat('MM-dd-y hh:mm a')
+                                              .format(((selectedDate != null) &&
+                                                      (selectedTime != null))
+                                                  ? _combineDateTime(
+                                                      selectedDate!,
+                                                      selectedTime!)
+                                                  : DateTime.now())),
+                                      icon: const Icon(
+                                        Icons.calendar_month,
+                                      ),
+                                    ),
+                                    TextButton.icon(
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.blue,
+                                      ),
+                                      onPressed: () {},
+                                      label: const Text("Link"),
+                                      icon: const Icon(Icons.link),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.008,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 203, 202, 202),
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 6.0,
                             ),
                           ],
                         ),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
+                          child: DividerTheme(
+                            data: const DividerThemeData(
+                                color: Colors.green, thickness: 1),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  onTap: () {
+                                    EssentialWidgetsCollection.showAlertDialog(
+                                        context,
+                                        icon: const Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "Choose Option",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  letterSpacing: 1.2,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black),
+                                            ),
+                                            Divider(
+                                                color: Colors.green,
+                                                thickness: 2)
+                                          ],
+                                        ),
+                                        title: TextButton.icon(
+                                          onPressed: () async {
+                                            _picker
+                                                .pickImage(
+                                                    maxHeight: 480,
+                                                    maxWidth: 640,
+                                                    source: ImageSource.camera)
+                                                .then((c) {
+                                              setState(() {
+                                                attachImage = c;
+                                              });
+                                              debugPrint(
+                                                  "Captured Image From Camera :- ${attachImage!.path}");
+                                              Navigator.pop(context);
+                                            });
+                                          },
+                                          label: const Text(
+                                            "Camera",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                letterSpacing: 1.2,
+                                                fontWeight: FontWeight.w300,
+                                                color: Colors.black),
+                                          ),
+                                          icon: const Icon(
+                                            Icons.camera,
+                                            size: 25,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        content: TextButton.icon(
+                                            onPressed: () {
+                                              _picker
+                                                  .pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.gallery)
+                                                  .then((c) {
+                                                setState(() {
+                                                  attachImage = c;
+                                                });
+                                                debugPrint(
+                                                    "Captured Image From gallery :- ${attachImage!.path}");
+                                                Navigator.pop(context);
+                                              });
+                                            },
+                                            icon: const Icon(
+                                              Icons.image_search,
+                                              size: 25,
+                                              color: Colors.black,
+                                            ),
+                                            label: const Text(
+                                              "Gallery",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  letterSpacing: 1.2,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.black),
+                                            )));
+                                  },
+                                  contentPadding: const EdgeInsets.all(0),
+                                  visualDensity: const VisualDensity(
+                                      horizontal: 0, vertical: -4),
+                                  leading: const Icon(
+                                    Icons.image,
+                                    size: 25,
+                                    color: Colors.black,
+                                  ),
+                                  title: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "Attachment",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            letterSpacing: 1.2,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black),
+                                      ),
+                                      (widget.argus
+                                              .containsKey('transactionData'))
+                                          ? (((widget.argus['transactionData']
+                                                          as TransactionListResponseData)
+                                                      .image !=
+                                                  null)
+                                              ? ((attachImage != null)
+                                                  ? Image.file(
+                                                      File(attachImage!.path),
+                                                      width: 100,
+                                                      height: 100,
+                                                    )
+                                                  : CachedNetworkImage(
+                                                      imageUrl:
+                                                          "${NetworkImagePathList.imagePathTrans}${(widget.argus['transactionData'] as TransactionListResponseData).image}",
+                                                      imageBuilder: (context,
+                                                              imageProvider) =>
+                                                          Container(
+                                                        color:
+                                                            Colors.transparent,
+                                                        width: 100,
+                                                        height: 100,
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              image: DecorationImage(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  image:
+                                                                      imageProvider)),
+                                                        ),
+                                                      ),
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey[300],
+                                                        radius: 45,
+                                                        child:
+                                                            const AnimatedImagePlaceholderLoader(),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey[300],
+                                                        radius: 80,
+                                                        child: Image.asset(
+                                                          'resources/images/house-icon-removebg-preview.png',
+                                                          height: 80,
+                                                          width: 80,
+                                                        ),
+                                                      ),
+                                                    ))
+                                              : (attachImage != null)
+                                                  ? Image.file(
+                                                      File(attachImage!.path),
+                                                      width: 100,
+                                                      height: 100,
+                                                    )
+                                                  : Container())
+                                          : ((attachImage != null)
+                                              ? Image.file(
+                                                  File(attachImage!.path),
+                                                  width: 100,
+                                                  height: 100,
+                                                )
+                                              : Container())
+                                    ],
+                                  ),
+                                ),
+                                const Divider(),
+                                ListTile(
+                                  contentPadding: const EdgeInsets.all(0),
+                                  visualDensity: const VisualDensity(
+                                      horizontal: 0, vertical: -4),
+                                  leading: const Icon(
+                                    Icons.chat,
+                                    size: 25,
+                                    color: Colors.black,
+                                  ),
+                                  title: const Padding(
+                                    padding: EdgeInsets.only(bottom: 10),
+                                    child: Text(
+                                      "Notes/ Remarks",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          letterSpacing: 1.2,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black),
+                                    ),
+                                  ),
+                                  subtitle: TextFormField(
+                                    controller: notesController,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null, // Set this
+
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        letterSpacing: 1.2,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w300),
+                                    onChanged: (value) {},
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      contentPadding: EdgeInsets.zero,
+                                      filled: false,
+                                      fillColor: Colors.grey.shade300,
+                                      counterText: '',
+                                      hintText: "Add your notes here..",
+                                      hintStyle: const TextStyle(
+                                          color: Colors.black,
+                                          letterSpacing: 1.2,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: Colors.transparent,
+                                            width: 2),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: Colors.transparent,
+                                            width: 2),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: Colors.transparent,
+                                            width: 2),
+                                      ),
+                                      errorText: null,
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color: Colors.transparent,
+                                            width: 2),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Divider(),
+                                TextButton.icon(
+                                  style: TextButton.styleFrom(
+                                      iconColor: Colors.blue,
+                                      foregroundColor: Colors.blue),
+                                  onPressed: () async {},
+                                  label: const Text(
+                                    "Add Custom Properties",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        letterSpacing: 1.2,
+                                        fontWeight: FontWeight.w300,
+                                        color: Colors.black),
+                                  ),
+                                  icon: const Icon(
+                                    Icons.add_circle_outline,
+                                    size: 25,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                SizedBox(
+                                  height: 50,
+                                  width: screenSize.width,
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          elevation: 10,
+                                          foregroundColor: Colors.blue,
+                                          side: const BorderSide(
+                                            color: Colors.blue,
+                                          )),
+                                      onPressed: () {
+                                        if (attachImage != null) {
+                                          if (amountController
+                                              .text.isNotEmpty) {
+                                            BlocProvider.of<
+                                                    TransactionsBloc>(context)
+                                                .add(AddCashTransactionEvent(
+                                                    samePageRedirection: true,
+                                                    customerId:
+                                                        (widget
+                                                                        .argus[
+                                                                    'customerData']
+                                                                as SelectedCustomerResponseData)
+                                                            .id!,
+                                                    businessId: (widget.argus[
+                                                                'selectedBusiness']
+                                                            as BusinessListResponseData)
+                                                        .id!,
+                                                    userId: sph
+                                                        .getString("userid")!,
+                                                    transactionType: 'D',
+                                                    transactionAmount:
+                                                        amountController.text,
+                                                    transactionNotes:
+                                                        notesController.text,
+                                                    transactionImages:
+                                                        attachImage));
+                                          } else {
+                                            EssentialWidgetsCollection
+                                                .showErrorSnackbar(context,
+                                                    description:
+                                                        "Please fill amount to complete transaction");
+                                          }
+                                        } else {
+                                          EssentialWidgetsCollection
+                                              .showErrorSnackbar(context,
+                                                  description:
+                                                      "Please upload image attachment for transaction proof");
+                                        }
+                                      },
+                                      child: const Text("Save & Add More")),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: keyboardIsOpened
             ? null
             : Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 height: 50,
                 width: screenSize.width,
                 child: ElevatedButton(
@@ -490,7 +708,34 @@ class _CashOutScreenState extends State<CashOutScreen> {
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      if (attachImage != null) {
+                        if (amountController.text.isNotEmpty) {
+                          BlocProvider.of<TransactionsBloc>(context).add(
+                              AddCashTransactionEvent(
+                                  samePageRedirection: false,
+                                  customerId: (widget.argus['customerData']
+                                          as SelectedCustomerResponseData)
+                                      .id!,
+                                  businessId: (widget.argus['selectedBusiness']
+                                          as BusinessListResponseData)
+                                      .id!,
+                                  userId: sph.getString("userid")!,
+                                  transactionType: 'D',
+                                  transactionAmount: amountController.text,
+                                  transactionNotes: notesController.text,
+                                  transactionImages: attachImage));
+                        } else {
+                          EssentialWidgetsCollection.showErrorSnackbar(context,
+                              description:
+                                  "Please fill amount to complete transaction");
+                        }
+                      } else {
+                        EssentialWidgetsCollection.showErrorSnackbar(context,
+                            description:
+                                "Please upload image attachment for transaction proof");
+                      }
+                    },
                     child: const Text("Save")),
               ),
       ),

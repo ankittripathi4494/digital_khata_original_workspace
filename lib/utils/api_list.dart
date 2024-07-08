@@ -27,4 +27,8 @@ class APIPathList {
   static const String deleteCustomer = "${subfolder}deleteCustomer";
   static const String getCustomerList = "${subfolder}getcustomerList";
   static const String getCustomerDetails = "${subfolder}getcustomeDetails";
+
+  static const String cashTransaction =
+      "${subfolder}cash_transaction";
+  static const String getCashTransactionList = "${subfolder}cash_transactionList";
 }

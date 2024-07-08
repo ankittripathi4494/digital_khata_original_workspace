@@ -10,11 +10,17 @@ import 'package:dkapp/module/customers/customer_bloc/customer_event.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_state.dart';
 import 'package:dkapp/module/customers/model/customer_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
+import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
+import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
+import 'package:dkapp/module/profile/transactions/transactions_event.dart';
+import 'package:dkapp/module/profile/transactions/transactions_state.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart' as i;
 import 'package:permission_handler/permission_handler.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -271,356 +277,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
                               //tab 1: Transcations
-                              SingleChildScrollView(
-                                scrollDirection: Axis.vertical,
-                                child: Column(
-                                  children: [
-                                    GridView.count(
-                                      shrinkWrap: true,
-                                      childAspectRatio: (1 / .7),
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      crossAxisCount: 4, // Changed from 2 to 1
-                                      crossAxisSpacing:
-                                          screenSize.width * 0.003,
-                                      mainAxisSpacing:
-                                          screenSize.height * 0.006,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            showModalBottomSheet<void>(
-                                              backgroundColor: Colors.white,
-                                              scrollControlDisabledMaxHeightRatio:
-                                                  0.2,
-                                              showDragHandle: true,
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return SizedBox(
-                                                  width: screenSize.width,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        height:
-                                                            screenSize.height *
-                                                                0.03,
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () {
-                                                          Navigator.pushNamed(
-                                                              context,
-                                                              '/upi-payment');
-                                                        },
-                                                        child: const Padding(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20.0,
-                                                                  vertical:
-                                                                      10.0),
-                                                          child: Text(
-                                                            'Settle',
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontSize: 20),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    20.0,
-                                                                vertical: 10.0),
-                                                        child: Text(
-                                                          'Write Off',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 20),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 203, 202, 202),
-                                                    offset: Offset(0.0, 1.0),
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                            child: const Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.check_circle_outline,
-                                                  color: Colors.green,
-                                                  size: 35,
-                                                ),
-                                                Text(
-                                                  'Settle',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {},
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 203, 202, 202),
-                                                    offset: Offset(0.0, 1.0),
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                            child: const Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.remember_me,
-                                                  color: Colors.brown,
-                                                  size: 30,
-                                                ),
-                                                Text(
-                                                  'Remind',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {},
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 203, 202, 202),
-                                                    offset: Offset(0.0, 1.0),
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                            child: const Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  CupertinoIcons
-                                                      .phone_circle_fill,
-                                                  color: Colors.green,
-                                                  size: 30,
-                                                ),
-                                                Text(
-                                                  'Remind',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {},
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
-                                                    color: Color.fromARGB(
-                                                        255, 203, 202, 202),
-                                                    offset: Offset(0.0, 1.0),
-                                                    blurRadius: 6.0,
-                                                  ),
-                                                ],
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        10.0)),
-                                            child: const Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  CupertinoIcons
-                                                      .chat_bubble_fill,
-                                                  color: Colors.blue,
-                                                  size: 30,
-                                                ),
-                                                Text(
-                                                  'Automatic',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        // Add more containers here if needed
-                                      ],
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: screenSize.width * 0.05,
-                                          vertical: screenSize.height * 0.03),
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Color.fromARGB(
-                                                255, 203, 202, 202),
-                                            offset: Offset(0.0, 1.0),
-                                            blurRadius: 6.0,
-                                          ),
-                                        ],
-                                      ),
-                                      child: const ExpansionTile(
-                                        backgroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                            side:
-                                                BorderSide(color: Colors.white),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(10.0))),
-                                        title: Text(
-                                          'Set Payment Reminder',
-                                          style: TextStyle(color: Colors.green),
-                                        ),
-                                        children: [
-                                          ListTile(
-                                            title: Text(
-                                              'Payment of Due Cycle',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                            subtitle: Text(
-                                              'Set a due date for this account',
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 92, 92, 92),
-                                                  fontSize: 12),
-                                            ),
-                                            trailing: Text(
-                                              'SET',
-                                              style: TextStyle(
-                                                  color: Colors.green,
-                                                  fontSize: 15),
-                                            ),
-                                          ),
-                                          ListTile(
-                                            title: Text(
-                                              'Overdue Remider Cycle',
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 15),
-                                            ),
-                                            subtitle: Text(
-                                              'How to frequently you want to remind the customer ',
-                                              style: TextStyle(
-                                                  color: Color.fromARGB(
-                                                      255, 92, 92, 92),
-                                                  fontSize: 12),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: screenSize.height * 0.1,
-                                    ),
-                                    const Center(
-                                      child: CircleAvatar(
-                                        radius: 50,
-                                        backgroundColor:
-                                            Color.fromARGB(255, 230, 223, 246),
-                                        child: Icon(
-                                          CupertinoIcons.search_circle_fill,
-                                          size: 60,
-                                          color: Colors.brown,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: screenSize.height * 0.25,
-                                    ),
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.spaceAround,
-                                    //   crossAxisAlignment:
-                                    //       CrossAxisAlignment.center,
-                                    //   children: [
-                                    //     TextButton(
-                                    //         style: TextButton.styleFrom(
-                                    //           minimumSize: Size(
-                                    //               screenSize.width * 0.45,
-                                    //               screenSize.height * 0.06),
-                                    //           backgroundColor:
-                                    //               const Color.fromARGB(
-                                    //                   255, 31, 1, 102),
-                                    //         ),
-                                    //         onPressed: () {},
-                                    //         child: const Text(
-                                    //           'Add Cash In',
-                                    //           style:
-                                    //               TextStyle(color: Colors.white),
-                                    //         )),
-                                    //     TextButton(
-                                    //         style: TextButton.styleFrom(
-                                    //           minimumSize: Size(
-                                    //               screenSize.width * 0.45,
-                                    //               screenSize.height * 0.06),
-                                    //           backgroundColor: Colors.red,
-                                    //         ),
-                                    //         onPressed: () {},
-                                    //         child: const Text(
-                                    //           'Add Cash Out',
-                                    //           style:
-                                    //               TextStyle(color: Colors.white),
-                                    //         ))
-                                    //   ],
-                                    // ),
-                                  ],
-                                ),
-                              )
+                              transactionListTabContent(screenSize, context,
+                                  state.selectedCustomerDetailedData)
                               //tab 2: recurring/emi
                               ,
                               Container(
@@ -1292,6 +950,386 @@ class _ProfileScreenState extends State<ProfileScreen>
           child: AnimatedImageLoader(),
         );
       },
+    );
+  }
+
+  transactionListTabContent(Size screenSize, BuildContext context,
+      SelectedCustomerResponseData selectedCustomerData) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          GridView.count(
+            shrinkWrap: true,
+            childAspectRatio: (1 / .7),
+            physics: const NeverScrollableScrollPhysics(),
+            crossAxisCount: 4, // Changed from 2 to 1
+            crossAxisSpacing: screenSize.width * 0.003,
+            mainAxisSpacing: screenSize.height * 0.006,
+            children: [
+              InkWell(
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    backgroundColor: Colors.white,
+                    scrollControlDisabledMaxHeightRatio: 0.2,
+                    showDragHandle: true,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SizedBox(
+                        width: screenSize.width,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: screenSize.height * 0.03,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                Navigator.pushNamed(context, '/upi-payment');
+                              },
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                child: Text(
+                                  'Settle',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 20),
+                                ),
+                              ),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                              child: Text(
+                                'Write Off',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 203, 202, 202),
+                          offset: Offset(0.0, 1.0),
+                          blurRadius: 6.0,
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.green,
+                        size: 35,
+                      ),
+                      Text(
+                        'Settle',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 203, 202, 202),
+                          offset: Offset(0.0, 1.0),
+                          blurRadius: 6.0,
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.remember_me,
+                        color: Colors.brown,
+                        size: 30,
+                      ),
+                      Text(
+                        'Remind',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 203, 202, 202),
+                          offset: Offset(0.0, 1.0),
+                          blurRadius: 6.0,
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        CupertinoIcons.phone_circle_fill,
+                        color: Colors.green,
+                        size: 30,
+                      ),
+                      Text(
+                        'Remind',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Container(
+                  decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 203, 202, 202),
+                          offset: Offset(0.0, 1.0),
+                          blurRadius: 6.0,
+                        ),
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0)),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        CupertinoIcons.chat_bubble_fill,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
+                      Text(
+                        'Automatic',
+                        style: TextStyle(color: Colors.black),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              // Add more containers here if needed
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: screenSize.width * 0.05,
+                vertical: screenSize.height * 0.03),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromARGB(255, 203, 202, 202),
+                  offset: Offset(0.0, 1.0),
+                  blurRadius: 6.0,
+                ),
+              ],
+            ),
+            child: const ExpansionTile(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              title: Text(
+                'Set Payment Reminder',
+                style: TextStyle(color: Colors.green),
+              ),
+              children: [
+                ListTile(
+                  title: Text(
+                    'Payment of Due Cycle',
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                  subtitle: Text(
+                    'Set a due date for this account',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
+                  ),
+                  trailing: Text(
+                    'SET',
+                    style: TextStyle(color: Colors.green, fontSize: 15),
+                  ),
+                ),
+                ListTile(
+                  title: Text(
+                    'Overdue Remider Cycle',
+                    style: TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+                  subtitle: Text(
+                    'How to frequently you want to remind the customer ',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
+                  ),
+                )
+              ],
+            ),
+          ),
+          BlocBuilder<TransactionsBloc, TransactionsState>(
+            bloc: TransactionsBloc()
+              ..add(TransactionListFetchEvent(
+                  businessId: (widget.argus['selectedBusiness']
+                          as BusinessListResponseData)
+                      .id!,
+                  customerId: selectedCustomerData.id!,
+                  userId: sph.getString("userid")!)),
+            builder: (context, state) {
+              if (state is TransactionListLoadedState) {
+                return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: state.successData!.length,
+                  itemBuilder: (context, index) {
+                    TransactionListResponseData transactionData =
+                        state.successData![index];
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.008,
+                          horizontal: screenSize.width * 0.05),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 203, 202, 202),
+                            offset: Offset(0.0, 1.0),
+                            blurRadius: 6.0,
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        onTap: () {
+                          if (transactionData.transType != 'D') {
+                            Navigator.pushNamed(context, '/cash-in-screen',
+                                arguments: {
+                                  'customerData': selectedCustomerData,
+                                  'selectedBusiness':
+                                      (widget.argus['selectedBusiness']
+                                          as BusinessListResponseData),
+                                  'transactionData': transactionData
+                                });
+                          } else {
+                            Navigator.pushNamed(context, '/cash-out-screen',
+                                arguments: {
+                                  'customerData': selectedCustomerData,
+                                  'selectedBusiness':
+                                      (widget.argus['selectedBusiness']
+                                          as BusinessListResponseData),
+                                  'transactionData': transactionData
+                                });
+                          }
+                        },
+                        leading: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.grey,
+                          child: Center(
+                            child: Icon(
+                              (transactionData.transType != 'D')
+                                  ? FontAwesomeIcons.download
+                                  : FontAwesomeIcons.upload,
+                              color: (transactionData.transType != 'D')
+                                  ? Colors.white
+                                  : Colors.red,
+                              size: 25,
+                            ),
+                          ),
+                        ),
+                        title: Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              RichText(
+                                  text: TextSpan(
+                                      text: i.DateFormat('dd-MM-y').format(
+                                        DateTime.parse(
+                                            transactionData.createdDate!),
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                            text: i.DateFormat('\nhh:mm a')
+                                                .format(DateTime.parse(
+                                                    transactionData
+                                                        .createdDate!)),
+                                            style: const TextStyle(
+                                                color: Colors.blueGrey,
+                                                fontSize: 14))
+                                      ],
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500))),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  (transactionData.transType != 'D')
+                                      ? Text("+ ${transactionData.transAmount}",
+                                          style: const TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))
+                                      : Text("- ${transactionData.transAmount}",
+                                          style: const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold)),
+                                  Text(
+                                      "Balance :- ${transactionData.afterTransAmount}",
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500))
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+              return const Center(
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Color.fromARGB(255, 230, 223, 246),
+                  child: Icon(
+                    CupertinoIcons.search_circle_fill,
+                    size: 60,
+                    color: Colors.brown,
+                  ),
+                ),
+              );
+            },
+          ),
+          SizedBox(
+            height: screenSize.height * 0.25,
+          ),
+        ],
+      ),
     );
   }
 

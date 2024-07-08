@@ -810,4 +810,5 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
           failedMessage: 'Failed to get platform version.'));
     }
   }
+
 }
