@@ -1,19 +1,7 @@
-import 'package:dkapp/module/business/contact_verifiction_screen.dart';
-import 'package:dkapp/module/business/manage_user_groups.dart';
-import 'package:dkapp/module/customers/add_customer_screen.dart';
-import 'package:dkapp/module/customers/customer_bloc/customer_bloc.dart';
-import 'package:dkapp/module/profile/cashin_screen.dart';
-import 'package:dkapp/module/profile/cashout_screen.dart';
-import 'package:dkapp/module/profile/edit_customer_profile_screen.dart';
-import 'package:dkapp/module/profile/profile_detail_screeen.dart';
-import 'package:dkapp/module/profile/profile_screen.dart';
-import 'package:dkapp/module/profile/amount_due_receive_screen.dart';
-import 'package:dkapp/module/profile/settlement_screen.dart';
-import 'package:dkapp/module/profile/writeoff_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
-import 'module/Emi/emi_screen.dart';
+import 'module/emi/emi_screen.dart';
 import 'module/account/account_screen.dart';
 import 'module/add_business/add_address_business_screen.dart';
 import 'module/add_business/add_new_business_screen.dart';
@@ -27,11 +15,15 @@ import 'module/bill/create_bill_screen.dart';
 import 'module/bill_plan/bill_plan_screen.dart';
 import 'module/business/business_bloc/business_bloc.dart';
 import 'module/business/business_screen.dart';
+import 'module/business/contact_verifiction_screen.dart';
+import 'module/business/manage_user_groups.dart';
 import 'module/business/update_business_profile_screen.dart';
 import 'module/business/user_group_bloc/user_group_bloc.dart';
 import 'module/business_type/business_type_bloc/business_type_bloc.dart';
 import 'module/business_type/business_type_screen.dart';
 import 'module/custom_amount/custom_amount_screen.dart';
+import 'module/customers/add_customer_screen.dart';
+import 'module/customers/customer_bloc/customer_bloc.dart';
 import 'module/customers/select_customer_screen.dart';
 import 'module/dashboard/screens/dashboard_screen.dart';
 import 'module/discount/discount_screen.dart';
@@ -58,7 +50,15 @@ import 'module/privacy_policy/privacy_policy_screen.dart';
 import 'module/privacy_policy/terms_condition_screen.dart';
 import 'module/product/product_detail_screen.dart';
 import 'module/product/product_screen.dart';
+import 'module/profile/amount_due_receive_screen.dart';
+import 'module/profile/cashin_screen.dart';
+import 'module/profile/cashout_screen.dart';
+import 'module/profile/edit_customer_profile_screen.dart';
+import 'module/profile/profile_detail_screeen.dart';
+import 'module/profile/profile_screen.dart';
+import 'module/profile/settlement_screen.dart';
 import 'module/profile/transactions/transactions_bloc.dart';
+import 'module/profile/writeoff_screen.dart';
 import 'module/purchases/my_purchases_screen.dart';
 import 'module/recurring/recurring_bill_screen.dart';
 import 'module/recurring/recurring_invoice_screen.dart';
@@ -146,7 +146,6 @@ class RouteAccessGenerator {
             ),
           ),
         );
-
       case '/how-It-works':
         if (arguments is Map<String, dynamic>) {
           return PageTransition(
