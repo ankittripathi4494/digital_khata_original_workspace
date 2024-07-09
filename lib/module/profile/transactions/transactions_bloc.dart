@@ -39,7 +39,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        // print(response.body);
+        print(response.body);
         if (response.statusCode == 200) {
           TransactionListResponseModel jsonResponse =
               TransactionListResponseModel.fromJson(

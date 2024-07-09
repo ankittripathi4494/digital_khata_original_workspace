@@ -5,11 +5,13 @@ import 'dart:io';
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
+import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_chips_input/select_chips_input.dart';
-
+import 'dart:convert' as convert;
 import '../dashboard/screens/dashboard_screen.dart';
 
 class InVoiceScreen extends StatefulWidget {
@@ -27,6 +29,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
   late TabController tabController;
   int tabIndex = 0;
   late int currentPageIndexValue = 1;
+  SharedPreferencesHelper sph = SharedPreferencesHelper();
 // Option 2
   @override
   void initState() {
@@ -2549,8 +2552,19 @@ class _InVoiceScreenState extends State<InVoiceScreen>
                             ),
                             InkWell(
                               onTap: () {
+                                var decodedJson = convert.jsonDecode(
+                                    sph.getString("selectedBusiness")!);
+                                Map<String, dynamic> jsonMap =
+                                    decodedJson as Map<String, dynamic>;
+
+                                Navigator.pop(context);
                                 Navigator.pushNamed(
-                                    context, '/recurring-transaction');
+                                    context, '/recurring-transaction',
+                                    arguments: {
+                                      'selectedBusiness':
+                                          BusinessListResponseData.fromJson(
+                                              jsonMap),
+                                    });
                               },
                               child: const Padding(
                                 padding: EdgeInsets.symmetric(

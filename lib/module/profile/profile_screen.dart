@@ -217,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               ],
             ),
             body: Container(
-               decoration: BoxDecoration(color: Colors.grey[100]),
+              decoration: BoxDecoration(color: Colors.grey[100]),
               child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: Column(
@@ -236,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             //   }
                             // },
                             controller: tabController,
-              
+
                             labelSpacing: 0.0,
                             height: screenSize.height * 0.08,
                             buttonMargin: const EdgeInsets.symmetric(
@@ -248,7 +248,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 31, 1, 102),
                                 borderRadius: BorderRadius.circular(0)),
-              
+
                             // borderWidth: 2,
                             // borderColor: Colors.black,
                             labelStyle: const TextStyle(
@@ -293,7 +293,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 recurringPart(screenSize, context,
                                     state.selectedCustomerDetailedData),
                                 //  tab 3: Invoices
-              
+
                                 Container(
                                   color: Colors.white,
                                   height: screenSize.height,
@@ -329,7 +329,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                 ),
                                 // tab 4: Files
-              
+
                                 Container(
                                   color: Colors.white,
                                   height: screenSize.height,
@@ -365,9 +365,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                 ),
                                 // tab 5: Notes
-              
+
                                 Container(
-                                  color: const Color.fromARGB(255, 211, 231, 248),
+                                  color:
+                                      const Color.fromARGB(255, 211, 231, 248),
                                   // height: screenSize.height / 1.5,
                                   // width: 100,
                                   child: Column(
@@ -406,14 +407,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10.0)),
-                                                enabledBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
-                                                focusedBorder: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    10.0)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    10.0)),
                                               ),
                                             ),
                                           )),
@@ -558,6 +563,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     ),
                                     InkWell(
                                       onTap: () {
+                                        Navigator.pop(context);
                                         Navigator.pushNamed(
                                             context, '/recurring-transaction',
                                             arguments: {
@@ -566,6 +572,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               'selectedBusiness': (widget
                                                       .argus['selectedBusiness']
                                                   as BusinessListResponseData),
+                                              'fromCustomerScreen': true
                                             });
                                       },
                                       child: const Padding(
@@ -1503,15 +1510,83 @@ class _ProfileScreenState extends State<ProfileScreen>
             ],
           );
         }
-        return const Center(
-          child: CircleAvatar(
-            radius: 50,
-            backgroundColor: Color.fromARGB(255, 230, 223, 246),
-            child: Icon(
-              CupertinoIcons.search_circle_fill,
-              size: 60,
-              color: Colors.brown,
+        if (state is TransactionListFailedState) {
+          return SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: false,
+            header: const WaterDropHeader(
+              waterDropColor: Color.fromARGB(255, 31, 1, 102),
+              idleIcon: AnimatedImagePlaceholderLoader(),
             ),
+            controller: refreshController,
+            onRefresh: (() async {
+              // monitor network fetch
+              await Future.delayed(const Duration(milliseconds: 1000));
+              // if failed,use refreshFailed()
+
+              Navigator.pushReplacementNamed(
+                  context, '/customer-screen-details',
+                  arguments: widget.argus);
+            }),
+            onLoading: (() async {
+              await Future.delayed(const Duration(milliseconds: 1000));
+              // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+              if (mounted) setState(() {});
+              refreshController.loadComplete();
+            }),
+            child: const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "No Transactions to Show",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        letterSpacing: 1.2,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
+                  ),
+                  Text(
+                    "Add your transactions to see overdue amount and send remainders",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        return SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: false,
+          header: const WaterDropHeader(
+            waterDropColor: Color.fromARGB(255, 31, 1, 102),
+            idleIcon: AnimatedImagePlaceholderLoader(),
+          ),
+          controller: refreshController,
+          onRefresh: (() async {
+            // monitor network fetch
+            await Future.delayed(const Duration(milliseconds: 1000));
+            // if failed,use refreshFailed()
+
+            Navigator.pushReplacementNamed(context, '/customer-screen-details',
+                arguments: widget.argus);
+          }),
+          onLoading: (() async {
+            await Future.delayed(const Duration(milliseconds: 1000));
+            // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+            if (mounted) setState(() {});
+            refreshController.loadComplete();
+          }),
+          child: const Center(
+            child: AnimatedImageLoader(),
           ),
         );
       },
