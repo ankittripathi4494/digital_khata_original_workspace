@@ -130,7 +130,8 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                 ))
           ],
         ),
-        body: Padding(
+        body: Container(
+           decoration: BoxDecoration(color: Colors.grey[100]),
           padding: EdgeInsets.symmetric(
               horizontal: screenSize.width * 0.05,
               vertical: screenSize.height * 0.03),

@@ -49,6 +49,9 @@ class _ProfileScreenState extends State<ProfileScreen>
     {"id": "5", "title": "Show Remainder"},
     {"id": "6", "title": "Reports"}
   ];
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
+
 // Option 2
   @override
   void initState() {
@@ -213,348 +216,319 @@ class _ProfileScreenState extends State<ProfileScreen>
                 )
               ],
             ),
-            body: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: screenSize.height / 1.2,
-                    width: screenSize.width,
-                    child: Column(
-                      children: <Widget>[
-                        ButtonsTabBar(
-                          // onTap: (index) {
-                          //   print(tabController.index);
-                          //   print(index);
-                          //   if (tabController.index == index) {
-                          //     print('Same Tab Clicked');
-                          //   }
-                          // },
-                          controller: tabController,
-
-                          labelSpacing: 0.0,
-                          height: screenSize.height * 0.08,
-                          buttonMargin: const EdgeInsets.symmetric(
-                              horizontal: 5.0, vertical: 10.0),
-                          radius: 0,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 10.0),
-                          // Customize the appearance and behavior of the tab bar
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 31, 1, 102),
-                              borderRadius: BorderRadius.circular(0)),
-
-                          // borderWidth: 2,
-                          // borderColor: Colors.black,
-                          labelStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          unselectedLabelStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          // Add your tabs here
-                          tabs: const [
-                            Tab(
-                              text: 'Transactions',
-                            ),
-                            Tab(
-                              text: 'Recuring/EMI',
-                            ),
-                            Tab(
-                              text: 'Invoices',
-                            ),
-                            Tab(
-                              text: 'Files',
-                            ),
-                            Tab(
-                              text: 'Notes',
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: TabBarView(
+            body: Container(
+               decoration: BoxDecoration(color: Colors.grey[100]),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: screenSize.height / 1.2,
+                      width: screenSize.width,
+                      child: Column(
+                        children: <Widget>[
+                          ButtonsTabBar(
+                            // onTap: (index) {
+                            //   print(tabController.index);
+                            //   print(index);
+                            //   if (tabController.index == index) {
+                            //     print('Same Tab Clicked');
+                            //   }
+                            // },
                             controller: tabController,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              //tab 1: Transcations
-                              transactionListTabContent(screenSize, context,
-                                  state.selectedCustomerDetailedData)
-                              //tab 2: recurring/emi
-                              ,
-                              Container(
-                                color: Colors.white,
-                                height: screenSize.height,
-                                // width: 100,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Center(
-                                      // color: Colors.grey,
-                                      child: Icon(
-                                        Icons.receipt_long_sharp,
-                                        size: 100,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Center(
-                                        // color: Colors.grey,
-                                        child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: screenSize.width * 0.1),
-                                      child: const Text(
-                                        'You can now automatically enter monthly        or weekly repeating transactions',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ))
-                                  ],
-                                ),
+              
+                            labelSpacing: 0.0,
+                            height: screenSize.height * 0.08,
+                            buttonMargin: const EdgeInsets.symmetric(
+                                horizontal: 5.0, vertical: 10.0),
+                            radius: 0,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 10.0),
+                            // Customize the appearance and behavior of the tab bar
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 31, 1, 102),
+                                borderRadius: BorderRadius.circular(0)),
+              
+                            // borderWidth: 2,
+                            // borderColor: Colors.black,
+                            labelStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            unselectedLabelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            // Add your tabs here
+                            tabs: const [
+                              Tab(
+                                text: 'Transactions',
                               ),
-                              //  tab 3: Invoices
-
-                              Container(
-                                color: Colors.white,
-                                height: screenSize.height,
-                                // width: 100,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Center(
-                                      // color: Colors.grey,
-                                      child: Icon(
-                                        Icons.receipt_long_sharp,
-                                        size: 100,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Center(
-                                        // color: Colors.grey,
-                                        child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: screenSize.width * 0.1),
-                                      child: const Text(
-                                        'No Data',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ))
-                                  ],
-                                ),
+                              Tab(
+                                text: 'Recuring/EMI',
                               ),
-                              // tab 4: Files
-
-                              Container(
-                                color: Colors.white,
-                                height: screenSize.height,
-                                // width: 100,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Center(
-                                      // color: Colors.grey,
-                                      child: Icon(
-                                        Icons.receipt_long_sharp,
-                                        size: 100,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    ),
-                                    Center(
-                                        // color: Colors.grey,
-                                        child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: screenSize.width * 0.1),
-                                      child: const Text(
-                                        'Upload important documents related to this account here and easily find them at one place',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ))
-                                  ],
-                                ),
+                              Tab(
+                                text: 'Invoices',
                               ),
-                              // tab 5: Notes
-
-                              Container(
-                                color: const Color.fromARGB(255, 211, 231, 248),
-                                // height: screenSize.height / 1.5,
-                                // width: 100,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Center(
-                                      // color: Colors.grey,
-                                      child: Icon(
-                                        Icons.receipt_long_sharp,
-                                        size: 100,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    // SizedBox(
-                                    //   height: screenSize.height * 0.2,
-                                    // ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Expanded(
-                                            child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 10.0,
-                                              vertical:
-                                                  screenSize.height * 0.1),
-                                          child: TextFormField(
-                                            decoration: InputDecoration(
-                                              fillColor: Colors.white,
-                                              hintText: 'Type a private note',
-                                              hintStyle: const TextStyle(
-                                                  color: Colors.grey),
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0)),
-                                              enabledBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0)),
-                                              focusedBorder: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0)),
-                                            ),
-                                          ),
-                                        )),
-                                        IconButton(
-                                            onPressed: () {},
-                                            icon: const Icon(null))
-                                      ],
-                                    )
-                                  ],
-                                ),
+                              Tab(
+                                text: 'Files',
+                              ),
+                              Tab(
+                                text: 'Notes',
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: TabBarView(
+                              controller: tabController,
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                //tab 1: Transcations
+                                transactionListTabContent(screenSize, context,
+                                    state.selectedCustomerDetailedData)
+                                //tab 2: recurring/emi
+                                ,
+                                recurringPart(screenSize, context,
+                                    state.selectedCustomerDetailedData),
+                                //  tab 3: Invoices
+              
+                                Container(
+                                  color: Colors.white,
+                                  height: screenSize.height,
+                                  // width: 100,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Center(
+                                        // color: Colors.grey,
+                                        child: Icon(
+                                          Icons.receipt_long_sharp,
+                                          size: 100,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Center(
+                                          // color: Colors.grey,
+                                          child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: screenSize.width * 0.1),
+                                        child: const Text(
+                                          'No Data',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                                // tab 4: Files
+              
+                                Container(
+                                  color: Colors.white,
+                                  height: screenSize.height,
+                                  // width: 100,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Center(
+                                        // color: Colors.grey,
+                                        child: Icon(
+                                          Icons.receipt_long_sharp,
+                                          size: 100,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      ),
+                                      Center(
+                                          // color: Colors.grey,
+                                          child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: screenSize.width * 0.1),
+                                        child: const Text(
+                                          'Upload important documents related to this account here and easily find them at one place',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ))
+                                    ],
+                                  ),
+                                ),
+                                // tab 5: Notes
+              
+                                Container(
+                                  color: const Color.fromARGB(255, 211, 231, 248),
+                                  // height: screenSize.height / 1.5,
+                                  // width: 100,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Center(
+                                        // color: Colors.grey,
+                                        child: Icon(
+                                          Icons.receipt_long_sharp,
+                                          size: 100,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                      // SizedBox(
+                                      //   height: screenSize.height * 0.2,
+                                      // ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                              child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10.0,
+                                                vertical:
+                                                    screenSize.height * 0.1),
+                                            child: TextFormField(
+                                              decoration: InputDecoration(
+                                                fillColor: Colors.white,
+                                                hintText: 'Type a private note',
+                                                hintStyle: const TextStyle(
+                                                    color: Colors.grey),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                enabledBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                                focusedBorder: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0)),
+                                              ),
+                                            ),
+                                          )),
+                                          IconButton(
+                                              onPressed: () {},
+                                              icon: const Icon(null))
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  //   Container(
-                  //     margin: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
-                  //     decoration: const BoxDecoration(
-                  //       color: Colors.white,
-                  //       boxShadow: [
-                  //         BoxShadow(
-                  //           color: Color.fromARGB(255, 203, 202, 202),
-                  //           offset: Offset(0.0, 1.0),
-                  //           blurRadius: 6.0,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //     child: const ExpansionTile(
-                  //       backgroundColor: Colors.white,
-                  //       shape: RoundedRectangleBorder(
-                  //           side: BorderSide(color: Colors.white),
-                  //           borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  //       title: Text(
-                  //         'Set Payment Reminder',
-                  //         style: TextStyle(color: Colors.green),
-                  //       ),
-                  //       children: [
-                  //         ListTile(
-                  //           title: Text(
-                  //             'Payment of Due Cycle',
-                  //             style: TextStyle(color: Colors.black, fontSize: 15),
-                  //           ),
-                  //           subtitle: Text(
-                  //             'Set a due date for this account',
-                  //             style: TextStyle(
-                  //                 color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
-                  //           ),
-                  //           trailing: Text(
-                  //             'SET',
-                  //             style: TextStyle(color: Colors.green, fontSize: 15),
-                  //           ),
-                  //         ),
-                  //         ListTile(
-                  //           title: Text(
-                  //             'Overdue Remider Cycle',
-                  //             style: TextStyle(color: Colors.black, fontSize: 15),
-                  //           ),
-                  //           subtitle: Text(
-                  //             'How to frequently you want to remind the customer ',
-                  //             style: TextStyle(
-                  //                 color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
-                  //           ),
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  //   SizedBox(
-                  //     height: screenSize.height * 0.1,
-                  //   ),
-                  //   const Center(
-                  //     child: CircleAvatar(
-                  //       radius: 50,
-                  //       backgroundColor: Color.fromARGB(255, 230, 223, 246),
-                  //       child: Icon(
-                  //         CupertinoIcons.search_circle_fill,
-                  //         size: 60,
-                  //         color: Colors.brown,
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   SizedBox(
-                  //     height: screenSize.height * 0.2,
-                  //   ),
-                  //   Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     children: [
-                  //       TextButton(
-                  //           style: TextButton.styleFrom(
-                  //             minimumSize: Size(
-                  //                 screenSize.width * 0.45, screenSize.height * 0.06),
-                  //             backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-                  //           ),
-                  //           onPressed: () {},
-                  //           child: const Text(
-                  //             'Add Cash In',
-                  //             style: TextStyle(color: Colors.white),
-                  //           )),
-                  //       TextButton(
-                  //           style: TextButton.styleFrom(
-                  //             minimumSize: Size(
-                  //                 screenSize.width * 0.45, screenSize.height * 0.06),
-                  //             backgroundColor: Colors.red,
-                  //           ),
-                  //           onPressed: () {},
-                  //           child: const Text(
-                  //             'Add Cash Out',
-                  //             style: TextStyle(color: Colors.white),
-                  //           ))
-                  //     ],
-                  //   )
-                ],
+                    //   Container(
+                    //     margin: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
+                    //     decoration: const BoxDecoration(
+                    //       color: Colors.white,
+                    //       boxShadow: [
+                    //         BoxShadow(
+                    //           color: Color.fromARGB(255, 203, 202, 202),
+                    //           offset: Offset(0.0, 1.0),
+                    //           blurRadius: 6.0,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     child: const ExpansionTile(
+                    //       backgroundColor: Colors.white,
+                    //       shape: RoundedRectangleBorder(
+                    //           side: BorderSide(color: Colors.white),
+                    //           borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    //       title: Text(
+                    //         'Set Payment Reminder',
+                    //         style: TextStyle(color: Colors.green),
+                    //       ),
+                    //       children: [
+                    //         ListTile(
+                    //           title: Text(
+                    //             'Payment of Due Cycle',
+                    //             style: TextStyle(color: Colors.black, fontSize: 15),
+                    //           ),
+                    //           subtitle: Text(
+                    //             'Set a due date for this account',
+                    //             style: TextStyle(
+                    //                 color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
+                    //           ),
+                    //           trailing: Text(
+                    //             'SET',
+                    //             style: TextStyle(color: Colors.green, fontSize: 15),
+                    //           ),
+                    //         ),
+                    //         ListTile(
+                    //           title: Text(
+                    //             'Overdue Remider Cycle',
+                    //             style: TextStyle(color: Colors.black, fontSize: 15),
+                    //           ),
+                    //           subtitle: Text(
+                    //             'How to frequently you want to remind the customer ',
+                    //             style: TextStyle(
+                    //                 color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
+                    //           ),
+                    //         )
+                    //       ],
+                    //     ),
+                    //   ),
+                    //   SizedBox(
+                    //     height: screenSize.height * 0.1,
+                    //   ),
+                    //   const Center(
+                    //     child: CircleAvatar(
+                    //       radius: 50,
+                    //       backgroundColor: Color.fromARGB(255, 230, 223, 246),
+                    //       child: Icon(
+                    //         CupertinoIcons.search_circle_fill,
+                    //         size: 60,
+                    //         color: Colors.brown,
+                    //       ),
+                    //     ),
+                    //   ),
+                    //   SizedBox(
+                    //     height: screenSize.height * 0.2,
+                    //   ),
+                    //   Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       TextButton(
+                    //           style: TextButton.styleFrom(
+                    //             minimumSize: Size(
+                    //                 screenSize.width * 0.45, screenSize.height * 0.06),
+                    //             backgroundColor: const Color.fromARGB(255, 31, 1, 102),
+                    //           ),
+                    //           onPressed: () {},
+                    //           child: const Text(
+                    //             'Add Cash In',
+                    //             style: TextStyle(color: Colors.white),
+                    //           )),
+                    //       TextButton(
+                    //           style: TextButton.styleFrom(
+                    //             minimumSize: Size(
+                    //                 screenSize.width * 0.45, screenSize.height * 0.06),
+                    //             backgroundColor: Colors.red,
+                    //           ),
+                    //           onPressed: () {},
+                    //           child: const Text(
+                    //             'Add Cash Out',
+                    //             style: TextStyle(color: Colors.white),
+                    //           ))
+                    //     ],
+                    //   )
+                  ],
+                ),
               ),
             ),
             floatingActionButtonLocation:
@@ -579,26 +553,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Container(
-                                    //   width: screenSize.width,
-                                    //   decoration: const BoxDecoration(),
-                                    //   child: const Center(
-                                    //     child: Text(
-                                    //       'Payment Providers',
-                                    //       style: TextStyle(
-                                    //           color: Colors.black,
-                                    //           fontSize: 23,
-                                    //           fontWeight: FontWeight.bold),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                     SizedBox(
                                       height: screenSize.height * 0.03,
                                     ),
                                     InkWell(
                                       onTap: () {
                                         Navigator.pushNamed(
-                                            context, '/upi-payment');
+                                            context, '/recurring-transaction',
+                                            arguments: {
+                                              'customerData': state
+                                                  .selectedCustomerDetailedData,
+                                              'selectedBusiness': (widget
+                                                      .argus['selectedBusiness']
+                                                  as BusinessListResponseData),
+                                            });
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.symmetric(
@@ -957,8 +925,42 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  RefreshController refreshController =
-      RefreshController(initialRefresh: false);
+  recurringPart(Size screenSize, BuildContext context,
+      SelectedCustomerResponseData selectedCustomerData) {
+    return Container(
+      color: Colors.white,
+      height: screenSize.height,
+      // width: 100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Center(
+            // color: Colors.grey,
+            child: Icon(
+              Icons.receipt_long_sharp,
+              size: 100,
+              color: Colors.blue,
+            ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Center(
+              // color: Colors.grey,
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
+            child: const Text(
+              'You can now automatically enter monthly        or weekly repeating transactions',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+          ))
+        ],
+      ),
+    );
+  }
 
   transactionListTabContent(Size screenSize, BuildContext context,
       SelectedCustomerResponseData selectedCustomerData) {

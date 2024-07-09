@@ -101,535 +101,538 @@ class _WriteOffScreenState extends State<WriteOffScreen> {
                 ))
           ],
         ),
-        body: BlocBuilder<TransactionsBloc, TransactionsState>(
-          builder: (context, state) {
-            return Container(
-              margin: const EdgeInsets.all(15),
-              child: SingleChildScrollView(
-                child: Form(
-                  child: Column(
-                    children: [
-                      (state is AddNewCashTransactionSuccessState)
-                          ? EssentialWidgetsCollection.autoScheduleTask(
-                              context,
-                              taskWaitDuration: Durations.medium3,
-                              task: () {
-                                print(
-                                    "Same Page Redirection:- ${state.samePageRedirection}");
-                                if (state.samePageRedirection == true) {
-                                  setState(() {
-                                    amountController.clear();
-                                    attachImage = null;
-                                    notesController.clear();
-                                  });
+        body: Container(
+           decoration: BoxDecoration(color: Colors.grey[100]),
+          child: BlocBuilder<TransactionsBloc, TransactionsState>(
+            builder: (context, state) {
+              return Container(
+                margin: const EdgeInsets.all(15),
+                child: SingleChildScrollView(
+                  child: Form(
+                    child: Column(
+                      children: [
+                        (state is AddNewCashTransactionSuccessState)
+                            ? EssentialWidgetsCollection.autoScheduleTask(
+                                context,
+                                taskWaitDuration: Durations.medium3,
+                                task: () {
+                                  print(
+                                      "Same Page Redirection:- ${state.samePageRedirection}");
+                                  if (state.samePageRedirection == true) {
+                                    setState(() {
+                                      amountController.clear();
+                                      attachImage = null;
+                                      notesController.clear();
+                                    });
+                                    Navigator.pushReplacementNamed(
+                                        context, '/cash-in-screen',
+                                        arguments: widget.argus);
+                                  } else {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/customer-screen-details',
+                                        arguments: widget.argus);
+                                  }
+                                  EssentialWidgetsCollection.showSuccessSnackbar(
+                                      context,
+                                      description: "Transaction Successfull");
+                                },
+                              )
+                            : Container(),
+                        (state is AddNewCashTransactionFailedState)
+                            ? EssentialWidgetsCollection.autoScheduleTask(
+                                context,
+                                taskWaitDuration: Durations.medium3,
+                                task: () {
                                   Navigator.pushReplacementNamed(
                                       context, '/cash-in-screen',
                                       arguments: widget.argus);
-                                } else {
-                                  Navigator.pushReplacementNamed(
-                                      context, '/customer-screen-details',
-                                      arguments: widget.argus);
-                                }
-                                EssentialWidgetsCollection.showSuccessSnackbar(
-                                    context,
-                                    description: "Transaction Successfull");
-                              },
-                            )
-                          : Container(),
-                      (state is AddNewCashTransactionFailedState)
-                          ? EssentialWidgetsCollection.autoScheduleTask(
-                              context,
-                              taskWaitDuration: Durations.medium3,
-                              task: () {
-                                Navigator.pushReplacementNamed(
-                                    context, '/cash-in-screen',
-                                    arguments: widget.argus);
-                                EssentialWidgetsCollection.showErrorSnackbar(
-                                    context,
-                                    description: state.failedMessage);
-                              },
-                            )
-                          : Container(),
-                      (state is AddNewCashTransactionLoadingState)
-                          ? const AnimatedImagePlaceholderLoader()
-                          : Container(),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          vertical: screenSize.height * 0.008,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 203, 202, 202),
-                              offset: Offset(0.0, 1.0),
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Write off",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    letterSpacing: 1.2,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.black),
+                                  EssentialWidgetsCollection.showErrorSnackbar(
+                                      context,
+                                      description: state.failedMessage);
+                                },
+                              )
+                            : Container(),
+                        (state is AddNewCashTransactionLoadingState)
+                            ? const AnimatedImagePlaceholderLoader()
+                            : Container(),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: screenSize.height * 0.008,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 6.0,
                               ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 10),
-                                height: 50,
-                                child: TextFormField(
-                                  controller: amountController,
-                                  keyboardType: TextInputType.number,
-                                  enabled: false,
+                            ],
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Write off",
                                   style: TextStyle(
-                                      color: ((widget.argus['transactionData']
+                                      fontSize: 20,
+                                      letterSpacing: 1.2,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 10),
+                                  height: 50,
+                                  child: TextFormField(
+                                    controller: amountController,
+                                    keyboardType: TextInputType.number,
+                                    enabled: false,
+                                    style: TextStyle(
+                                        color: ((widget.argus['transactionData']
+                                                        as TransactionListResponseData)
+                                                    .transType !=
+                                                'D')
+                                            ? Colors.red
+                                            : Colors.green,
+                                        letterSpacing: 1.2,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                    onChanged: (value) {},
+                                    decoration: InputDecoration(
+                                      filled: false,
+                                      fillColor: Colors.grey.shade300,
+                                      counterText: '',
+                                      prefixIcon: const Icon(
+                                        Icons.currency_rupee,
+                                        size: 20,
+                                      ),
+                                      prefixIconColor: ((widget.argus[
+                                                          'transactionData']
                                                       as TransactionListResponseData)
                                                   .transType !=
                                               'D')
                                           ? Colors.red
                                           : Colors.green,
-                                      letterSpacing: 1.2,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                  onChanged: (value) {},
-                                  decoration: InputDecoration(
-                                    filled: false,
-                                    fillColor: Colors.grey.shade300,
-                                    counterText: '',
-                                    prefixIcon: const Icon(
-                                      Icons.currency_rupee,
-                                      size: 20,
-                                    ),
-                                    prefixIconColor: ((widget.argus[
-                                                        'transactionData']
-                                                    as TransactionListResponseData)
-                                                .transType !=
-                                            'D')
-                                        ? Colors.red
-                                        : Colors.green,
-                                    hintText: "0",
-                                    hintStyle: const TextStyle(
-                                        color: Colors.black,
-                                        letterSpacing: 1.2,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                          color:
-                                              Color.fromARGB(255, 31, 1, 102),
-                                          width: 2),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                          color:
-                                              Color.fromARGB(255, 31, 1, 102),
-                                          width: 2),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                          color:
-                                              Color.fromARGB(255, 31, 1, 102),
-                                          width: 2),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                          color:
-                                              Color.fromARGB(255, 31, 1, 102),
-                                          width: 2),
-                                    ),
-                                    errorText: null,
-                                    errorBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
-                                          color:
-                                              Color.fromARGB(255, 31, 1, 102),
-                                          width: 2),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 0, vertical: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    OutlinedButton.icon(
-                                      style: OutlinedButton.styleFrom(
-                                        foregroundColor: Colors.black,
-                                        iconColor: Colors.blue,
-                                      ),
-                                      onPressed: () {
-                                        showDatePicker(
-                                          context: context,
-                                          initialDate: DateTime.now(),
-                                          firstDate: DateTime(2000),
-                                          lastDate: DateTime(2101),
-                                        ).then((c) {
-                                          if (c != null) {
-                                            setState(() {
-                                              selectedDate = c;
-                                            });
-                                          }
-                                          showTimePicker(
-                                            context: context,
-                                            initialTime: TimeOfDay.now(),
-                                          ).then((t) {
-                                            if (t != null) {
-                                              setState(() {
-                                                selectedTime = t;
-                                              });
-                                            }
-                                          });
-                                        });
-                                      },
-                                      label: Text(
-                                          i.DateFormat('MM-dd-y hh:mm a')
-                                              .format(((selectedDate != null) &&
-                                                      (selectedTime != null))
-                                                  ? _combineDateTime(
-                                                      selectedDate!,
-                                                      selectedTime!)
-                                                  : DateTime.now())),
-                                      icon: const Icon(
-                                        Icons.calendar_month,
-                                      ),
-                                    ),
-                                    TextButton.icon(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.blue,
-                                      ),
-                                      onPressed: () {},
-                                      label: const Text("Link"),
-                                      icon: const Icon(Icons.link),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                          vertical: screenSize.height * 0.008,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 203, 202, 202),
-                              offset: Offset(0.0, 1.0),
-                              blurRadius: 6.0,
-                            ),
-                          ],
-                        ),
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 0),
-                          child: DividerTheme(
-                            data: const DividerThemeData(
-                                color: Colors.green, thickness: 1),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ListTile(
-                                  onTap: () {
-                                    EssentialWidgetsCollection.showAlertDialog(
-                                        context,
-                                        icon: const Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              "Choose Option",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  letterSpacing: 1.2,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.black),
-                                            ),
-                                            Divider(
-                                                color: Colors.green,
-                                                thickness: 2)
-                                          ],
-                                        ),
-                                        title: TextButton.icon(
-                                          onPressed: () async {
-                                            _picker
-                                                .pickImage(
-                                                    maxHeight: 480,
-                                                    maxWidth: 640,
-                                                    source: ImageSource.camera)
-                                                .then((c) {
-                                              setState(() {
-                                                attachImage = c;
-                                              });
-                                              debugPrint(
-                                                  "Captured Image From Camera :- ${attachImage!.path}");
-                                              Navigator.pop(context);
-                                            });
-                                          },
-                                          label: const Text(
-                                            "Camera",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                letterSpacing: 1.2,
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.black),
-                                          ),
-                                          icon: const Icon(
-                                            Icons.camera,
-                                            size: 25,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        content: TextButton.icon(
-                                            onPressed: () {
-                                              _picker
-                                                  .pickImage(
-                                                      maxHeight: 480,
-                                                      maxWidth: 640,
-                                                      source:
-                                                          ImageSource.gallery)
-                                                  .then((c) {
-                                                setState(() {
-                                                  attachImage = c;
-                                                });
-                                                debugPrint(
-                                                    "Captured Image From gallery :- ${attachImage!.path}");
-                                                Navigator.pop(context);
-                                              });
-                                            },
-                                            icon: const Icon(
-                                              Icons.image_search,
-                                              size: 25,
-                                              color: Colors.black,
-                                            ),
-                                            label: const Text(
-                                              "Gallery",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  letterSpacing: 1.2,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.black),
-                                            )));
-                                  },
-                                  contentPadding: const EdgeInsets.all(0),
-                                  visualDensity: const VisualDensity(
-                                      horizontal: 0, vertical: -4),
-                                  leading: const Icon(
-                                    Icons.image,
-                                    size: 25,
-                                    color: Colors.black,
-                                  ),
-                                  title: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        "Attachment",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            letterSpacing: 1.2,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black),
-                                      ),
-                                      (widget.argus
-                                              .containsKey('transactionData'))
-                                          ? (((widget.argus['transactionData']
-                                                          as TransactionListResponseData)
-                                                      .image !=
-                                                  null)
-                                              ? ((attachImage != null)
-                                                  ? Image.file(
-                                                      File(attachImage!.path),
-                                                      width: 100,
-                                                      height: 100,
-                                                    )
-                                                  : CachedNetworkImage(
-                                                      imageUrl:
-                                                          "${NetworkImagePathList.imagePathTrans}${(widget.argus['transactionData'] as TransactionListResponseData).image}",
-                                                      imageBuilder: (context,
-                                                              imageProvider) =>
-                                                          Container(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 100,
-                                                        height: 100,
-                                                        child: Container(
-                                                          decoration: BoxDecoration(
-                                                              image: DecorationImage(
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  image:
-                                                                      imageProvider)),
-                                                        ),
-                                                      ),
-                                                      placeholder:
-                                                          (context, url) =>
-                                                              CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.grey[300],
-                                                        radius: 45,
-                                                        child:
-                                                            const AnimatedImagePlaceholderLoader(),
-                                                      ),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.grey[300],
-                                                        radius: 80,
-                                                        child: Image.asset(
-                                                          'resources/images/house-icon-removebg-preview.png',
-                                                          height: 80,
-                                                          width: 80,
-                                                        ),
-                                                      ),
-                                                    ))
-                                              : (attachImage != null)
-                                                  ? Image.file(
-                                                      File(attachImage!.path),
-                                                      width: 100,
-                                                      height: 100,
-                                                    )
-                                                  : Container())
-                                          : ((attachImage != null)
-                                              ? Image.file(
-                                                  File(attachImage!.path),
-                                                  width: 100,
-                                                  height: 100,
-                                                )
-                                              : Container())
-                                    ],
-                                  ),
-                                ),
-                                const Divider(),
-                                ListTile(
-                                  contentPadding: const EdgeInsets.all(0),
-                                  visualDensity: const VisualDensity(
-                                      horizontal: 0, vertical: -4),
-                                  leading: const Icon(
-                                    Icons.chat,
-                                    size: 25,
-                                    color: Colors.black,
-                                  ),
-                                  title: const Padding(
-                                    padding: EdgeInsets.only(bottom: 10),
-                                    child: Text(
-                                      "Notes/ Remarks",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          letterSpacing: 1.2,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black),
-                                    ),
-                                  ),
-                                  subtitle: TextFormField(
-                                    controller: notesController,
-                                    keyboardType: TextInputType.multiline,
-                                    maxLines: null, // Set this
-
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        letterSpacing: 1.2,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w300),
-                                    onChanged: (value) {},
-                                    decoration: InputDecoration(
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.zero,
-                                      filled: false,
-                                      fillColor: Colors.grey.shade300,
-                                      counterText: '',
-                                      hintText: "Add your notes here..",
+                                      hintText: "0",
                                       hintStyle: const TextStyle(
                                           color: Colors.black,
                                           letterSpacing: 1.2,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            width: 2),
+                                      ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
-                                            color: Colors.transparent,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
                                             width: 2),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
-                                            color: Colors.transparent,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
                                             width: 2),
                                       ),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
-                                            color: Colors.transparent,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
                                             width: 2),
                                       ),
                                       errorText: null,
                                       errorBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: const BorderSide(
-                                            color: Colors.transparent,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
                                             width: 2),
                                       ),
                                     ),
                                   ),
                                 ),
-                                const Divider(),
-                                TextButton.icon(
-                                  style: TextButton.styleFrom(
-                                      iconColor: Colors.blue,
-                                      foregroundColor: Colors.blue),
-                                  onPressed: () async {},
-                                  label: const Text(
-                                    "Add Custom Properties",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        letterSpacing: 1.2,
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.black),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 0, vertical: 10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      OutlinedButton.icon(
+                                        style: OutlinedButton.styleFrom(
+                                          foregroundColor: Colors.black,
+                                          iconColor: Colors.blue,
+                                        ),
+                                        onPressed: () {
+                                          showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(2101),
+                                          ).then((c) {
+                                            if (c != null) {
+                                              setState(() {
+                                                selectedDate = c;
+                                              });
+                                            }
+                                            showTimePicker(
+                                              context: context,
+                                              initialTime: TimeOfDay.now(),
+                                            ).then((t) {
+                                              if (t != null) {
+                                                setState(() {
+                                                  selectedTime = t;
+                                                });
+                                              }
+                                            });
+                                          });
+                                        },
+                                        label: Text(
+                                            i.DateFormat('MM-dd-y hh:mm a')
+                                                .format(((selectedDate != null) &&
+                                                        (selectedTime != null))
+                                                    ? _combineDateTime(
+                                                        selectedDate!,
+                                                        selectedTime!)
+                                                    : DateTime.now())),
+                                        icon: const Icon(
+                                          Icons.calendar_month,
+                                        ),
+                                      ),
+                                      TextButton.icon(
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Colors.blue,
+                                        ),
+                                        onPressed: () {},
+                                        label: const Text("Link"),
+                                        icon: const Icon(Icons.link),
+                                      )
+                                    ],
                                   ),
-                                  icon: const Icon(
-                                    Icons.add_circle_outline,
-                                    size: 25,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
                                 ),
                               ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: screenSize.height * 0.008,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 0),
+                            child: DividerTheme(
+                              data: const DividerThemeData(
+                                  color: Colors.green, thickness: 1),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ListTile(
+                                    onTap: () {
+                                      EssentialWidgetsCollection.showAlertDialog(
+                                          context,
+                                          icon: const Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                "Choose Option",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    letterSpacing: 1.2,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.black),
+                                              ),
+                                              Divider(
+                                                  color: Colors.green,
+                                                  thickness: 2)
+                                            ],
+                                          ),
+                                          title: TextButton.icon(
+                                            onPressed: () async {
+                                              _picker
+                                                  .pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source: ImageSource.camera)
+                                                  .then((c) {
+                                                setState(() {
+                                                  attachImage = c;
+                                                });
+                                                debugPrint(
+                                                    "Captured Image From Camera :- ${attachImage!.path}");
+                                                Navigator.pop(context);
+                                              });
+                                            },
+                                            label: const Text(
+                                              "Camera",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  letterSpacing: 1.2,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.black),
+                                            ),
+                                            icon: const Icon(
+                                              Icons.camera,
+                                              size: 25,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          content: TextButton.icon(
+                                              onPressed: () {
+                                                _picker
+                                                    .pickImage(
+                                                        maxHeight: 480,
+                                                        maxWidth: 640,
+                                                        source:
+                                                            ImageSource.gallery)
+                                                    .then((c) {
+                                                  setState(() {
+                                                    attachImage = c;
+                                                  });
+                                                  debugPrint(
+                                                      "Captured Image From gallery :- ${attachImage!.path}");
+                                                  Navigator.pop(context);
+                                                });
+                                              },
+                                              icon: const Icon(
+                                                Icons.image_search,
+                                                size: 25,
+                                                color: Colors.black,
+                                              ),
+                                              label: const Text(
+                                                "Gallery",
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    letterSpacing: 1.2,
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.black),
+                                              )));
+                                    },
+                                    contentPadding: const EdgeInsets.all(0),
+                                    visualDensity: const VisualDensity(
+                                        horizontal: 0, vertical: -4),
+                                    leading: const Icon(
+                                      Icons.image,
+                                      size: 25,
+                                      color: Colors.black,
+                                    ),
+                                    title: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Attachment",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              letterSpacing: 1.2,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black),
+                                        ),
+                                        (widget.argus
+                                                .containsKey('transactionData'))
+                                            ? (((widget.argus['transactionData']
+                                                            as TransactionListResponseData)
+                                                        .image !=
+                                                    null)
+                                                ? ((attachImage != null)
+                                                    ? Image.file(
+                                                        File(attachImage!.path),
+                                                        width: 100,
+                                                        height: 100,
+                                                      )
+                                                    : CachedNetworkImage(
+                                                        imageUrl:
+                                                            "${NetworkImagePathList.imagePathTrans}${(widget.argus['transactionData'] as TransactionListResponseData).image}",
+                                                        imageBuilder: (context,
+                                                                imageProvider) =>
+                                                            Container(
+                                                          color:
+                                                              Colors.transparent,
+                                                          width: 100,
+                                                          height: 100,
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                image: DecorationImage(
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                    image:
+                                                                        imageProvider)),
+                                                          ),
+                                                        ),
+                                                        placeholder:
+                                                            (context, url) =>
+                                                                CircleAvatar(
+                                                          backgroundColor:
+                                                              Colors.grey[300],
+                                                          radius: 45,
+                                                          child:
+                                                              const AnimatedImagePlaceholderLoader(),
+                                                        ),
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            CircleAvatar(
+                                                          backgroundColor:
+                                                              Colors.grey[300],
+                                                          radius: 80,
+                                                          child: Image.asset(
+                                                            'resources/images/house-icon-removebg-preview.png',
+                                                            height: 80,
+                                                            width: 80,
+                                                          ),
+                                                        ),
+                                                      ))
+                                                : (attachImage != null)
+                                                    ? Image.file(
+                                                        File(attachImage!.path),
+                                                        width: 100,
+                                                        height: 100,
+                                                      )
+                                                    : Container())
+                                            : ((attachImage != null)
+                                                ? Image.file(
+                                                    File(attachImage!.path),
+                                                    width: 100,
+                                                    height: 100,
+                                                  )
+                                                : Container())
+                                      ],
+                                    ),
+                                  ),
+                                  const Divider(),
+                                  ListTile(
+                                    contentPadding: const EdgeInsets.all(0),
+                                    visualDensity: const VisualDensity(
+                                        horizontal: 0, vertical: -4),
+                                    leading: const Icon(
+                                      Icons.chat,
+                                      size: 25,
+                                      color: Colors.black,
+                                    ),
+                                    title: const Padding(
+                                      padding: EdgeInsets.only(bottom: 10),
+                                      child: Text(
+                                        "Notes/ Remarks",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            letterSpacing: 1.2,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black),
+                                      ),
+                                    ),
+                                    subtitle: TextFormField(
+                                      controller: notesController,
+                                      keyboardType: TextInputType.multiline,
+                                      maxLines: null, // Set this
+          
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          letterSpacing: 1.2,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300),
+                                      onChanged: (value) {},
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                        filled: false,
+                                        fillColor: Colors.grey.shade300,
+                                        counterText: '',
+                                        hintText: "Add your notes here..",
+                                        hintStyle: const TextStyle(
+                                            color: Colors.black,
+                                            letterSpacing: 1.2,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: Colors.transparent,
+                                              width: 2),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: Colors.transparent,
+                                              width: 2),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: Colors.transparent,
+                                              width: 2),
+                                        ),
+                                        errorText: null,
+                                        errorBorder: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                          borderSide: const BorderSide(
+                                              color: Colors.transparent,
+                                              width: 2),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const Divider(),
+                                  TextButton.icon(
+                                    style: TextButton.styleFrom(
+                                        iconColor: Colors.blue,
+                                        foregroundColor: Colors.blue),
+                                    onPressed: () async {},
+                                    label: const Text(
+                                      "Add Custom Properties",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          letterSpacing: 1.2,
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.black),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.add_circle_outline,
+                                      size: 25,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: keyboardIsOpened

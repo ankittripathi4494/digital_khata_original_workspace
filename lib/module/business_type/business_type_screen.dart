@@ -101,202 +101,205 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
           style: TextStyle(color: Colors.white, fontSize: 25),
         ),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      onChanged: (value) {
-                        BlocProvider.of<BusinessTypeBloc>(context).add(
-                            BusinessTypeListSelectedFilterEvent(
-                                userId: userId,
-                                searchText: searchTextController.text,
-                                selectedDataList: [],
-                                choiceList: [],
-                                choiceAndType: ''));
-                      },
-                      controller: searchTextController,
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 31, 1, 102),
-                      ),
-                      cursorColor: const Color.fromARGB(255, 31, 1, 102),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 0.0),
-                        hintText: 'Search or add new',
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        prefixIcon: const Icon(
-                          Icons.search,
-                          size: 35,
-                          color: Colors.grey,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 31, 1, 102),
-                            )),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 31, 1, 102),
-                            )),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: screenSize.width * 0.01,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      if (searchTextController.text.isNotEmpty) {
-                        BlocProvider.of<BusinessTypeBloc>(context)
-                            .add(BusinessTypeAddChoicesEvent(
-                          choiceName: searchTextController.text,
-                        ));
-                        setState(() {
-                          searchTextController.text = '';
-                        });
-                      } else {
-                        EssentialWidgetsCollection.showErrorSnackbar(context,
-                            title: null, description: "Please enter some data in search field to add data");
-                      }
-                    },
-                    child: Card(
-                      color: const Color.fromARGB(255, 31, 1, 102),
-                      // margin:
-                      //     EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0)),
-                      // padding:
-                      //     EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-                      // decoration: BoxDecoration(color: Colors.blue),
-                      child: const Icon(
-                        Icons.add,
-                        color: Colors.white,
-                        size: 45,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            BlocBuilder<BusinessTypeBloc, BusinessTypeState>(
-              builder: (context, state) {
-                if (state is BusinessTypeListLoadedState) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: state.choicesList!
-                            .map((chip) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  child: Chip(
-                                    label: Text(chip),
-                                    onDeleted: () {
-                                      BlocProvider.of<BusinessTypeBloc>(context)
-                                          .add(BusinessTypeRemoveChoicesEvent(
-                                        choiceName: chip,
-                                      ));
-                                    },
-                                  ),
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                  );
-                }
-                return Container();
-              },
-            ),
-            BlocBuilder<BusinessTypeBloc, BusinessTypeState>(
-              builder: (context, state) {
-                if (state is BusinessTypeListLoadedState) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: state.businessTypeList?.length,
-                    itemBuilder: (context, index) {
-                      BusinessTypeListResponseData data =
-                          state.businessTypeList![index];
-
-                      return CheckboxListTile(
-                        value: (data.isChecked == true) ? true : false,
+      body: Container(
+         decoration: BoxDecoration(color: Colors.grey[100]),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
                         onChanged: (value) {
-                          BlocProvider.of<BusinessTypeBloc>(context)
-                              .add(ToggleBusinessTypeSelection(index: index));
+                          BlocProvider.of<BusinessTypeBloc>(context).add(
+                              BusinessTypeListSelectedFilterEvent(
+                                  userId: userId,
+                                  searchText: searchTextController.text,
+                                  selectedDataList: [],
+                                  choiceList: [],
+                                  choiceAndType: ''));
                         },
-                        title: Text(
-                          data.name!,
-                          style: const TextStyle(
-                              color: Colors.black87, fontSize: 18),
+                        controller: searchTextController,
+                        style: const TextStyle(
+                          color: Color.fromARGB(255, 31, 1, 102),
                         ),
-                      );
-                    },
-                  );
-                }
-                if (state is BusinessTypeListFailedState) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.no_accounts,
-                        size: 60,
-                        color: Colors.red,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(state.failedMessage),
-                    ],
-                  );
-                }
-                if (state is BusinessTypeListLoadingState) {
-                  return const Center(child: AnimatedImageLoader());
-                }
-                return const Center(
-                  child: AnimatedImageLoader(),
-                );
-              },
-            ),
-            BlocBuilder<BusinessTypeBloc, BusinessTypeState>(
-              builder: (context, state) {
-                if (state is BusinessTypeListLoadedState) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 40.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        minimumSize: const Size(380, 60),
-                        backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-                      ),
-                      onPressed: () {
-                        Map<String, dynamic> selectedStringData = {};
-                        selectedStringData['selectedData'] =
-                            state.businessTypeList;
-                        selectedStringData['choices'] = state.choicesList;
-                        Navigator.pop(context, selectedStringData);
-                      },
-                      child: const Text(
-                        'SAVE',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        cursorColor: const Color.fromARGB(255, 31, 1, 102),
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 0.0),
+                          hintText: 'Search or add new',
+                          hintStyle: const TextStyle(color: Colors.grey),
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            size: 35,
+                            color: Colors.grey,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 31, 1, 102),
+                              )),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 31, 1, 102),
+                              )),
+                        ),
                       ),
                     ),
+                    SizedBox(
+                      width: screenSize.width * 0.01,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (searchTextController.text.isNotEmpty) {
+                          BlocProvider.of<BusinessTypeBloc>(context)
+                              .add(BusinessTypeAddChoicesEvent(
+                            choiceName: searchTextController.text,
+                          ));
+                          setState(() {
+                            searchTextController.text = '';
+                          });
+                        } else {
+                          EssentialWidgetsCollection.showErrorSnackbar(context,
+                              title: null, description: "Please enter some data in search field to add data");
+                        }
+                      },
+                      child: Card(
+                        color: const Color.fromARGB(255, 31, 1, 102),
+                        // margin:
+                        //     EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)),
+                        // padding:
+                        //     EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+                        // decoration: BoxDecoration(color: Colors.blue),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.white,
+                          size: 45,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              BlocBuilder<BusinessTypeBloc, BusinessTypeState>(
+                builder: (context, state) {
+                  if (state is BusinessTypeListLoadedState) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: state.choicesList!
+                              .map((chip) => Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
+                                    child: Chip(
+                                      label: Text(chip),
+                                      onDeleted: () {
+                                        BlocProvider.of<BusinessTypeBloc>(context)
+                                            .add(BusinessTypeRemoveChoicesEvent(
+                                          choiceName: chip,
+                                        ));
+                                      },
+                                    ),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              ),
+              BlocBuilder<BusinessTypeBloc, BusinessTypeState>(
+                builder: (context, state) {
+                  if (state is BusinessTypeListLoadedState) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: state.businessTypeList?.length,
+                      itemBuilder: (context, index) {
+                        BusinessTypeListResponseData data =
+                            state.businessTypeList![index];
+        
+                        return CheckboxListTile(
+                          value: (data.isChecked == true) ? true : false,
+                          onChanged: (value) {
+                            BlocProvider.of<BusinessTypeBloc>(context)
+                                .add(ToggleBusinessTypeSelection(index: index));
+                          },
+                          title: Text(
+                            data.name!,
+                            style: const TextStyle(
+                                color: Colors.black87, fontSize: 18),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  if (state is BusinessTypeListFailedState) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.no_accounts,
+                          size: 60,
+                          color: Colors.red,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(state.failedMessage),
+                      ],
+                    );
+                  }
+                  if (state is BusinessTypeListLoadingState) {
+                    return const Center(child: AnimatedImageLoader());
+                  }
+                  return const Center(
+                    child: AnimatedImageLoader(),
                   );
-                }
-                return Container();
-              },
-            )
-          ],
+                },
+              ),
+              BlocBuilder<BusinessTypeBloc, BusinessTypeState>(
+                builder: (context, state) {
+                  if (state is BusinessTypeListLoadedState) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 40.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          minimumSize: const Size(380, 60),
+                          backgroundColor: const Color.fromARGB(255, 31, 1, 102),
+                        ),
+                        onPressed: () {
+                          Map<String, dynamic> selectedStringData = {};
+                          selectedStringData['selectedData'] =
+                              state.businessTypeList;
+                          selectedStringData['choices'] = state.choicesList;
+                          Navigator.pop(context, selectedStringData);
+                        },
+                        child: const Text(
+                          'SAVE',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
+              )
+            ],
+          ),
         ),
       ),
     );

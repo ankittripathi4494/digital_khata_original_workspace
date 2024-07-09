@@ -83,109 +83,112 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
         canPop: false,
         child: Scaffold(
           // appBar: AppBar(backgroundColor: Colors.blue,),
-          body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: screenSize.height * 0.1,
-                  ),
-                  const Text(
-                    'Check your mobile',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 23,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.01,
-                  ),
-                  const Text(
-                    'A 6-digit code was sent to your Phone Number. Enter it within 2 minutes.',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
+          body: Container(
+             decoration: BoxDecoration(color: Colors.grey[100]),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Padding(
+                padding:
+                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.15),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: screenSize.height * 0.1,
                     ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.1,
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Countdown(
-                      controller: countdownController,
-                      seconds: 120,
-                      build: (_, double time) => Text(
-                        intToTimeLeft(time.toInt()),
-                        textAlign: TextAlign.end,
-                        softWrap: true,
-                        style: const TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
+                    const Text(
+                      'Check your mobile',
+                      style: TextStyle(
                           color: Colors.black,
-                        ),
+                          fontSize: 23,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    SizedBox(
+                      height: screenSize.height * 0.01,
+                    ),
+                    const Text(
+                      'A 6-digit code was sent to your Phone Number. Enter it within 2 minutes.',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
                       ),
-                      interval: const Duration(milliseconds: 100),
-                      onFinished: () {
-                        setState(() {
-                          showResendButton = true;
-                        });
-                      },
                     ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height * 0.1,
-                  ),
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: Pinput(
-                      controller: otpController,
-                      length: 6,
-                      // focusNode: focusNode,
-                      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                      showCursor: true,
-                      defaultPinTheme: defaultPinTheme,
-                      autofocus: true,
-                      validator: (value) {
-                        return value ==
-                                (widget.argus['loginResponseData']
-                                        as LoginResponseData)
-                                    .otp
-                            ? null
-                            : 'OTP does not matched.';
-                      },
-                      keyboardType: TextInputType.number,
-                      hapticFeedbackType: HapticFeedbackType.vibrate,
-                      focusedPinTheme: defaultPinTheme.copyDecorationWith(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.black),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      submittedPinTheme: defaultPinTheme.copyDecorationWith(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: const Color.fromARGB(245, 12, 44, 104),
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Countdown(
+                        controller: countdownController,
+                        seconds: 120,
+                        build: (_, double time) => Text(
+                          intToTimeLeft(time.toInt()),
+                          textAlign: TextAlign.end,
+                          softWrap: true,
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
                           ),
-                          borderRadius: BorderRadius.circular(8.0)),
-                      onCompleted: (pin) {
-                        debugPrint('onCompleted: $pin');
-                        setState(() {
-                          inputPinned = pin;
-                        });
-                      },
-                      onChanged: (value) {
-                        debugPrint('onChanged: $value');
-                      },
+                        ),
+                        interval: const Duration(milliseconds: 100),
+                        onFinished: () {
+                          setState(() {
+                            showResendButton = true;
+                          });
+                        },
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: screenSize.height / 1.9,
-                  ),
-                 ],
+                    SizedBox(
+                      height: screenSize.height * 0.1,
+                    ),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Pinput(
+                        controller: otpController,
+                        length: 6,
+                        // focusNode: focusNode,
+                        pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                        showCursor: true,
+                        defaultPinTheme: defaultPinTheme,
+                        autofocus: true,
+                        validator: (value) {
+                          return value ==
+                                  (widget.argus['loginResponseData']
+                                          as LoginResponseData)
+                                      .otp
+                              ? null
+                              : 'OTP does not matched.';
+                        },
+                        keyboardType: TextInputType.number,
+                        hapticFeedbackType: HapticFeedbackType.vibrate,
+                        focusedPinTheme: defaultPinTheme.copyDecorationWith(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.black),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        submittedPinTheme: defaultPinTheme.copyDecorationWith(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: const Color.fromARGB(245, 12, 44, 104),
+                            ),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        onCompleted: (pin) {
+                          debugPrint('onCompleted: $pin');
+                          setState(() {
+                            inputPinned = pin;
+                          });
+                        },
+                        onChanged: (value) {
+                          debugPrint('onChanged: $value');
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: screenSize.height / 1.9,
+                    ),
+                   ],
+                ),
               ),
             ),
           ),

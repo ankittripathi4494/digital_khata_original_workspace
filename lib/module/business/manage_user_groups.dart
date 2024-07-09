@@ -79,121 +79,124 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
             style: TextStyle(color: Colors.white, fontSize: 23),
           ),
         ),
-        body: BlocBuilder<UserGroupBloc, UserGroupState>(
-          builder: (context, state) {
-            if (state is UserGroupListLoadedState) {
-              return SmartRefresher(
-                enablePullDown: true,
-                enablePullUp: false,
-                header: const WaterDropHeader(
-                  waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                  idleIcon: AnimatedImagePlaceholderLoader(),
-                ),
-                controller: refreshController,
-                onRefresh: (() async {
-                  // monitor network fetch
-                  await Future.delayed(const Duration(milliseconds: 1000));
-                  // if failed,use refreshFailed()
-
-                  setState(() {
-                    nameController.text = '';
-                    mobileController.text = '';
-                    descriptionController.text = '';
-                  });
-                  BlocProvider.of<UserGroupBloc>(context).add(
-                      UserGroupListFetchEvent(
-                          userId: sph.getString("userid")!,
-                          businessId: BusinessListResponseData.fromJson(
-                                  jsonDecode(
-                                      jsonEncode(widget.argus['businessData'])))
-                              .id!));
-                }),
-                onLoading: (() async {
-                  await Future.delayed(const Duration(milliseconds: 1000));
-                  // if failed,use loadFailed(),if no data return,use LoadNodata()
-
-                  if (mounted) setState(() {});
-                  refreshController.loadComplete();
-                }),
-                child: ListView.builder(
-                  itemCount: state.successData!.length,
-                  itemBuilder: (context, index) {
-                    UserGroupResponseData userGroupData =
-                        state.successData![index];
-                    return Material(
-                      elevation: 20,
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: const LinearGradient(
-                                colors: [Colors.white, Colors.white])),
-                        child: ListTile(
-                          title: Text(
-                            userGroupData.name!,
-                            style: const TextStyle(
-                                fontSize: 18,
-                                color: Color.fromARGB(255, 31, 1, 102),
-                                fontWeight: FontWeight.w700),
+        body: Container(
+           decoration: BoxDecoration(color: Colors.grey[100]),
+          child: BlocBuilder<UserGroupBloc, UserGroupState>(
+            builder: (context, state) {
+              if (state is UserGroupListLoadedState) {
+                return SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  header: const WaterDropHeader(
+                    waterDropColor: Color.fromARGB(255, 31, 1, 102),
+                    idleIcon: AnimatedImagePlaceholderLoader(),
+                  ),
+                  controller: refreshController,
+                  onRefresh: (() async {
+                    // monitor network fetch
+                    await Future.delayed(const Duration(milliseconds: 1000));
+                    // if failed,use refreshFailed()
+          
+                    setState(() {
+                      nameController.text = '';
+                      mobileController.text = '';
+                      descriptionController.text = '';
+                    });
+                    BlocProvider.of<UserGroupBloc>(context).add(
+                        UserGroupListFetchEvent(
+                            userId: sph.getString("userid")!,
+                            businessId: BusinessListResponseData.fromJson(
+                                    jsonDecode(
+                                        jsonEncode(widget.argus['businessData'])))
+                                .id!));
+                  }),
+                  onLoading: (() async {
+                    await Future.delayed(const Duration(milliseconds: 1000));
+                    // if failed,use loadFailed(),if no data return,use LoadNodata()
+          
+                    if (mounted) setState(() {});
+                    refreshController.loadComplete();
+                  }),
+                  child: ListView.builder(
+                    itemCount: state.successData!.length,
+                    itemBuilder: (context, index) {
+                      UserGroupResponseData userGroupData =
+                          state.successData![index];
+                      return Material(
+                        elevation: 20,
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              gradient: const LinearGradient(
+                                  colors: [Colors.white, Colors.white])),
+                          child: ListTile(
+                            title: Text(
+                              userGroupData.name!,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: Color.fromARGB(255, 31, 1, 102),
+                                  fontWeight: FontWeight.w700),
+                            ),
+                            subtitle: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  userGroupData.mobile!,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color.fromARGB(255, 31, 1, 102),
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                 Text(
+                                  userGroupData.description!,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Color.fromARGB(255, 31, 1, 102),
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ],
+                            ),
+                            trailing: const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 20,
+                              weight: 20.0,
+                              color: Color.fromARGB(255, 31, 1, 102),
+                            ),
+                            onTap: () {
+                              nameController.text = userGroupData.name!;
+                              mobileController.text = userGroupData.mobile!;
+                              descriptionController.text =
+                                  userGroupData.description!;
+                              editGroupBottomSheet(context, userGroupData);
+                            },
                           ),
-                          subtitle: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                userGroupData.mobile!,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 31, 1, 102),
-                                    fontWeight: FontWeight.w400),
-                              ),
-                               Text(
-                                userGroupData.description!,
-                                style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Color.fromARGB(255, 31, 1, 102),
-                                    fontWeight: FontWeight.w400),
-                              ),
-                            ],
-                          ),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 20,
-                            weight: 20.0,
-                            color: Color.fromARGB(255, 31, 1, 102),
-                          ),
-                          onTap: () {
-                            nameController.text = userGroupData.name!;
-                            mobileController.text = userGroupData.mobile!;
-                            descriptionController.text =
-                                userGroupData.description!;
-                            editGroupBottomSheet(context, userGroupData);
-                          },
                         ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            }
-            if (state is UserGroupListLoadingState) {
+                      );
+                    },
+                  ),
+                );
+              }
+              if (state is UserGroupListLoadingState) {
+                return const Center(
+                  child: AnimatedImageLoader(),
+                );
+              }
+              if (state is UserGroupListFailedState) {
+                return const Center(
+                  child: Text("No User Group Found"),
+                );
+              }
               return const Center(
                 child: AnimatedImageLoader(),
               );
-            }
-            if (state is UserGroupListFailedState) {
-              return const Center(
-                child: Text("No User Group Found"),
-              );
-            }
-            return const Center(
-              child: AnimatedImageLoader(),
-            );
-          },
+            },
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 31, 1, 102),

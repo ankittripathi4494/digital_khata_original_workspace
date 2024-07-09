@@ -36,110 +36,113 @@ class _SelectCustomerScreenState extends State<SelectCustomerScreen> {
                 },
               )),
         ),
-        body: Column(
-          children: [
-            Card(
-              margin: EdgeInsets.symmetric(
-                  horizontal: screenSize.width * 0.04,
-                  vertical: screenSize.height * 0.01),
-              elevation: 2.0,
-              color: Colors.white,
-              surfaceTintColor: Colors.white,
-              child: TextFormField(
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 31, 1, 102),
-                ),
-                cursorColor: const Color.fromARGB(255, 31, 1, 102),
-                decoration: InputDecoration(
-                    prefixIcon: const Icon(
-                      Icons.search,
-                      color: Color.fromARGB(255, 69, 69, 69),
-                      size: 30.0,
-                    ),
-                    hintText: 'Search Customer here',
-                    hintStyle: const TextStyle(
-                      color: Color.fromARGB(255, 143, 141, 141),
-                    ),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(10.0)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(10.0)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 31, 1, 102),
-                        ),
-                        borderRadius: BorderRadius.circular(10.0))),
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: screenSize.height * 0.008,
-                        horizontal: screenSize.width * 0.05),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const ProfileScreen()));
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.grey[300],
-                          child: const Icon(
-                            Icons.person_2_sharp,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        title: const Text(
-                          'John',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
+        body: Container(
+           decoration: BoxDecoration(color: Colors.grey[100]),
+          child: Column(
+            children: [
+              Card(
+                margin: EdgeInsets.symmetric(
+                    horizontal: screenSize.width * 0.04,
+                    vertical: screenSize.height * 0.01),
+                elevation: 2.0,
+                color: Colors.white,
+                surfaceTintColor: Colors.white,
+                child: TextFormField(
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 31, 1, 102),
+                  ),
+                  cursorColor: const Color.fromARGB(255, 31, 1, 102),
+                  decoration: InputDecoration(
+                      prefixIcon: const Icon(
+                        Icons.search,
+                        color: Color.fromARGB(255, 69, 69, 69),
+                        size: 30.0,
+                      ),
+                      hintText: 'Search Customer here',
+                      hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 143, 141, 141),
+                      ),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
                             color: Color.fromARGB(255, 31, 1, 102),
                           ),
-                        ),
-                        subtitle: const Text('8767657645'),
-                        trailing: const Column(
-                          children: [
-                            Text(
-                              '\u{20B9} ${0}',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w700),
+                          borderRadius: BorderRadius.circular(10.0))),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.008,
+                          horizontal: screenSize.width * 0.05),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(255, 203, 202, 202),
+                            offset: Offset(0.0, 1.0),
+                            blurRadius: 6.0,
+                          ),
+                        ],
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const ProfileScreen()));
+                        },
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Colors.grey[300],
+                            child: const Icon(
+                              Icons.person_2_sharp,
+                              color: Colors.grey,
                             ),
-                            Text(
-                              'CREDIT',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w600),
-                            )
-                          ],
+                          ),
+                          title: const Text(
+                            'John',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Color.fromARGB(255, 31, 1, 102),
+                            ),
+                          ),
+                          subtitle: const Text('8767657645'),
+                          trailing: const Column(
+                            children: [
+                              Text(
+                                '\u{20B9} ${0}',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              Text(
+                                'CREDIT',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w600),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            )
-          ],
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: const Color.fromARGB(255, 30, 29, 29),

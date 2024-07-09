@@ -135,253 +135,256 @@ class _ContactVerificationScreenState extends State<ContactVerificationScreen> {
         }
       },
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              expandedHeight: 200.0,
-              floating: false,
-              pinned: true,
-              iconTheme: const IconThemeData(color: Colors.white),
-              systemOverlayStyle: SystemUiOverlayStyle.light,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                background: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Background image or color
-                    Container(
-                      color: Colors.blue,
-                    ),
-                    // Profile picture
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+        body: Container(
+           decoration: BoxDecoration(color: Colors.grey[100]),
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                expandedHeight: 200.0,
+                floating: false,
+                pinned: true,
+                iconTheme: const IconThemeData(color: Colors.white),
+                systemOverlayStyle: SystemUiOverlayStyle.light,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  background: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Background image or color
+                      Container(
+                        color: Colors.blue,
+                      ),
+                      // Profile picture
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "resources/images/house-icon-removebg-preview.png",
+                            height: screenSize.height * 0.09,
+                            width: screenSize.width * 0.09,
+                          ),
+                          const Text(
+                            "Mobile Verification",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          const Flexible(
+                            child: Text(
+                              "We will send an OTP to this mobile number to verify",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          )
+                        ],
+                      ),
+                      // Camera icon
+                    ],
+                  ),
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 30.0),
+                    child: SingleChildScrollView(
+                        child: Column(
                       children: [
-                        Image.asset(
-                          "resources/images/house-icon-removebg-preview.png",
-                          height: screenSize.height * 0.09,
-                          width: screenSize.width * 0.09,
+                        const SizedBox(
+                          height: 20,
                         ),
-                        const Text(
-                          "Mobile Verification",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800),
+                        TextFormField(
+                          controller: businessContactController,
+                          textCapitalization: TextCapitalization.words,
+                          enabled: (otpSent == true) ? false : true,
+                          maxLength: 10,
+                          style: const TextStyle(color: Colors.black),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          keyboardType: TextInputType.number,
+                          cursorColor: Colors.black,
+                          decoration: InputDecoration(
+                            counterText: '',
+                            labelText: 'Enter Contact Number',
+                            labelStyle: const TextStyle(
+                                color: Color.fromARGB(255, 31, 1, 102)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Color.fromARGB(255, 31, 1, 102)),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            disabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 31, 1, 102),
+                                ),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                  color: Color.fromARGB(255, 31, 1, 102),
+                                ),
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
-                        const Flexible(
-                          child: Text(
-                            "We will send an OTP to this mobile number to verify",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal),
-                          ),
-                        )
-                      ],
-                    ),
-                    // Camera icon
-                  ],
-                ),
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: SingleChildScrollView(
-                      child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        controller: businessContactController,
-                        textCapitalization: TextCapitalization.words,
-                        enabled: (otpSent == true) ? false : true,
-                        maxLength: 10,
-                        style: const TextStyle(color: Colors.black),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        keyboardType: TextInputType.number,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                          counterText: '',
-                          labelText: 'Enter Contact Number',
-                          labelStyle: const TextStyle(
-                              color: Color.fromARGB(255, 31, 1, 102)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 31, 1, 102)),
-                              borderRadius: BorderRadius.circular(8.0)),
-                          disabledBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 31, 1, 102),
-                              ),
-                              borderRadius: BorderRadius.circular(8.0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 31, 1, 102),
-                              ),
-                              borderRadius: BorderRadius.circular(8.0)),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      (otpSent == true)
-                          ? Column(
-                              children: [
-                                Directionality(
-                                  textDirection: TextDirection.ltr,
-                                  child: Pinput(
-                                    controller: otpController,
-                                    length: 6,
-                                    // focusNode: focusNode,
-                                    pinputAutovalidateMode:
-                                        PinputAutovalidateMode.onSubmit,
-                                    showCursor: true,
-                                    defaultPinTheme: defaultPinTheme,
-                                    autofocus: true,
-                                    validator: (value) {
-                                      // return value ==
-                                      //         (widget.argus['loginResponseData']
-                                      //                 as LoginResponseData)
-                                      //             .otp
-                                      //     ? null
-                                      //     : 'OTP does not matched.';
-                                      return (value!.compareTo("123456") == 0)
-                                          ? null
-                                          : 'OTP does not matched.';
-                                    },
-
-                                    keyboardType: TextInputType.number,
-                                    hapticFeedbackType:
-                                        HapticFeedbackType.vibrate,
-                                    focusedPinTheme:
-                                        defaultPinTheme.copyDecorationWith(
-                                            color: Colors.white,
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0)),
-                                    submittedPinTheme:
-                                        defaultPinTheme.copyDecorationWith(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                              color: const Color.fromARGB(
-                                                  245, 12, 44, 104),
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(8.0)),
-                                    onCompleted: (pin) {
-                                      debugPrint('onCompleted: $pin');
-                                      setState(() {
-                                        inputPinned = pin;
-                                      });
-                                      if ((pin.compareTo("123456") == 0)) {
-                                        Map<String, dynamic>
-                                            selectedStringData = {};
-                                        selectedStringData['contactDataPass'] =
-                                            businessContactController.text;
-                                        Navigator.pop(
-                                            context, selectedStringData);
-                                      }
-                                    },
-                                    onChanged: (value) {
-                                      debugPrint('onChanged: $value');
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Countdown(
-                                    controller: countdownController,
-                                    seconds: 120,
-                                    build: (_, double time) => Text(
-                                      intToTimeLeft(time.toInt()),
-                                      textAlign: TextAlign.end,
-                                      softWrap: true,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.blueGrey,
-                                      ),
+                        (otpSent == true)
+                            ? Column(
+                                children: [
+                                  Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Pinput(
+                                      controller: otpController,
+                                      length: 6,
+                                      // focusNode: focusNode,
+                                      pinputAutovalidateMode:
+                                          PinputAutovalidateMode.onSubmit,
+                                      showCursor: true,
+                                      defaultPinTheme: defaultPinTheme,
+                                      autofocus: true,
+                                      validator: (value) {
+                                        // return value ==
+                                        //         (widget.argus['loginResponseData']
+                                        //                 as LoginResponseData)
+                                        //             .otp
+                                        //     ? null
+                                        //     : 'OTP does not matched.';
+                                        return (value!.compareTo("123456") == 0)
+                                            ? null
+                                            : 'OTP does not matched.';
+                                      },
+          
+                                      keyboardType: TextInputType.number,
+                                      hapticFeedbackType:
+                                          HapticFeedbackType.vibrate,
+                                      focusedPinTheme:
+                                          defaultPinTheme.copyDecorationWith(
+                                              color: Colors.white,
+                                              border:
+                                                  Border.all(color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0)),
+                                      submittedPinTheme:
+                                          defaultPinTheme.copyDecorationWith(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: const Color.fromARGB(
+                                                    245, 12, 44, 104),
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0)),
+                                      onCompleted: (pin) {
+                                        debugPrint('onCompleted: $pin');
+                                        setState(() {
+                                          inputPinned = pin;
+                                        });
+                                        if ((pin.compareTo("123456") == 0)) {
+                                          Map<String, dynamic>
+                                              selectedStringData = {};
+                                          selectedStringData['contactDataPass'] =
+                                              businessContactController.text;
+                                          Navigator.pop(
+                                              context, selectedStringData);
+                                        }
+                                      },
+                                      onChanged: (value) {
+                                        debugPrint('onChanged: $value');
+                                      },
                                     ),
-                                    interval: const Duration(milliseconds: 100),
-                                    onFinished: () {
-                                      setState(() {
-                                        showResendButton = true;
-                                      });
-                                    },
                                   ),
-                                ),
-                              ],
-                            )
-                          : OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                  backgroundColor: Colors.deepPurple,
-                                  foregroundColor: Colors.white),
-                              onPressed: () {
-                                if (businessContactController.text
-                                    .isValidContact()) {
-                                  setState(() {
-                                    otpSent = true;
-                                  });
-                                } else {
-                                  EssentialWidgetsCollection.showErrorSnackbar(
-                                      context,
-                                      title: null,description: "Please Enter Valid Contact Number");
-                                }
-                              },
-                              child: const Text("Send OTP")),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      (showResendButton == true)
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'Need help?',
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                // SizedBox(
-                                //   width: screenSize.width * 0.01,
-                                // ),
-                                TextButton(
-                                  onPressed: () {
-                                    resendOTP(widget.argus);
-                                  },
-                                  child: const Text(
-                                    'Click here',
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: Countdown(
+                                      controller: countdownController,
+                                      seconds: 120,
+                                      build: (_, double time) => Text(
+                                        intToTimeLeft(time.toInt()),
+                                        textAlign: TextAlign.end,
+                                        softWrap: true,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.blueGrey,
+                                        ),
+                                      ),
+                                      interval: const Duration(milliseconds: 100),
+                                      onFinished: () {
+                                        setState(() {
+                                          showResendButton = true;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                    backgroundColor: Colors.deepPurple,
+                                    foregroundColor: Colors.white),
+                                onPressed: () {
+                                  if (businessContactController.text
+                                      .isValidContact()) {
+                                    setState(() {
+                                      otpSent = true;
+                                    });
+                                  } else {
+                                    EssentialWidgetsCollection.showErrorSnackbar(
+                                        context,
+                                        title: null,description: "Please Enter Valid Contact Number");
+                                  }
+                                },
+                                child: const Text("Send OTP")),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        (showResendButton == true)
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'Need help?',
                                     style: TextStyle(
-                                        decoration: TextDecoration.underline,
                                         color: Colors.grey,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 15),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600),
                                   ),
-                                ),
-                              ],
-                            )
-                          : Container()
-                    ],
-                  )),
+                                  // SizedBox(
+                                  //   width: screenSize.width * 0.01,
+                                  // ),
+                                  TextButton(
+                                    onPressed: () {
+                                      resendOTP(widget.argus);
+                                    },
+                                    child: const Text(
+                                      'Click here',
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Container()
+                      ],
+                    )),
+                  ),
+                  childCount: 1, // Replace with your item count
                 ),
-                childCount: 1, // Replace with your item count
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

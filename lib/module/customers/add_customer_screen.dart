@@ -68,7 +68,9 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.grey[100],
         appBar: AppBar(
+          backgroundColor: Colors.grey[100],
           surfaceTintColor: Colors.transparent,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -92,166 +94,107 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 icon: const Icon(Icons.contact_phone_outlined)),
           ],
         ),
-        body: Column(
-          children: [
-            (updatedData == true)
-                ? EssentialWidgetsCollection.autoScheduleTask(context,
-                    task: () {
-                    print("datya");
-                    setState(() {
-                      updatedData = false;
-                    });
-                    BlocProvider.of<CustomerBloc>(context).add(
-                        AddCustomerTextChangeEvent(
-                            customerName: nameController.text,
-                            customerEmail: emailController.text,
-                            customerMobile: mobileController.text,
-                            customerUserGroup: groupController.text));
-                  }, taskWaitDuration: Durations.short4)
-                : Container(),
-            BlocBuilder<UserGroupBloc, UserGroupState>(
-              builder: (context, state) {
-                if (state is UserGroupListLoadedState) {
-                  return EssentialWidgetsCollection.autoScheduleTask(
-                    context,
-                    childWidget: Container(),
-                    taskWaitDuration: Durations.short4,
-                    task: () {
+        body: Container(
+          decoration: BoxDecoration(color: Colors.grey[100]),
+          child: Column(
+            children: [
+              (updatedData == true)
+                  ? EssentialWidgetsCollection.autoScheduleTask(context,
+                      task: () {
+                      print("datya");
                       setState(() {
-                        usergroupList.addAll(state.successData!);
+                        updatedData = false;
                       });
-                    },
-                  );
-                }
-                if (state is UserGroupListFailedState) {
-                  return EssentialWidgetsCollection.autoScheduleTask(
-                    context,
-                    childWidget: Container(),
-                    taskWaitDuration: Durations.short4,
-                    task: () {
-                      print("faield");
-                      setState(() {
-                        usergroupList.addAll([]);
-                      });
-                    },
-                  );
-                }
-                return Container();
-              },
-            ),
-            Flexible(
-              child: BlocBuilder<CustomerBloc, CustomerState>(
+                      BlocProvider.of<CustomerBloc>(context).add(
+                          AddCustomerTextChangeEvent(
+                              customerName: nameController.text,
+                              customerEmail: emailController.text,
+                              customerMobile: mobileController.text,
+                              customerUserGroup: groupController.text));
+                    }, taskWaitDuration: Durations.short4)
+                  : Container(),
+              BlocBuilder<UserGroupBloc, UserGroupState>(
                 builder: (context, state) {
-                  return SingleChildScrollView(
-                    child: Form(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          (state is AddNewCustomerSuccessState)
-                              ? EssentialWidgetsCollection.autoScheduleTask(
-                                  context,
-                                  childWidget: Container(),
-                                  taskWaitDuration: Durations.long2,
-                                  task: () {
-                                    EssentialWidgetsCollection
-                                        .showSuccessSnackbar(
-                                            context, title: null, description: state.successMessage);
+                  if (state is UserGroupListLoadedState) {
+                    return EssentialWidgetsCollection.autoScheduleTask(
+                      context,
+                      childWidget: Container(),
+                      taskWaitDuration: Durations.short4,
+                      task: () {
+                        setState(() {
+                          usergroupList.addAll(state.successData!);
+                        });
+                      },
+                    );
+                  }
+                  if (state is UserGroupListFailedState) {
+                    return EssentialWidgetsCollection.autoScheduleTask(
+                      context,
+                      childWidget: Container(),
+                      taskWaitDuration: Durations.short4,
+                      task: () {
+                        print("faield");
+                        setState(() {
+                          usergroupList.addAll([]);
+                        });
+                      },
+                    );
+                  }
+                  return Container();
+                },
+              ),
+              Flexible(
+                child: BlocBuilder<CustomerBloc, CustomerState>(
+                  builder: (context, state) {
+                    return SingleChildScrollView(
+                      child: Form(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            (state is AddNewCustomerSuccessState)
+                                ? EssentialWidgetsCollection.autoScheduleTask(
+                                    context,
+                                    childWidget: Container(),
+                                    taskWaitDuration: Durations.long2,
+                                    task: () {
+                                      EssentialWidgetsCollection
+                                          .showSuccessSnackbar(context,
+                                              title: null,
+                                              description:
+                                                  state.successMessage);
 
-                                    Navigator.pop(context);
-                                    Navigator.pushNamed(context, '/dashboard');
-                                  },
-                                )
-                              : Container(),
-                          (state is AddNewCustomerFailedState)
-                              ? EssentialWidgetsCollection.autoScheduleTask(
-                                  context,
-                                  childWidget: Container(),
-                                  taskWaitDuration: Durations.long2,
-                                  task: () {
-                                    Navigator.pushReplacementNamed(
-                                        context, '/add-customer',
-                                        arguments: widget.argus);
-                                    EssentialWidgetsCollection
-                                        .showErrorSnackbar(
-                                            context, title: null, description: state.failedMessage);
-                                  },
-                                )
-                              : Container(),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            height:
-                                (state is AddNewCustomerTextChangedErrorState)
-                                    ? 80
-                                    : 50,
-                            child: TextFormField(
-                              controller: nameController,
-                              style: const TextStyle(
-                                  color: Color.fromARGB(255, 31, 1, 102)),
-                              onChanged: (value) {
-                                BlocProvider.of<CustomerBloc>(context).add(
-                                    AddCustomerTextChangeEvent(
-                                        customerName: nameController.text,
-                                        customerEmail: emailController.text,
-                                        customerMobile: mobileController.text,
-                                        customerUserGroup:
-                                            groupController.text));
-                              },
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.grey.shade300,
-                                prefixIcon: const Icon(Icons.person),
-                                prefixIconColor:
-                                    const Color.fromARGB(255, 31, 1, 102),
-                                labelText: "Enter Name",
-                                labelStyle: const TextStyle(
-                                    color: Color.fromARGB(255, 31, 1, 102)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                errorText: (state
-                                        is AddNewCustomerTextChangedErrorState)
-                                    ? state.customerNameError
-                                    : null,
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            height:
-                                (state is AddNewCustomerTextChangedErrorState)
-                                    ? 80
-                                    : 50,
-                            child: TextFormField(
-                                controller: mobileController,
-                                maxLength: 10,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
+                                      Navigator.pop(context);
+                                      Navigator.pushNamed(
+                                          context, '/dashboard');
+                                    },
+                                  )
+                                : Container(),
+                            (state is AddNewCustomerFailedState)
+                                ? EssentialWidgetsCollection.autoScheduleTask(
+                                    context,
+                                    childWidget: Container(),
+                                    taskWaitDuration: Durations.long2,
+                                    task: () {
+                                      Navigator.pushReplacementNamed(
+                                          context, '/add-customer',
+                                          arguments: widget.argus);
+                                      EssentialWidgetsCollection
+                                          .showErrorSnackbar(context,
+                                              title: null,
+                                              description: state.failedMessage);
+                                    },
+                                  )
+                                : Container(),
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              height:
+                                  (state is AddNewCustomerTextChangedErrorState)
+                                      ? 80
+                                      : 50,
+                              child: TextFormField(
+                                controller: nameController,
                                 style: const TextStyle(
                                     color: Color.fromARGB(255, 31, 1, 102)),
                                 onChanged: (value) {
@@ -266,14 +209,10 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.grey.shade300,
-                                  counterText: '',
-                                  prefix: const Text(
-                                    "+91 ",
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  labelText: "Enter Mobile Number",
+                                  prefixIcon: const Icon(Icons.person),
+                                  prefixIconColor:
+                                      const Color.fromARGB(255, 31, 1, 102),
+                                  labelText: "Enter Name",
                                   labelStyle: const TextStyle(
                                       color: Color.fromARGB(255, 31, 1, 102)),
                                   enabledBorder: OutlineInputBorder(
@@ -296,7 +235,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                   ),
                                   errorText: (state
                                           is AddNewCustomerTextChangedErrorState)
-                                      ? state.customerMobileError
+                                      ? state.customerNameError
                                       : null,
                                   errorBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -304,103 +243,49 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                         color: Color.fromARGB(255, 31, 1, 102),
                                         width: 2),
                                   ),
-                                )),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            height:
-                                (state is AddNewCustomerTextChangedErrorState)
-                                    ? 80
-                                    : 50,
-                            child: TextFormField(
-                              controller: emailController,
-                              keyboardType: TextInputType.emailAddress,
-                              style: const TextStyle(
-                                  color: Color.fromARGB(255, 31, 1, 102)),
-                              onChanged: (value) {
-                                BlocProvider.of<CustomerBloc>(context).add(
-                                    AddCustomerTextChangeEvent(
-                                        customerName: nameController.text,
-                                        customerEmail: emailController.text,
-                                        customerMobile: mobileController.text,
-                                        customerUserGroup:
-                                            groupController.text));
-                              },
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.grey.shade300,
-                                counterText: '',
-                                prefixIcon: const Icon(Icons.mail),
-                                prefixIconColor:
-                                    const Color.fromARGB(255, 31, 1, 102),
-                                labelText: "Enter Email",
-                                labelStyle: const TextStyle(
-                                    color: Color.fromARGB(255, 31, 1, 102)),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
-                                ),
-                                errorText: (state
-                                        is AddNewCustomerTextChangedErrorState)
-                                    ? state.customerEmailError
-                                    : null,
-                                errorBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      width: 2),
                                 ),
                               ),
                             ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 10),
-                            height:
-                                (state is AddNewCustomerTextChangedErrorState)
-                                    ? 80
-                                    : 50,
-                            child: InkWell(
-                              onTap: () {
-                                (selectedGroup != null)
-                                    ? showSelectedUserGroupBottomSheet(context)
-                                    : showUserGroupListBottomSheet(context);
-                              },
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              height:
+                                  (state is AddNewCustomerTextChangedErrorState)
+                                      ? 80
+                                      : 50,
                               child: TextFormField(
-                                  controller: groupController,
-                                  enabled: false,
+                                  controller: mobileController,
+                                  maxLength: 10,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                   style: const TextStyle(
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                      fontWeight: FontWeight.w600),
+                                      color: Color.fromARGB(255, 31, 1, 102)),
+                                  onChanged: (value) {
+                                    BlocProvider.of<CustomerBloc>(context).add(
+                                        AddCustomerTextChangeEvent(
+                                            customerName: nameController.text,
+                                            customerEmail: emailController.text,
+                                            customerMobile:
+                                                mobileController.text,
+                                            customerUserGroup:
+                                                groupController.text));
+                                  },
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: Colors.grey.shade300,
                                     counterText: '',
-                                    labelText: "Select Group",
-                                    labelStyle: const TextStyle(
-                                        color: Color.fromARGB(255, 31, 1, 102)),
-                                    disabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                      borderSide: const BorderSide(
+                                    prefix: const Text(
+                                      "+91 ",
+                                      style: TextStyle(
                                           color:
                                               Color.fromARGB(255, 31, 1, 102),
-                                          width: 2),
+                                          fontWeight: FontWeight.bold),
                                     ),
+                                    labelText: "Enter Mobile Number",
+                                    labelStyle: const TextStyle(
+                                        color: Color.fromARGB(255, 31, 1, 102)),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: const BorderSide(
@@ -424,7 +309,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                     ),
                                     errorText: (state
                                             is AddNewCustomerTextChangedErrorState)
-                                        ? state.userGroupResponseDataError
+                                        ? state.customerMobileError
                                         : null,
                                     errorBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -435,15 +320,147 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                     ),
                                   )),
                             ),
-                          ),
-                        ],
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              height:
+                                  (state is AddNewCustomerTextChangedErrorState)
+                                      ? 80
+                                      : 50,
+                              child: TextFormField(
+                                controller: emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 31, 1, 102)),
+                                onChanged: (value) {
+                                  BlocProvider.of<CustomerBloc>(context).add(
+                                      AddCustomerTextChangeEvent(
+                                          customerName: nameController.text,
+                                          customerEmail: emailController.text,
+                                          customerMobile: mobileController.text,
+                                          customerUserGroup:
+                                              groupController.text));
+                                },
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.grey.shade300,
+                                  counterText: '',
+                                  prefixIcon: const Icon(Icons.mail),
+                                  prefixIconColor:
+                                      const Color.fromARGB(255, 31, 1, 102),
+                                  labelText: "Enter Email",
+                                  labelStyle: const TextStyle(
+                                      color: Color.fromARGB(255, 31, 1, 102)),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                        width: 2),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                        width: 2),
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                        width: 2),
+                                  ),
+                                  errorText: (state
+                                          is AddNewCustomerTextChangedErrorState)
+                                      ? state.customerEmailError
+                                      : null,
+                                  errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                        width: 2),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              height:
+                                  (state is AddNewCustomerTextChangedErrorState)
+                                      ? 80
+                                      : 50,
+                              child: InkWell(
+                                onTap: () {
+                                  (selectedGroup != null)
+                                      ? showSelectedUserGroupBottomSheet(
+                                          context)
+                                      : showUserGroupListBottomSheet(context);
+                                },
+                                child: TextFormField(
+                                    controller: groupController,
+                                    enabled: false,
+                                    style: const TextStyle(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                        fontWeight: FontWeight.w600),
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.grey.shade300,
+                                      counterText: '',
+                                      labelText: "Select Group",
+                                      labelStyle: const TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 31, 1, 102)),
+                                      disabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            width: 2),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            width: 2),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            width: 2),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            width: 2),
+                                      ),
+                                      errorText: (state
+                                              is AddNewCustomerTextChangedErrorState)
+                                          ? state.userGroupResponseDataError
+                                          : null,
+                                      errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: const BorderSide(
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            width: 2),
+                                      ),
+                                    )),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: keyboardIsOpened
@@ -600,61 +617,94 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Flexible(
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: (state is UserGroupListLoadedState)
-                                ? state.successData!.length
-                                : 0,
-                            itemBuilder: (context, index) {
-                              UserGroupResponseData? userGroupData =
-                                  (state is UserGroupListLoadedState)
-                                      ? state.successData![index]
-                                      : null;
-                              return Material(
-                                elevation: 20,
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 10),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      gradient: const LinearGradient(colors: [
-                                        Colors.white,
-                                        Colors.white
-                                      ])),
-                                  child: ListTile(
-                                    title: Text(
-                                      userGroupData?.name ?? '',
-                                      style: const TextStyle(
-                                          fontSize: 14,
-                                          color:
-                                              Color.fromARGB(255, 31, 1, 102),
-                                          fontWeight: FontWeight.w400),
-                                    ),
-                                    trailing: const Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 20,
-                                      weight: 20.0,
-                                      color: Color.fromARGB(255, 31, 1, 102),
-                                    ),
-                                    onTap: () {
-                                      this.setState(() {
-                                        selectedGroup = userGroupData;
-                                        groupController.text =
-                                            selectedGroup!.name ?? '';
+                          child: (state is UserGroupListLoadedState)
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: state.successData!.length,
+                                  itemBuilder: (context, index) {
+                                    UserGroupResponseData? userGroupData =
+                                        state.successData![index];
+                                    return Material(
+                                      elevation: 20,
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 10),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            gradient: const LinearGradient(
+                                                colors: [
+                                                  Colors.white,
+                                                  Colors.white
+                                                ])),
+                                        child: ListTile(
+                                          title: Text(
+                                            userGroupData.name ?? '',
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Color.fromARGB(
+                                                    255, 31, 1, 102),
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 20,
+                                            weight: 20.0,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                          ),
+                                          onTap: () {
+                                            this.setState(() {
+                                              selectedGroup = userGroupData;
+                                              groupController.text =
+                                                  selectedGroup!.name ?? '';
 
-                                        updatedData = true;
-                                      });
-                                      Navigator.pop(context);
+                                              updatedData = true;
+                                            });
+                                            Navigator.pop(context);
 
-                                      print(selectedGroup!.name);
-                                    },
+                                            print(selectedGroup!.name);
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Material(
+                                  elevation: 20,
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        gradient: const LinearGradient(colors: [
+                                          Colors.white,
+                                          Colors.white
+                                        ])),
+                                    child: const ListTile(
+                                      title: Text(
+                                        "No Group Available",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      subtitle: Text(
+                                        "Please add user group in business section",
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
                         ),
                       ],
                     ),

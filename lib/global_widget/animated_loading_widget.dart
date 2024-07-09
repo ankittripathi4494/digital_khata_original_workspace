@@ -1,4 +1,3 @@
-import 'package:dkapp/global_widget/text_loader_indicator.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedImageLoader extends StatefulWidget {
@@ -14,19 +13,18 @@ class _AnimatedImageLoaderState extends State<AnimatedImageLoader> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 50,
+      width: 50,
       padding: const EdgeInsets.all(8),
-      child: const Material(
-        child: TextLoaderIndicator(
-          size: 25,
-        ),
-      ),
-      // child: const ClockLoader(
-      //   size: 100,
-      //   frameColor: Colors.deepOrange,
-      //   minuteColor: Colors.blue,
-      //   hourColor: Colors.green,
+      // child: const Material(
+      //   child: TextLoaderIndicator(
+      //     size: 25,
+      //   ),
       // ),
+      child: const CircularProgressIndicator(
+        backgroundColor: Colors.black,
+        color: Colors.blue,
+      ),
       // child: const CircularProgressIndicator(
       //   // backgroundColor: Colors.blueGrey,
       //   color: Colors.deepPurple,

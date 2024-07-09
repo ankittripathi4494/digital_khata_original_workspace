@@ -296,6 +296,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           context,
                           taskWaitDuration: Durations.medium3,
                           task: () {
+                            setState(() {
+                              advancedReceived = 0;
+                              duePending = 0;
+                            });
                             BlocProvider.of<CustomerBloc>(context).add(
                                 CustomerListFetchEvent(
                                     userId: sph.getString("userid")!,
@@ -3775,18 +3779,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const CircleAvatar(
-              radius: 30,
-              backgroundColor: Color.fromARGB(255, 230, 223, 246),
-              child: Icon(
-                CupertinoIcons.question,
-                size: 50,
-                color: Color.fromARGB(255, 31, 1, 102),
-              ),
-            ),
-            SizedBox(
-              height: screenSize.height * 0.01,
-            ),
+            // const CircleAvatar(
+            //   radius: 30,
+            //   backgroundColor: Color.fromARGB(255, 230, 223, 246),
+            //   child: Icon(
+            //     CupertinoIcons.question,
+            //     size: 50,
+            //     color: Color.fromARGB(255, 31, 1, 102),
+            //   ),
+            // ),
+            // SizedBox(
+            //   height: screenSize.height * 0.01,
+            // ),
             const Text(
               'No accounts',
               style: TextStyle(
