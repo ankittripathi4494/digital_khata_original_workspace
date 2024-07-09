@@ -2,6 +2,7 @@
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
@@ -22,6 +23,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart' as i;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:talker/talker.dart';
 
 class ProfileScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -37,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   SharedPreferencesHelper sph = SharedPreferencesHelper();
   late TabController tabController;
   int tabIndex = 0;
+
   List<Map<String, dynamic>> movecertButtonList = [
     {"id": "1", "title": "Add to Contacts"},
     {"id": "2", "title": "Edit Customer"},
@@ -136,9 +140,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                   state.selectedCustomerDetailedData.fullname!,
                   style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
-                subtitle: const Text(
-                  '\u{20B9} ${0}',
-                  style: TextStyle(color: Colors.white, fontSize: 15),
+                subtitle: Text(
+                  '\u{20B9} ${state.selectedCustomerDetailedData.amount ?? 0}',
+                  style: const TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
               actions: [
@@ -953,383 +957,562 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
+
   transactionListTabContent(Size screenSize, BuildContext context,
       SelectedCustomerResponseData selectedCustomerData) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          GridView.count(
-            shrinkWrap: true,
-            childAspectRatio: (1 / .7),
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 4, // Changed from 2 to 1
-            crossAxisSpacing: screenSize.width * 0.003,
-            mainAxisSpacing: screenSize.height * 0.006,
+    return BlocBuilder<TransactionsBloc, TransactionsState>(
+      bloc: TransactionsBloc()
+        ..add(TransactionListFetchEvent(
+            businessId:
+                (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                    .id!,
+            customerId: selectedCustomerData.id!,
+            userId: sph.getString("userid")!)),
+      builder: (context, state) {
+        if (state is TransactionListLoadedState) {
+          return Column(
             children: [
-              InkWell(
-                onTap: () {
-                  showModalBottomSheet<void>(
-                    backgroundColor: Colors.white,
-                    scrollControlDisabledMaxHeightRatio: 0.2,
-                    showDragHandle: true,
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SizedBox(
-                        width: screenSize.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: screenSize.height * 0.03,
+              GridView.count(
+                shrinkWrap: true,
+                childAspectRatio: (1 / .7),
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 4, // Changed from 2 to 1
+                crossAxisSpacing: 10, //screenSize.width * 0.004
+                mainAxisSpacing: screenSize.height * 0.005,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      showModalBottomSheet<void>(
+                        backgroundColor: Colors.white,
+                        scrollControlDisabledMaxHeightRatio: 0.2,
+                        showDragHandle: true,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return SizedBox(
+                            width: screenSize.width,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: screenSize.height * 0.03,
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    //
+                                    if ((double.parse(state.successData!.first
+                                            .afterTransAmount!) ==
+                                        0)) {
+                                      Navigator.pop(context);
+                                      EssentialWidgetsCollection.showErrorSnackbar(
+                                          context,
+                                          description:
+                                              "You are all settled with this khata");
+                                    } else {
+                                      Navigator.pop(context);
+                                      Navigator.pushNamed(
+                                          context, '/settlement-screen',
+                                          arguments: {
+                                            'customerData':
+                                                selectedCustomerData,
+                                            'selectedBusiness': (widget
+                                                    .argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                            'transactionData':
+                                                state.successData!.first,
+                                            'settle': true,
+                                            'writeoff': false,
+                                          });
+                                    }
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    child: Text(
+                                      'Settle',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    if ((double.parse(state.successData!.first
+                                            .afterTransAmount!) <
+                                        0)) {
+                                      Navigator.pop(context);
+                                      Navigator.pushNamed(
+                                          context, '/writoff-screen',
+                                          arguments: {
+                                            'customerData':
+                                                selectedCustomerData,
+                                            'selectedBusiness': (widget
+                                                    .argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                            'transactionData':
+                                                state.successData!.first,
+                                            'settle': false,
+                                            'writeoff': true,
+                                          });
+                                    } else {
+                                      Navigator.pop(context);
+                                      EssentialWidgetsCollection.showErrorSnackbar(
+                                          context,
+                                          description:
+                                              "You don't have due balance to writeoff.");
+                                    }
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20.0, vertical: 10.0),
+                                    child: Text(
+                                      'Write Off',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/upi-payment');
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                child: Text(
-                                  'Settle',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 203, 202, 202),
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.check_circle_outline,
+                            color: Colors.green,
+                            size: 35,
+                          ),
+                          Text(
+                            'Settle',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 203, 202, 202),
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.remember_me,
+                            color: Colors.brown,
+                            size: 30,
+                          ),
+                          Text(
+                            'Remind',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 203, 202, 202),
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            CupertinoIcons.phone_circle_fill,
+                            color: Colors.green,
+                            size: 30,
+                          ),
+                          Text(
+                            'Remind',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Container(
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 203, 202, 202),
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 6.0,
+                            ),
+                          ],
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            CupertinoIcons.chat_bubble_fill,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          Text(
+                            'Automatic',
+                            style: TextStyle(color: Colors.black),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Add more containers here if needed
+                ],
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(
+                    horizontal: screenSize.width * 0.05,
+                    vertical: screenSize.height * 0.03),
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 203, 202, 202),
+                      offset: Offset(0.0, 1.0),
+                      blurRadius: 6.0,
+                    ),
+                  ],
+                ),
+                child: const ExpansionTile(
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      side: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                  title: Text(
+                    'Set Payment Reminder',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                  children: [
+                    ListTile(
+                      title: Text(
+                        'Payment of Due Cycle',
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                      subtitle: Text(
+                        'Set a due date for this account',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 92, 92, 92),
+                            fontSize: 12),
+                      ),
+                      trailing: Text(
+                        'SET',
+                        style: TextStyle(color: Colors.green, fontSize: 15),
+                      ),
+                    ),
+                    ListTile(
+                      title: Text(
+                        'Overdue Remider Cycle',
+                        style: TextStyle(color: Colors.black, fontSize: 15),
+                      ),
+                      subtitle: Text(
+                        'How to frequently you want to remind the customer ',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 92, 92, 92),
+                            fontSize: 12),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Flexible(
+                child: SmartRefresher(
+                  enablePullDown: true,
+                  enablePullUp: false,
+                  header: const WaterDropHeader(
+                    waterDropColor: Color.fromARGB(255, 31, 1, 102),
+                    idleIcon: AnimatedImagePlaceholderLoader(),
+                  ),
+                  controller: refreshController,
+                  onRefresh: (() async {
+                    // monitor network fetch
+                    await Future.delayed(const Duration(milliseconds: 1000));
+                    // if failed,use refreshFailed()
+
+                    Navigator.pushReplacementNamed(
+                        context, '/customer-screen-details',
+                        arguments: widget.argus);
+                  }),
+                  onLoading: (() async {
+                    await Future.delayed(const Duration(milliseconds: 1000));
+                    // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+                    if (mounted) setState(() {});
+                    refreshController.loadComplete();
+                  }),
+                  child: ListView.builder(
+                    // physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: state.successData!.length,
+                    itemBuilder: (context, index) {
+                      TransactionListResponseData transactionData =
+                          state.successData![index];
+                      return Dismissible(
+                        key: UniqueKey(),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (DismissDirection direction) {
+                          Talker().info('Dismissed with direction $direction');
+
+                          if (direction == DismissDirection.endToStart) {
+                            if (transactionData.transType == 'D') {
+                              Navigator.pushNamed(context, '/cash-in-screen',
+                                  arguments: {
+                                    'customerData': selectedCustomerData,
+                                    'selectedBusiness':
+                                        (widget.argus['selectedBusiness']
+                                            as BusinessListResponseData),
+                                    'transactionData': transactionData
+                                  }).then((_) {
+                                // This block runs when you have returned back to the 1st Page from 2nd.
+                                Navigator.pushReplacementNamed(
+                                    context, '/customer-screen-details',
+                                    arguments: widget.argus);
+                              });
+                            } else {
+                              Navigator.pushNamed(context, '/cash-out-screen',
+                                  arguments: {
+                                    'customerData': selectedCustomerData,
+                                    'selectedBusiness':
+                                        (widget.argus['selectedBusiness']
+                                            as BusinessListResponseData),
+                                    'transactionData': transactionData
+                                  }).then((_) {
+                                // This block runs when you have returned back to the 1st Page from 2nd.
+                                Navigator.pushReplacementNamed(
+                                    context, '/customer-screen-details',
+                                    arguments: widget.argus);
+                              });
+                            }
+                          }
+                        },
+                        background: const ColoredBox(
+                          color: Colors.green,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    CupertinoIcons.check_mark_circled_solid,
+                                    color: Colors.white,
+                                    size: 25,
+                                  ),
+                                  Text(
+                                    "Settle",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: screenSize.height * 0.008,
+                              horizontal: screenSize.width * 0.05),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 0),
+                            onTap: () {
+                              if (transactionData.transType != 'D') {
+                                Navigator.pushNamed(
+                                    context, '/amount-due-receive-screen',
+                                    arguments: {
+                                      'customerData': selectedCustomerData,
+                                      'selectedBusiness':
+                                          (widget.argus['selectedBusiness']
+                                              as BusinessListResponseData),
+                                      'transactionData': transactionData
+                                    });
+                              } else {
+                                Navigator.pushNamed(
+                                    context, '/amount-due-receive-screen',
+                                    arguments: {
+                                      'customerData': selectedCustomerData,
+                                      'selectedBusiness':
+                                          (widget.argus['selectedBusiness']
+                                              as BusinessListResponseData),
+                                      'transactionData': transactionData
+                                    });
+                              }
+                            },
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.grey,
+                              child: Center(
+                                child: Icon(
+                                  (transactionData.transType != 'D')
+                                      ? FontAwesomeIcons.download
+                                      : FontAwesomeIcons.upload,
+                                  color: (transactionData.transType != 'D')
+                                      ? Colors.white
+                                      : Colors.red,
+                                  size: 20,
                                 ),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              child: Text(
-                                'Write Off',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 20),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.check_circle_outline,
-                        color: Colors.green,
-                        size: 35,
-                      ),
-                      Text(
-                        'Settle',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.remember_me,
-                        color: Colors.brown,
-                        size: 30,
-                      ),
-                      Text(
-                        'Remind',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        CupertinoIcons.phone_circle_fill,
-                        color: Colors.green,
-                        size: 30,
-                      ),
-                      Text(
-                        'Remind',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  decoration: BoxDecoration(
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0)),
-                  child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Icon(
-                        CupertinoIcons.chat_bubble_fill,
-                        color: Colors.blue,
-                        size: 30,
-                      ),
-                      Text(
-                        'Automatic',
-                        style: TextStyle(color: Colors.black),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              // Add more containers here if needed
-            ],
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: screenSize.width * 0.05,
-                vertical: screenSize.height * 0.03),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 203, 202, 202),
-                  offset: Offset(0.0, 1.0),
-                  blurRadius: 6.0,
-                ),
-              ],
-            ),
-            child: const ExpansionTile(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  side: BorderSide(color: Colors.white),
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              title: Text(
-                'Set Payment Reminder',
-                style: TextStyle(color: Colors.green),
-              ),
-              children: [
-                ListTile(
-                  title: Text(
-                    'Payment of Due Cycle',
-                    style: TextStyle(color: Colors.black, fontSize: 15),
-                  ),
-                  subtitle: Text(
-                    'Set a due date for this account',
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
-                  ),
-                  trailing: Text(
-                    'SET',
-                    style: TextStyle(color: Colors.green, fontSize: 15),
-                  ),
-                ),
-                ListTile(
-                  title: Text(
-                    'Overdue Remider Cycle',
-                    style: TextStyle(color: Colors.black, fontSize: 15),
-                  ),
-                  subtitle: Text(
-                    'How to frequently you want to remind the customer ',
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 92, 92, 92), fontSize: 12),
-                  ),
-                )
-              ],
-            ),
-          ),
-          BlocBuilder<TransactionsBloc, TransactionsState>(
-            bloc: TransactionsBloc()
-              ..add(TransactionListFetchEvent(
-                  businessId: (widget.argus['selectedBusiness']
-                          as BusinessListResponseData)
-                      .id!,
-                  customerId: selectedCustomerData.id!,
-                  userId: sph.getString("userid")!)),
-            builder: (context, state) {
-              if (state is TransactionListLoadedState) {
-                return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: state.successData!.length,
-                  itemBuilder: (context, index) {
-                    TransactionListResponseData transactionData =
-                        state.successData![index];
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                          vertical: screenSize.height * 0.008,
-                          horizontal: screenSize.width * 0.05),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.0),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color.fromARGB(255, 203, 202, 202),
-                            offset: Offset(0.0, 1.0),
-                            blurRadius: 6.0,
-                          ),
-                        ],
-                      ),
-                      child: ListTile(
-                        onTap: () {
-                          if (transactionData.transType != 'D') {
-                            Navigator.pushNamed(context, '/cash-in-screen',
-                                arguments: {
-                                  'customerData': selectedCustomerData,
-                                  'selectedBusiness':
-                                      (widget.argus['selectedBusiness']
-                                          as BusinessListResponseData),
-                                  'transactionData': transactionData
-                                });
-                          } else {
-                            Navigator.pushNamed(context, '/cash-out-screen',
-                                arguments: {
-                                  'customerData': selectedCustomerData,
-                                  'selectedBusiness':
-                                      (widget.argus['selectedBusiness']
-                                          as BusinessListResponseData),
-                                  'transactionData': transactionData
-                                });
-                          }
-                        },
-                        leading: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.grey,
-                          child: Center(
-                            child: Icon(
-                              (transactionData.transType != 'D')
-                                  ? FontAwesomeIcons.download
-                                  : FontAwesomeIcons.upload,
-                              color: (transactionData.transType != 'D')
-                                  ? Colors.white
-                                  : Colors.red,
-                              size: 25,
-                            ),
-                          ),
-                        ),
-                        title: Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              RichText(
-                                  text: TextSpan(
-                                      text: i.DateFormat('dd-MM-y').format(
-                                        DateTime.parse(
-                                            transactionData.createdDate!),
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                            text: i.DateFormat('\nhh:mm a')
-                                                .format(DateTime.parse(
-                                                    transactionData
-                                                        .createdDate!)),
-                                            style: const TextStyle(
-                                                color: Colors.blueGrey,
-                                                fontSize: 14))
-                                      ],
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500))),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                            title: Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
+                                  RichText(
+                                      text: TextSpan(
+                                          text: i.DateFormat('dd-MM-y').format(
+                                            DateTime.parse(
+                                                transactionData.createdDate!),
+                                          ),
+                                          children: [
+                                            TextSpan(
+                                                text: i.DateFormat('\nhh:mm a')
+                                                    .format(DateTime.parse(
+                                                        transactionData
+                                                            .createdDate!)),
+                                                style: const TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 12))
+                                          ],
+                                          style: const TextStyle(
+                                              letterSpacing: 1.2,
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500))),
                                   (transactionData.transType != 'D')
                                       ? Text("+ ${transactionData.transAmount}",
                                           style: const TextStyle(
                                               color: Colors.green,
-                                              fontSize: 20,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.bold))
                                       : Text("- ${transactionData.transAmount}",
                                           style: const TextStyle(
                                               color: Colors.red,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold)),
-                                  Text(
-                                      "Balance :- ${transactionData.afterTransAmount}",
-                                      style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500))
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold))
                                 ],
-                              )
-                            ],
+                              ),
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    padding: const EdgeInsets.all(0),
+                                    child: Text(transactionData.notes!,
+                                        overflow: TextOverflow.ellipsis,
+                                        softWrap: true,
+                                        style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.normal)),
+                                  ),
+                                  RichText(
+                                      text: TextSpan(
+                                          text: "Balance : \t",
+                                          children: [
+                                            TextSpan(
+                                                text:
+                                                    "${transactionData.afterTransAmount}",
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w400))
+                                          ],
+                                          style: const TextStyle(
+                                              letterSpacing: 1.2,
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700))),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              }
-              return const Center(
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Color.fromARGB(255, 230, 223, 246),
-                  child: Icon(
-                    CupertinoIcons.search_circle_fill,
-                    size: 60,
-                    color: Colors.brown,
+                      );
+                    },
                   ),
                 ),
-              );
-            },
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+            ],
+          );
+        }
+        return const Center(
+          child: CircleAvatar(
+            radius: 50,
+            backgroundColor: Color.fromARGB(255, 230, 223, 246),
+            child: Icon(
+              CupertinoIcons.search_circle_fill,
+              size: 60,
+              color: Colors.brown,
+            ),
           ),
-          SizedBox(
-            height: screenSize.height * 0.25,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

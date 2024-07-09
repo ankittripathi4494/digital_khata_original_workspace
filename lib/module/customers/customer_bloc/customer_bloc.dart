@@ -212,7 +212,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        // print(response.body);
+        print(response.body);
         if (response.statusCode == 200) {
           CustomerResponseModel jsonResponse =
               CustomerResponseModel.fromJson(convert.jsonDecode(response.body));

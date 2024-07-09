@@ -206,9 +206,9 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen>
                       const SizedBox(
                         height: 8,
                       ),
-                      const Text(
-                        '\u{20B9} ${0}',
-                        style: TextStyle(
+                      Text(
+                        '\u{20B9} ${(widget.argus['customerData'] as SelectedCustomerResponseData).amount??0}',
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),

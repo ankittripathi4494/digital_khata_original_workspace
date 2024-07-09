@@ -24,6 +24,23 @@ class AddCashTransactionEvent extends TransactionsEvent {
   });
 }
 
+class UpdateCashTransactionEvent extends TransactionsEvent {
+  late final String transactionId;
+  late final String customerId;
+  late final String userId;
+  late final String businessId;
+  late final String transactionNotes;
+  late final XFile? transactionImages;
+  UpdateCashTransactionEvent({
+    required this.transactionId,
+    required this.customerId,
+    required this.userId,
+    required this.businessId,
+    required this.transactionNotes,
+    this.transactionImages,
+  });
+}
+
 class TransactionListFetchEvent extends TransactionsEvent {
   late final String customerId;
   late final String userId;
@@ -34,5 +51,3 @@ class TransactionListFetchEvent extends TransactionsEvent {
     required this.businessId,
   });
 }
-
-

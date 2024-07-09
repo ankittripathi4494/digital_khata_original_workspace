@@ -18,7 +18,7 @@ class _AnimatedImageLoaderState extends State<AnimatedImageLoader> {
       padding: const EdgeInsets.all(8),
       child: const Material(
         child: TextLoaderIndicator(
-          size: 35,
+          size: 25,
         ),
       ),
       // child: const ClockLoader(

@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:simple_chips_input/select_chips_input.dart';
 
 import '../../../global_blocs/internet/internet_cubit.dart';
@@ -40,6 +42,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String outputSelectChipsInput = '';
 
   late int currentPageIndexValue = 0;
+
+  late double advancedReceived = 0;
+
+  late double duePending = 0;
 
   @override
   void initState() {
@@ -283,8 +289,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 body: Container(
                   decoration: BoxDecoration(color: Colors.grey[100]),
                   child: SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
                     child: Column(
                       children: [
+                        EssentialWidgetsCollection.autoScheduleTask(
+                          context,
+                          taskWaitDuration: Durations.medium3,
+                          task: () {
+                            BlocProvider.of<CustomerBloc>(context).add(
+                                CustomerListFetchEvent(
+                                    userId: sph.getString("userid")!,
+                                    businessId:
+                                        state.selectedBusinessData?.id ?? ''));
+                          },
+                        ),
                         Container(
                           decoration: const BoxDecoration(color: Colors.white),
                           child: Row(
@@ -298,8 +316,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Icons.south_east_rounded,
                                         color: Colors.green,
                                       )),
-                                  title: const Text(
-                                    '\u20B9${0}',
+                                  title: Text(
+                                    '\u20B9${advancedReceived.abs().toStringAsFixed(2)}',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600),
@@ -322,8 +340,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         Icons.arrow_outward_sharp,
                                         color: Colors.red,
                                       )),
-                                  title: const Text(
-                                    '\u20B9${0}',
+                                  title: Text(
+                                    '\u20B9${duePending.abs().toStringAsFixed(2)}',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600),
@@ -2546,373 +2564,397 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   customerTabList(Size screenSize, BusinessListResponseData? selectedBusiness) {
-    BlocProvider.of<CustomerBloc>(context).add(CustomerListFetchEvent(
-        userId: sph.getString("userid")!,
-        businessId: selectedBusiness?.id ?? ''));
     return BlocBuilder<CustomerBloc, CustomerState>(
       builder: (context, state) {
         if (state is CustomerListLoadedState) {
           return Container(
             decoration: BoxDecoration(color: Colors.grey[100]),
             height: screenSize.height / 1.2,
-            child: Column(
-              children: [
-                ListTile(
-                  leading: Text(
-                    'UPCOMING DUE ACCOUNTS - ${state.successData?.length ?? 0}',
-                    style: TextStyle(color: Colors.grey, fontSize: 15),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  EssentialWidgetsCollection.autoScheduleTask(
+                    context,
+                    taskWaitDuration: Durations.medium3,
+                    task: () {
+                      double advancedReceivedTemp = 0;
+                      double duePendingTemp = 0;
+                      for (CustomerResponseData c in state.successData!) {
+                        if (((c.amount != null) &&
+                            (int.parse(c.amount!).sign == 1))) {
+                          advancedReceivedTemp =
+                              advancedReceivedTemp + int.parse(c.amount!);
+                        } else if (((c.amount != null) &&
+                            (int.parse(c.amount!).sign == -1))) {
+                          duePendingTemp =
+                              duePendingTemp + int.parse(c.amount!);
+                        }
+                      }
+                      setState(() {
+                        advancedReceived = advancedReceivedTemp;
+                        duePending = duePendingTemp;
+                      });
+                    },
                   ),
-                  title: IconButton(
-                      onPressed: () {
-                        showModalBottomSheet<void>(
-                          backgroundColor: Colors.white,
-                          scrollControlDisabledMaxHeightRatio: 0.3,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ListTile(
-                                  leading: const Icon(
-                                    Icons.sort,
-                                    size: 30,
-                                    weight: 50,
-                                    color: Color.fromARGB(255, 50, 49, 49),
-                                  ),
-                                  title: const Text(
-                                    'Sort By',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 50, 49, 49),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  trailing: TextButton.icon(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
+                  ListTile(
+                    leading: Text(
+                      'UPCOMING DUE ACCOUNTS - ${state.successData?.length ?? 0}',
+                      style: TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
+                    title: IconButton(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            backgroundColor: Colors.white,
+                            scrollControlDisabledMaxHeightRatio: 0.3,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.sort,
                                       size: 30,
-                                      color: Colors.black,
+                                      weight: 50,
+                                      color: Color.fromARGB(255, 50, 49, 49),
                                     ),
-                                    label: const Text(
-                                      'clear',
+                                    title: const Text(
+                                      'Sort By',
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 15),
+                                          color:
+                                              Color.fromARGB(255, 50, 49, 49),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    trailing: TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        'clear',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 15),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Divider(
-                                  color: Colors.grey[300],
-                                ),
-                                SelectChipsInput(
-                                  marginBetweenChips: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.09,
-                                      vertical: screenSize.height * 0.001),
-                                  paddingInsideChipContainer:
-                                      const EdgeInsets.symmetric(
-                                          vertical: 12.0, horizontal: 16.0),
-                                  chipsText: const ['AMOUNT', 'NAME'],
-                                  separatorCharacter: ";",
-                                  selectedChipTextStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
+                                  Divider(
+                                    color: Colors.grey[300],
                                   ),
-                                  unselectedChipTextStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                  onTap: (p0, p1) {
-                                    setState(() {
-                                      outputSelectChipsInput = p0;
-                                    });
-                                  },
-                                  prefixIcons: const [
-                                    Icon(
-                                      Icons.arrow_drop_down,
-                                      size: 25.0,
-                                      color: Colors.black,
-                                    ),
-                                    Icon(
-                                      Icons.arrow_drop_down,
-                                      size: 25.0,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                  selectedPrefixIcon: const Padding(
-                                    padding: EdgeInsets.only(right: 5.0),
-                                    child: Icon(
-                                      Icons.arrow_drop_up_outlined,
-                                      size: 25.0,
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.09,
+                                        vertical: screenSize.height * 0.001),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16.0),
+                                    chipsText: const ['AMOUNT', 'NAME'],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
                                       color: Colors.white,
+                                      fontSize: 16,
                                     ),
-                                  ),
-                                  widgetContainerDecoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    color: const Color.fromARGB(
-                                        255, 249, 248, 248),
-                                  ),
-                                  unselectedChipDecoration: BoxDecoration(
-                                    // color: Colors.green,
-                                    border: Border.all(
-                                        color: Colors.green, width: 1.8),
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  selectedChipDecoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                ),
-                                SelectChipsInput(
-                                  marginBetweenChips: EdgeInsets.symmetric(
-                                    horizontal: screenSize.width * 0.1,
-                                  ),
-                                  paddingInsideChipContainer:
-                                      const EdgeInsets.symmetric(
-                                          vertical: 12.0, horizontal: 12.0),
-                                  chipsText: const ['RECENT', 'DUE DATE'],
-                                  separatorCharacter: ";",
-                                  selectedChipTextStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                  unselectedChipTextStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                  onTap: (p0, p1) {
-                                    setState(() {
-                                      outputSelectChipsInput = p0;
-                                    });
-                                  },
-                                  prefixIcons: const [
-                                    Icon(
-                                      Icons.arrow_drop_down,
-                                      size: 25.0,
+                                    unselectedChipTextStyle: const TextStyle(
                                       color: Colors.black,
+                                      fontSize: 16,
                                     ),
-                                    Icon(
-                                      Icons.arrow_drop_down,
-                                      size: 25.0,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                  selectedPrefixIcon: const Padding(
-                                    padding: EdgeInsets.only(right: 5.0),
-                                    child: Icon(
-                                      Icons.arrow_drop_up_outlined,
-                                      size: 25.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  widgetContainerDecoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    color: const Color.fromARGB(
-                                        255, 249, 248, 248),
-                                  ),
-                                  unselectedChipDecoration: BoxDecoration(
-                                    // color: Colors.green,
-                                    border: Border.all(
-                                        color: Colors.green, width: 1.8),
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  selectedChipDecoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.sort,
-                        color: Color.fromARGB(255, 50, 49, 49),
-                      )),
-                  trailing: IconButton(
-                      onPressed: () {
-                        showModalBottomSheet<void>(
-                          backgroundColor: Colors.white,
-                          scrollControlDisabledMaxHeightRatio: 0.3,
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ListTile(
-                                  leading: const Icon(
-                                    Icons.sort,
-                                    size: 30,
-                                    weight: 50,
-                                    color: Color.fromARGB(255, 50, 49, 49),
-                                  ),
-                                  title: const Text(
-                                    'Filter',
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 50, 49, 49),
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  trailing: TextButton.icon(
-                                    onPressed: () {
-                                      Navigator.pop(context);
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
                                     },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      size: 30,
+                                    prefixIcons: const [
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                    selectedPrefixIcon: const Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.arrow_drop_up_outlined,
+                                        size: 25.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                      horizontal: screenSize.width * 0.1,
+                                    ),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 12.0),
+                                    chipsText: const ['RECENT', 'DUE DATE'],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
                                       color: Colors.black,
+                                      fontSize: 16,
                                     ),
-                                    label: const Text(
-                                      'clear',
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    prefixIcons: const [
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                    selectedPrefixIcon: const Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.arrow_drop_up_outlined,
+                                        size: 25.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.sort,
+                          color: Color.fromARGB(255, 50, 49, 49),
+                        )),
+                    trailing: IconButton(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            backgroundColor: Colors.white,
+                            scrollControlDisabledMaxHeightRatio: 0.3,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.sort,
+                                      size: 30,
+                                      weight: 50,
+                                      color: Color.fromARGB(255, 50, 49, 49),
+                                    ),
+                                    title: const Text(
+                                      'Filter',
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 15),
+                                          color:
+                                              Color.fromARGB(255, 50, 49, 49),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    trailing: TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        'clear',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 15),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Divider(
-                                  color: Colors.grey[300],
-                                ),
-                                SelectChipsInput(
-                                  marginBetweenChips: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.09,
-                                      vertical: screenSize.height * 0.01),
-                                  paddingInsideChipContainer:
-                                      const EdgeInsets.symmetric(
-                                          vertical: 12.0, horizontal: 16.0),
-                                  chipsText: const [
-                                    'Hide Zero Balance Accounts',
-                                    'Hide DND'
-                                  ],
-                                  separatorCharacter: ";",
-                                  selectedChipTextStyle: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
+                                  Divider(
+                                    color: Colors.grey[300],
                                   ),
-                                  unselectedChipTextStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.09,
+                                        vertical: screenSize.height * 0.01),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16.0),
+                                    chipsText: const [
+                                      'Hide Zero Balance Accounts',
+                                      'Hide DND'
+                                    ],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
                                   ),
-                                  onTap: (p0, p1) {
-                                    setState(() {
-                                      outputSelectChipsInput = p0;
-                                    });
-                                  },
-                                  widgetContainerDecoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                    color: const Color.fromARGB(
-                                        255, 249, 248, 248),
-                                  ),
-                                  unselectedChipDecoration: BoxDecoration(
-                                    // color: Colors.green,
-                                    border: Border.all(
-                                        color: Colors.green, width: 1.8),
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  selectedChipDecoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                      icon: const Icon(
-                        CupertinoIcons.text_alignright,
-                        color: Color.fromARGB(255, 50, 49, 49),
-                      )),
-                ),
-                SizedBox(
-                  height: screenSize.height / 2.5,
-                  width: screenSize.width,
-                  child: DefaultTabController(
-                    length: 7,
-                    child: Column(
-                      children: <Widget>[
-                        ButtonsTabBar(
-                          labelSpacing: 8.0,
-                          buttonMargin: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 5.0),
-                          radius: 50,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 10.0),
-                          // Customize the appearance and behavior of the tab bar
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 31, 1, 102),
-                              borderRadius: BorderRadius.circular(30)),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(
+                          CupertinoIcons.text_alignright,
+                          color: Color.fromARGB(255, 50, 49, 49),
+                        )),
+                  ),
+                  SizedBox(
+                    height: screenSize.height / 1,
+                    width: screenSize.width,
+                    child: DefaultTabController(
+                      length: 7,
+                      child: Column(
+                        children: <Widget>[
+                          ButtonsTabBar(
+                            labelSpacing: 8.0,
+                            buttonMargin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 5.0),
+                            radius: 50,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 10.0),
+                            // Customize the appearance and behavior of the tab bar
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 31, 1, 102),
+                                borderRadius: BorderRadius.circular(30)),
 
-                          // borderWidth: 2,
-                          // borderColor: Colors.black,
-                          labelStyle: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          unselectedLabelStyle: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          // Add your tabs here
-                          tabs: const [
-                            Tab(
-                              text: 'All',
+                            // borderWidth: 2,
+                            // borderColor: Colors.black,
+                            labelStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Tab(
-                              text: 'Today',
+                            unselectedLabelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Tab(
-                              text: 'Overdue',
-                            ),
-                            Tab(
-                              text: 'Upcoming',
-                            ),
-                            Tab(
-                              text: 'Tag',
-                            ),
-                            Tab(
-                              text: 'Groups',
-                            ),
-                            Tab(
-                              text: 'DND',
-                            ),
-                          ],
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              //tab 1: All
-                              _allDataTab(screenSize, state.successData,
-                                  selectedBusiness),
-
-                              //tab 2: Today
-                              _todayDataTab(screenSize, state.successData),
-
-                              //tab 3: Overdue
-                              _overdueDataTab(screenSize, state.successData),
-
-                              //tab 4: UpComing
-                              _upcomingDataTab(screenSize, state.successData),
-
-                              //tab 5: Tag
-                              _tagDataTab(screenSize, state.successData),
-                              //tab 6: Groups
-                              _groupDataTab(screenSize, state.successData),
-
-                              //tab 7: DND
-                              _dndDataTab(screenSize, state.successData),
+                            // Add your tabs here
+                            tabs: const [
+                              Tab(
+                                text: 'All',
+                              ),
+                              Tab(
+                                text: 'Today',
+                              ),
+                              Tab(
+                                text: 'Overdue',
+                              ),
+                              Tab(
+                                text: 'Upcoming',
+                              ),
+                              Tab(
+                                text: 'Tag',
+                              ),
+                              Tab(
+                                text: 'Groups',
+                              ),
+                              Tab(
+                                text: 'DND',
+                              ),
                             ],
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                //tab 1: All
+                                _allDataTab(screenSize, state.successData,
+                                    selectedBusiness),
+
+                                //tab 2: Today
+                                _todayDataTab(screenSize, state.successData),
+
+                                //tab 3: Overdue
+                                _overdueDataTab(screenSize, state.successData),
+
+                                //tab 4: UpComing
+                                _upcomingDataTab(screenSize, state.successData),
+
+                                //tab 5: Tag
+                                _tagDataTab(screenSize, state.successData),
+                                //tab 6: Groups
+                                _groupDataTab(screenSize, state.successData),
+
+                                //tab 7: DND
+                                _dndDataTab(screenSize, state.successData),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-                // SizedBox(
-                //   height: screenSize.height * 0.02,
-                // ),
-              ],
+                  )
+                  // SizedBox(
+                  //   height: screenSize.height * 0.02,
+                  // ),
+                ],
+              ),
             ),
           );
         }
@@ -3591,76 +3633,137 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
   _allDataTab(Size screenSize, List<CustomerResponseData>? customerData,
       BusinessListResponseData? selectedBusiness) {
     if (customerData!.isNotEmpty) {
       return Container(
         color: Colors.grey[100],
-        child: ListView.builder(
-          itemCount: customerData.length,
-          itemBuilder: (context, index) {
-            CustomerResponseData cd = customerData[index];
-            return Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.008,
-                  horizontal: screenSize.width * 0.05),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.0),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 203, 202, 202),
-                    offset: Offset(0.0, 1.0),
-                    blurRadius: 6.0,
-                  ),
-                ],
-              ),
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/customer-screen-details',
-                      arguments: {
-                        'customerData': cd,
-                        'selectedBusiness': selectedBusiness
-                      });
-                },
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.grey[300],
-                    child: const Icon(
-                      Icons.person_2_sharp,
-                      color: Colors.grey,
+        child: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: false,
+          header: const WaterDropHeader(
+            waterDropColor: Color.fromARGB(255, 31, 1, 102),
+            idleIcon: AnimatedImagePlaceholderLoader(),
+          ),
+          controller: refreshController,
+          onRefresh: (() async {
+            // monitor network fetch
+            await Future.delayed(const Duration(milliseconds: 1000));
+            // if failed,use refreshFailed()
+
+            BlocProvider.of<CustomerBloc>(context).add(CustomerListFetchEvent(
+                userId: sph.getString("userid")!,
+                businessId: selectedBusiness?.id ?? ''));
+          }),
+          onLoading: (() async {
+            await Future.delayed(const Duration(milliseconds: 1000));
+            // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+            if (mounted) setState(() {});
+            refreshController.loadComplete();
+          }),
+          child: ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: customerData.length,
+            itemBuilder: (context, index) {
+              CustomerResponseData cd = customerData[index];
+              // print(customerData[index].toJson());
+              return Container(
+                margin: EdgeInsets.symmetric(
+                    vertical: screenSize.height * 0.008,
+                    horizontal: screenSize.width * 0.05),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 203, 202, 202),
+                      offset: Offset(0.0, 1.0),
+                      blurRadius: 6.0,
                     ),
-                  ),
-                  title: Text(
-                    cd.fullname ?? '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Color.fromARGB(255, 31, 1, 102),
-                    ),
-                  ),
-                  subtitle: Text(cd.mobile ?? ''),
-                  trailing: Column(
-                    children: const [
-                      Text(
-                        '\u{20B9} ${0}',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.green,
-                            fontWeight: FontWeight.w700),
+                  ],
+                ),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/customer-screen-details',
+                        arguments: {
+                          'customerData': cd,
+                          'selectedBusiness': selectedBusiness
+                        });
+                  },
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.grey[300],
+                      child: const Icon(
+                        Icons.person_2_sharp,
+                        color: Colors.grey,
                       ),
-                      Text(
-                        'CREDIT',
-                        style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w600),
-                      )
-                    ],
+                    ),
+                    title: Text(
+                      cd.fullname ?? '',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 31, 1, 102),
+                      ),
+                    ),
+                    subtitle: Text(cd.mobile ?? ''),
+                    trailing: Column(
+                      children: [
+                        (cd.amount != null)
+                            ? (((double.parse(cd.amount!) > 0))
+                                ? Text(
+                                    '\u{20B9} ${cd.amount ?? 0}',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w700),
+                                  )
+                                : Text(
+                                    '\u{20B9} ${cd.amount ?? 0}',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.w700),
+                                  ))
+                            : Text(
+                                '\u{20B9} ${cd.amount ?? 0}',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                        (cd.amount != null)
+                            ? ((double.parse(cd.amount!) > 0)
+                                ? Text(
+                                    'CREDIT',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                : Text(
+                                    'DUE',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600),
+                                  ))
+                            : Text(
+                                'CREDIT',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.w600),
+                              )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       );
     } else {

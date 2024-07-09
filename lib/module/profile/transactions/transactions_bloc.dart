@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'package:dkapp/module/profile/model/add_new_transaction_response_model.dart';
 import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
 import 'package:dkapp/module/profile/transactions/transactions_event.dart';
 import 'package:dkapp/module/profile/transactions/transactions_state.dart';
@@ -15,11 +14,10 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   TransactionsBloc() : super(TransactionsInitialState()) {
     on<AddCashTransactionEvent>((event, emit) async {
       emit(AddNewCashTransactionLoadingState());
-      // if (event.transactionImages != null) {
-      //   await updateCashTransactionImage(event, emit);
-      // } else {
-      //   await updateCashTransaction(event, emit);
-      // }
+      await addCashTransactionImage(event, emit);
+    });
+    on<UpdateCashTransactionEvent>((event, emit) async {
+      emit(UpdateCashTransactionLoadingState());
       await updateCashTransactionImage(event, emit);
     });
 
@@ -35,7 +33,8 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         print(map);
 
         http.Response response = await http.post(
-            Uri.http(APIPathList.mainDomain, APIPathList.getCashTransactionList),
+            Uri.http(
+                APIPathList.mainDomain, APIPathList.getCashTransactionList),
             body: map,
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
@@ -73,7 +72,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
     });
   }
 
-  updateCashTransactionImage(
+  addCashTransactionImage(
       AddCashTransactionEvent event, Emitter<TransactionsState> emit) async {
     try {
       var requestForImage = http.MultipartRequest('POST',
@@ -88,11 +87,14 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
 
       requestForImage.headers["HTTP_AUTHORIZATION"] =
           '${DateTime.now().millisecondsSinceEpoch}';
-      requestForImage.files.add(await http.MultipartFile.fromPath(
-          "images",
-          (event.transactionImages != null)
-              ? event.transactionImages!.path
-              : ''));
+
+      if ((event.transactionImages != null)) {
+        requestForImage.files.add(await http.MultipartFile.fromPath(
+            "images", event.transactionImages!.path));
+      } else {
+        requestForImage.files
+            .add(http.MultipartFile.fromBytes("images", [], filename: ''));
+      }
 
       var responseBusinessProfileImage = await requestForImage.send();
       if (responseBusinessProfileImage.statusCode == 200) {
@@ -112,50 +114,43 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
     }
   }
 
-  updateCashTransaction(
-      AddCashTransactionEvent event, Emitter<TransactionsState> emit) async {
-    var map = {};
+  updateCashTransactionImage(
+      UpdateCashTransactionEvent event, Emitter<TransactionsState> emit) async {
     try {
-      map['token'] = 'bnbuujn';
-      map['user_id'] = event.userId;
-      map['branch_id'] = event.businessId;
-      map['customer_id'] = event.customerId;
-      map['trans_type'] = event.transactionType;
-      map['trans_amount'] = event.transactionAmount;
-      map['notes'] = event.transactionNotes;
+      var requestForImage = http.MultipartRequest('POST',
+          Uri.http(APIPathList.mainDomain, APIPathList.cashTransactionUpdate));
+      requestForImage.fields['branch_id'] = event.businessId;
+      requestForImage.fields['token'] = 'bnbuujn';
+      requestForImage.fields['user_id'] = event.userId;
+      requestForImage.fields['customer_id'] = event.customerId;
+      requestForImage.fields['transaction_id'] = event.transactionId;
+      requestForImage.fields['notes'] = event.transactionNotes;
 
-      print("Input Map :- $map");
-      http.Response response = await http.post(
-          Uri.http(APIPathList.mainDomain, APIPathList.cashTransaction),
-          body: map,
-          headers: {
-            "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
-          });
-      print(response.body);
-      if (response.statusCode == 200) {
-        AddNewTransactionResponseModel jsonResponse =
-            AddNewTransactionResponseModel.fromJson(
-                convert.jsonDecode(response.body));
+      requestForImage.headers["HTTP_AUTHORIZATION"] =
+          '${DateTime.now().millisecondsSinceEpoch}';
 
-        if (jsonResponse.response != "failure") {
-          if (kDebugMode) {
-            print(jsonResponse.response.toString());
-          }
-
-          emit(AddNewCashTransactionSuccessState(
-              successMessage: jsonResponse.message!,
-              samePageRedirection: event.samePageRedirection));
-        } else {
-          emit(AddNewCashTransactionFailedState(
-              failedMessage: jsonResponse.message!));
-        }
+      if ((event.transactionImages != null)) {
+        requestForImage.files.add(await http.MultipartFile.fromPath(
+            "images", event.transactionImages!.path));
       } else {
-        emit(AddNewCashTransactionFailedState(
+        requestForImage.files
+            .add(http.MultipartFile.fromBytes("images", [], filename: ''));
+      }
+
+      var responseBusinessProfileImage = await requestForImage.send();
+      if (responseBusinessProfileImage.statusCode == 200) {
+        print("Image uplodade success");
+        // await updateCashTransaction(event, emit);
+        emit(UpdateCashTransactionSuccessState(
+          successMessage: responseBusinessProfileImage.reasonPhrase!,
+        ));
+      } else {
+        emit(UpdateCashTransactionFailedState(
             failedMessage:
-                'Request failed with status: ${response.statusCode}.'));
+                'Request failed with status: ${responseBusinessProfileImage.statusCode}.'));
       }
     } on PlatformException {
-      emit(AddNewCashTransactionFailedState(
+      emit(UpdateCashTransactionFailedState(
           failedMessage: 'Failed to get platform version.'));
     }
   }

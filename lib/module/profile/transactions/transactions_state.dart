@@ -24,6 +24,25 @@ class AddNewCashTransactionFailedState extends TransactionsState {
   });
 }
 
+//! States for Update Cash In Transaction Event
+
+class UpdateCashTransactionLoadingState extends TransactionsState {}
+
+class UpdateCashTransactionSuccessState extends TransactionsState {
+  late final String successMessage;
+
+  UpdateCashTransactionSuccessState({
+    required this.successMessage,
+  });
+}
+
+class UpdateCashTransactionFailedState extends TransactionsState {
+  late final String failedMessage;
+  UpdateCashTransactionFailedState({
+    required this.failedMessage,
+  });
+}
+
 //! States for Transaction List Fetch Event
 
 class TransactionListLoadingState extends TransactionsState {}

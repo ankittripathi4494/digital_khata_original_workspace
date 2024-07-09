@@ -7,6 +7,9 @@ import 'package:dkapp/module/profile/cashout_screen.dart';
 import 'package:dkapp/module/profile/edit_customer_profile_screen.dart';
 import 'package:dkapp/module/profile/profile_detail_screeen.dart';
 import 'package:dkapp/module/profile/profile_screen.dart';
+import 'package:dkapp/module/profile/amount_due_receive_screen.dart';
+import 'package:dkapp/module/profile/settlement_screen.dart';
+import 'package:dkapp/module/profile/writeoff_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
@@ -1058,6 +1061,75 @@ class RouteAccessGenerator {
           child: BlocProvider(
             create: (context) => TransactionsBloc(),
             child: CashOutScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/amount-due-receive-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => TransactionsBloc(),
+              child: AmountDueReceiveScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => TransactionsBloc(),
+            child: AmountDueReceiveScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/settlement-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => TransactionsBloc(),
+              child: SettlementScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => TransactionsBloc(),
+            child: SettlementScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/writoff-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => TransactionsBloc(),
+              child: WriteOffScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => TransactionsBloc(),
+            child: WriteOffScreen(
               argus: const {},
             ),
           ),

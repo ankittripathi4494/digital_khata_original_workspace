@@ -2,14 +2,12 @@
 
 import 'dart:async' as t1;
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
 import 'package:dkapp/module/profile/transactions/transactions_event.dart';
 import 'package:dkapp/module/profile/transactions/transactions_state.dart';
-import 'package:dkapp/utils/image_list.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,9 +47,6 @@ class _CashInScreenState extends State<CashInScreen> {
         amountController.text =
             (widget.argus['transactionData'] as TransactionListResponseData)
                 .transAmount!;
-        notesController.text =
-            (widget.argus['transactionData'] as TransactionListResponseData)
-                .notes!;
       });
     }
   }
@@ -84,9 +79,9 @@ class _CashInScreenState extends State<CashInScreen> {
                   .fullname!,
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
-            subtitle: const Text(
-              '\u{20B9} ${0}',
-              style: TextStyle(color: Colors.white, fontSize: 15),
+            subtitle: Text(
+              '\u{20B9} ${(widget.argus['customerData'] as SelectedCustomerResponseData).amount ?? 0}',
+              style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
           actions: [
@@ -96,31 +91,25 @@ class _CashInScreenState extends State<CashInScreen> {
                     textStyle:
                         const TextStyle(fontSize: 14, letterSpacing: 1.2)),
                 onPressed: () {
-                  if (attachImage != null) {
-                    if (amountController.text.isNotEmpty) {
-                      BlocProvider.of<TransactionsBloc>(context).add(
-                          AddCashTransactionEvent(
-                              samePageRedirection: false,
-                              customerId: (widget.argus['customerData']
-                                      as SelectedCustomerResponseData)
-                                  .id!,
-                              businessId: (widget.argus['selectedBusiness']
-                                      as BusinessListResponseData)
-                                  .id!,
-                              userId: sph.getString("userid")!,
-                              transactionType: 'C',
-                              transactionAmount: amountController.text,
-                              transactionNotes: notesController.text,
-                              transactionImages: attachImage));
-                    } else {
-                      EssentialWidgetsCollection.showErrorSnackbar(context,
-                          description:
-                              "Please fill amount to complete transaction");
-                    }
+                  if (amountController.text.isNotEmpty) {
+                    BlocProvider.of<TransactionsBloc>(context).add(
+                        AddCashTransactionEvent(
+                            samePageRedirection: false,
+                            customerId: (widget.argus['customerData']
+                                    as SelectedCustomerResponseData)
+                                .id!,
+                            businessId: (widget.argus['selectedBusiness']
+                                    as BusinessListResponseData)
+                                .id!,
+                            userId: sph.getString("userid")!,
+                            transactionType: 'C',
+                            transactionAmount: amountController.text,
+                            transactionNotes: notesController.text,
+                            transactionImages: attachImage));
                   } else {
                     EssentialWidgetsCollection.showErrorSnackbar(context,
                         description:
-                            "Please upload image attachment for transaction proof");
+                            "Please fill amount to complete transaction");
                   }
                 },
                 child: Text(
@@ -463,73 +452,13 @@ class _CashInScreenState extends State<CashInScreen> {
                                             fontWeight: FontWeight.w400,
                                             color: Colors.black),
                                       ),
-                                      (widget.argus
-                                              .containsKey('transactionData'))
-                                          ? (((widget.argus['transactionData']
-                                                          as TransactionListResponseData)
-                                                      .image !=
-                                                  null)
-                                              ? ((attachImage != null)
-                                                  ? Image.file(
-                                                      File(attachImage!.path),
-                                                      width: 100,
-                                                      height: 100,
-                                                    )
-                                                  : CachedNetworkImage(
-                                                      imageUrl:
-                                                          "${NetworkImagePathList.imagePathTrans}${(widget.argus['transactionData'] as TransactionListResponseData).image}",
-                                                      imageBuilder: (context,
-                                                              imageProvider) =>
-                                                          Container(
-                                                        color:
-                                                            Colors.transparent,
-                                                        width: 100,
-                                                        height: 100,
-                                                        child: Container(
-                                                          decoration: BoxDecoration(
-                                                              image: DecorationImage(
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  image:
-                                                                      imageProvider)),
-                                                        ),
-                                                      ),
-                                                      placeholder:
-                                                          (context, url) =>
-                                                              CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.grey[300],
-                                                        radius: 45,
-                                                        child:
-                                                            const AnimatedImagePlaceholderLoader(),
-                                                      ),
-                                                      errorWidget: (context,
-                                                              url, error) =>
-                                                          CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.grey[300],
-                                                        radius: 80,
-                                                        child: Image.asset(
-                                                          'resources/images/house-icon-removebg-preview.png',
-                                                          height: 80,
-                                                          width: 80,
-                                                        ),
-                                                      ),
-                                                    ))
-                                              : (attachImage != null)
-                                                  ? Image.file(
-                                                      File(attachImage!.path),
-                                                      width: 100,
-                                                      height: 100,
-                                                    )
-                                                  : Container())
-                                          : ((attachImage != null)
-                                              ? Image.file(
-                                                  File(attachImage!.path),
-                                                  width: 100,
-                                                  height: 100,
-                                                )
-                                              : Container())
+                                      ((attachImage != null)
+                                          ? Image.file(
+                                              File(attachImage!.path),
+                                              width: 100,
+                                              height: 100,
+                                            )
+                                          : Container())
                                     ],
                                   ),
                                 ),
@@ -638,43 +567,32 @@ class _CashInScreenState extends State<CashInScreen> {
                                             color: Colors.blue,
                                           )),
                                       onPressed: () {
-                                        if (attachImage != null) {
-                                          if (amountController
-                                              .text.isNotEmpty) {
-                                            BlocProvider.of<
-                                                    TransactionsBloc>(context)
-                                                .add(AddCashTransactionEvent(
-                                                    samePageRedirection: true,
-                                                    customerId:
-                                                        (widget
-                                                                        .argus[
-                                                                    'customerData']
-                                                                as SelectedCustomerResponseData)
-                                                            .id!,
-                                                    businessId: (widget.argus[
-                                                                'selectedBusiness']
-                                                            as BusinessListResponseData)
-                                                        .id!,
-                                                    userId: sph
-                                                        .getString("userid")!,
-                                                    transactionType: 'C',
-                                                    transactionAmount:
-                                                        amountController.text,
-                                                    transactionNotes:
-                                                        notesController.text,
-                                                    transactionImages:
-                                                        attachImage));
-                                          } else {
-                                            EssentialWidgetsCollection
-                                                .showErrorSnackbar(context,
-                                                    description:
-                                                        "Please fill amount to complete transaction");
-                                          }
+                                        if (amountController.text.isNotEmpty) {
+                                          BlocProvider.of<TransactionsBloc>(context)
+                                              .add(AddCashTransactionEvent(
+                                                  samePageRedirection: true,
+                                                  customerId: (widget.argus[
+                                                              'customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .id!,
+                                                  businessId: (widget.argus[
+                                                              'selectedBusiness']
+                                                          as BusinessListResponseData)
+                                                      .id!,
+                                                  userId:
+                                                      sph.getString("userid")!,
+                                                  transactionType: 'C',
+                                                  transactionAmount:
+                                                      amountController.text,
+                                                  transactionNotes:
+                                                      notesController.text,
+                                                  transactionImages:
+                                                      attachImage));
                                         } else {
                                           EssentialWidgetsCollection
                                               .showErrorSnackbar(context,
                                                   description:
-                                                      "Please upload image attachment for transaction proof");
+                                                      "Please fill amount to complete transaction");
                                         }
                                       },
                                       child: const Text("Save & Add More")),
@@ -709,31 +627,25 @@ class _CashInScreenState extends State<CashInScreen> {
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () {
-                      if (attachImage != null) {
-                        if (amountController.text.isNotEmpty) {
-                          BlocProvider.of<TransactionsBloc>(context).add(
-                              AddCashTransactionEvent(
-                                  samePageRedirection: false,
-                                  customerId: (widget.argus['customerData']
-                                          as SelectedCustomerResponseData)
-                                      .id!,
-                                  businessId: (widget.argus['selectedBusiness']
-                                          as BusinessListResponseData)
-                                      .id!,
-                                  userId: sph.getString("userid")!,
-                                  transactionType: 'C',
-                                  transactionAmount: amountController.text,
-                                  transactionNotes: notesController.text,
-                                  transactionImages: attachImage));
-                        } else {
-                          EssentialWidgetsCollection.showErrorSnackbar(context,
-                              description:
-                                  "Please fill amount to complete transaction");
-                        }
+                      if (amountController.text.isNotEmpty) {
+                        BlocProvider.of<TransactionsBloc>(context).add(
+                            AddCashTransactionEvent(
+                                samePageRedirection: false,
+                                customerId: (widget.argus['customerData']
+                                        as SelectedCustomerResponseData)
+                                    .id!,
+                                businessId: (widget.argus['selectedBusiness']
+                                        as BusinessListResponseData)
+                                    .id!,
+                                userId: sph.getString("userid")!,
+                                transactionType: 'C',
+                                transactionAmount: amountController.text,
+                                transactionNotes: notesController.text,
+                                transactionImages: attachImage));
                       } else {
                         EssentialWidgetsCollection.showErrorSnackbar(context,
                             description:
-                                "Please upload image attachment for transaction proof");
+                                "Please fill amount to complete transaction");
                       }
                     },
                     child: const Text("Save")),

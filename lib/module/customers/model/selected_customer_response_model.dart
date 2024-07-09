@@ -49,6 +49,7 @@ class SelectedCustomerResponseData {
   String? dob;
   String? billingCycle;
   String? address;
+  String? amount;
 
   SelectedCustomerResponseData(
       {this.id,
@@ -60,7 +61,8 @@ class SelectedCustomerResponseData {
       this.mobile,
       this.dob,
       this.billingCycle,
-      this.address});
+      this.address,
+      this.amount});
 
   SelectedCustomerResponseData.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
@@ -93,6 +95,9 @@ class SelectedCustomerResponseData {
     if (json["address"] is String) {
       address = json["address"];
     }
+    if (json["amount"] is String) {
+      amount = json["amount"];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -107,6 +112,7 @@ class SelectedCustomerResponseData {
     _data["dob"] = dob;
     _data["billing_cycle"] = billingCycle;
     _data["address"] = address;
+    _data["amount"] = amount;
     return _data;
   }
 }

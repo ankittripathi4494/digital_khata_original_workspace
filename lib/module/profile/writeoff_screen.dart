@@ -2,13 +2,16 @@
 
 import 'dart:async' as t1;
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
 import 'package:dkapp/module/profile/transactions/transactions_event.dart';
 import 'package:dkapp/module/profile/transactions/transactions_state.dart';
+import 'package:dkapp/utils/image_list.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,15 +21,15 @@ import 'package:dkapp/global_blocs/internet/internet_state.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
 
-class CashOutScreen extends StatefulWidget {
+class WriteOffScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
-  CashOutScreen({super.key, required this.argus});
+  WriteOffScreen({super.key, required this.argus});
 
   @override
-  State<CashOutScreen> createState() => _CashOutScreenState();
+  State<WriteOffScreen> createState() => _WriteOffScreenState();
 }
 
-class _CashOutScreenState extends State<CashOutScreen> {
+class _WriteOffScreenState extends State<WriteOffScreen> {
   SharedPreferencesHelper sph = SharedPreferencesHelper();
   final ImagePicker _picker = ImagePicker();
   TextEditingController amountController = TextEditingController();
@@ -34,8 +37,6 @@ class _CashOutScreenState extends State<CashOutScreen> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   XFile? attachImage;
-
-
 
   @override
   void initState() {
@@ -46,13 +47,15 @@ class _CashOutScreenState extends State<CashOutScreen> {
   fetchTransactionData() {
     if (widget.argus.containsKey('transactionData')) {
       setState(() {
-        amountController.text =
-            (widget.argus['transactionData'] as TransactionListResponseData)
-                .transAmount!;
-      
+        amountController.text = double.parse(
+                (widget.argus['transactionData'] as TransactionListResponseData)
+                    .afterTransAmount!)
+            .abs()
+            .toString();
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -87,35 +90,14 @@ class _CashOutScreenState extends State<CashOutScreen> {
             ),
           ),
           actions: [
-            TextButton(
-                style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    textStyle:
-                        const TextStyle(fontSize: 14, letterSpacing: 1.2)),
-                onPressed: () {
-                  if (amountController.text.isNotEmpty) {
-                    BlocProvider.of<TransactionsBloc>(context).add(
-                        AddCashTransactionEvent(
-                            samePageRedirection: false,
-                            customerId: (widget.argus['customerData']
-                                    as SelectedCustomerResponseData)
-                                .id!,
-                            businessId: (widget.argus['selectedBusiness']
-                                    as BusinessListResponseData)
-                                .id!,
-                            userId: sph.getString("userid")!,
-                            transactionType: 'D',
-                            transactionAmount: amountController.text,
-                            transactionNotes: notesController.text,
-                            transactionImages: attachImage));
-                  } else {
-                    EssentialWidgetsCollection.showErrorSnackbar(context,
-                        description:
-                            "Please fill amount to complete transaction");
-                  }
-                },
-                child: Text(
-                  "Save".toUpperCase(),
+            IconButton(
+                style: IconButton.styleFrom(
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () {},
+                icon: const Icon(
+                  CupertinoIcons.delete,
+                  size: 30,
                 ))
           ],
         ),
@@ -141,7 +123,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
                                     notesController.clear();
                                   });
                                   Navigator.pushReplacementNamed(
-                                      context, '/cash-out-screen',
+                                      context, '/cash-in-screen',
                                       arguments: widget.argus);
                                 } else {
                                   Navigator.pushReplacementNamed(
@@ -160,7 +142,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
                               taskWaitDuration: Durations.medium3,
                               task: () {
                                 Navigator.pushReplacementNamed(
-                                    context, '/cash-out-screen',
+                                    context, '/cash-in-screen',
                                     arguments: widget.argus);
                                 EssentialWidgetsCollection.showErrorSnackbar(
                                     context,
@@ -194,7 +176,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                "Amount Due",
+                                "Write off",
                                 style: TextStyle(
                                     fontSize: 20,
                                     letterSpacing: 1.2,
@@ -208,8 +190,14 @@ class _CashOutScreenState extends State<CashOutScreen> {
                                 child: TextFormField(
                                   controller: amountController,
                                   keyboardType: TextInputType.number,
-                                  style: const TextStyle(
-                                      color: Colors.black,
+                                  enabled: false,
+                                  style: TextStyle(
+                                      color: ((widget.argus['transactionData']
+                                                      as TransactionListResponseData)
+                                                  .transType !=
+                                              'D')
+                                          ? Colors.red
+                                          : Colors.green,
                                       letterSpacing: 1.2,
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold),
@@ -222,13 +210,26 @@ class _CashOutScreenState extends State<CashOutScreen> {
                                       Icons.currency_rupee,
                                       size: 20,
                                     ),
-                                    prefixIconColor: Colors.black,
+                                    prefixIconColor: ((widget.argus[
+                                                        'transactionData']
+                                                    as TransactionListResponseData)
+                                                .transType !=
+                                            'D')
+                                        ? Colors.red
+                                        : Colors.green,
                                     hintText: "0",
                                     hintStyle: const TextStyle(
                                         color: Colors.black,
                                         letterSpacing: 1.2,
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold),
+                                    disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: const BorderSide(
+                                          color:
+                                              Color.fromARGB(255, 31, 1, 102),
+                                          width: 2),
+                                    ),
                                     enabledBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                       borderSide: const BorderSide(
@@ -454,13 +455,73 @@ class _CashOutScreenState extends State<CashOutScreen> {
                                             fontWeight: FontWeight.w400,
                                             color: Colors.black),
                                       ),
-                                      ((attachImage != null)
-                                          ? Image.file(
-                                              File(attachImage!.path),
-                                              width: 100,
-                                              height: 100,
-                                            )
-                                          : Container())
+                                      (widget.argus
+                                              .containsKey('transactionData'))
+                                          ? (((widget.argus['transactionData']
+                                                          as TransactionListResponseData)
+                                                      .image !=
+                                                  null)
+                                              ? ((attachImage != null)
+                                                  ? Image.file(
+                                                      File(attachImage!.path),
+                                                      width: 100,
+                                                      height: 100,
+                                                    )
+                                                  : CachedNetworkImage(
+                                                      imageUrl:
+                                                          "${NetworkImagePathList.imagePathTrans}${(widget.argus['transactionData'] as TransactionListResponseData).image}",
+                                                      imageBuilder: (context,
+                                                              imageProvider) =>
+                                                          Container(
+                                                        color:
+                                                            Colors.transparent,
+                                                        width: 100,
+                                                        height: 100,
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              image: DecorationImage(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  image:
+                                                                      imageProvider)),
+                                                        ),
+                                                      ),
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey[300],
+                                                        radius: 45,
+                                                        child:
+                                                            const AnimatedImagePlaceholderLoader(),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.grey[300],
+                                                        radius: 80,
+                                                        child: Image.asset(
+                                                          'resources/images/house-icon-removebg-preview.png',
+                                                          height: 80,
+                                                          width: 80,
+                                                        ),
+                                                      ),
+                                                    ))
+                                              : (attachImage != null)
+                                                  ? Image.file(
+                                                      File(attachImage!.path),
+                                                      width: 100,
+                                                      height: 100,
+                                                    )
+                                                  : Container())
+                                          : ((attachImage != null)
+                                              ? Image.file(
+                                                  File(attachImage!.path),
+                                                  width: 100,
+                                                  height: 100,
+                                                )
+                                              : Container())
                                     ],
                                   ),
                                 ),
@@ -558,50 +619,6 @@ class _CashOutScreenState extends State<CashOutScreen> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                SizedBox(
-                                  height: 50,
-                                  width: screenSize.width,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 10,
-                                          foregroundColor: Colors.blue,
-                                          side: const BorderSide(
-                                            color: Colors.blue,
-                                          )),
-                                      onPressed: () {
-                                        if (amountController.text.isNotEmpty) {
-                                          BlocProvider.of<TransactionsBloc>(context)
-                                              .add(AddCashTransactionEvent(
-                                                  samePageRedirection: true,
-                                                  customerId: (widget.argus[
-                                                              'customerData']
-                                                          as SelectedCustomerResponseData)
-                                                      .id!,
-                                                  businessId: (widget.argus[
-                                                              'selectedBusiness']
-                                                          as BusinessListResponseData)
-                                                      .id!,
-                                                  userId:
-                                                      sph.getString("userid")!,
-                                                  transactionType: 'D',
-                                                  transactionAmount:
-                                                      amountController.text,
-                                                  transactionNotes:
-                                                      notesController.text,
-                                                  transactionImages:
-                                                      attachImage));
-                                        } else {
-                                          EssentialWidgetsCollection
-                                              .showErrorSnackbar(context,
-                                                  description:
-                                                      "Please fill amount to complete transaction");
-                                        }
-                                      },
-                                      child: const Text("Save & Add More")),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
                               ],
                             ),
                           ),
@@ -630,20 +647,40 @@ class _CashOutScreenState extends State<CashOutScreen> {
                     ),
                     onPressed: () {
                       if (amountController.text.isNotEmpty) {
-                        BlocProvider.of<TransactionsBloc>(context).add(
-                            AddCashTransactionEvent(
-                                samePageRedirection: false,
-                                customerId: (widget.argus['customerData']
-                                        as SelectedCustomerResponseData)
-                                    .id!,
-                                businessId: (widget.argus['selectedBusiness']
-                                        as BusinessListResponseData)
-                                    .id!,
-                                userId: sph.getString("userid")!,
-                                transactionType: 'D',
-                                transactionAmount: amountController.text,
-                                transactionNotes: notesController.text,
-                                transactionImages: attachImage));
+                        if ((widget.argus['transactionData']
+                                    as TransactionListResponseData)
+                                .transType ==
+                            'D') {
+                          BlocProvider.of<TransactionsBloc>(context).add(
+                              AddCashTransactionEvent(
+                                  samePageRedirection: false,
+                                  customerId: (widget.argus['customerData']
+                                          as SelectedCustomerResponseData)
+                                      .id!,
+                                  businessId: (widget.argus['selectedBusiness']
+                                          as BusinessListResponseData)
+                                      .id!,
+                                  userId: sph.getString("userid")!,
+                                  transactionType: 'C',
+                                  transactionAmount: amountController.text,
+                                  transactionNotes: notesController.text,
+                                  transactionImages: attachImage));
+                        } else {
+                          BlocProvider.of<TransactionsBloc>(context).add(
+                              AddCashTransactionEvent(
+                                  samePageRedirection: false,
+                                  customerId: (widget.argus['customerData']
+                                          as SelectedCustomerResponseData)
+                                      .id!,
+                                  businessId: (widget.argus['selectedBusiness']
+                                          as BusinessListResponseData)
+                                      .id!,
+                                  userId: sph.getString("userid")!,
+                                  transactionType: 'D',
+                                  transactionAmount: amountController.text,
+                                  transactionNotes: notesController.text,
+                                  transactionImages: attachImage));
+                        }
                       } else {
                         EssentialWidgetsCollection.showErrorSnackbar(context,
                             description:
