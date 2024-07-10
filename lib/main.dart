@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dkapp/module/plan/plan_bloc/plan_bloc.dart';
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -110,6 +111,9 @@ class _MyAppState extends State<MyApp> {
                 ),
                 BlocProvider<TransactionsBloc>(
                   create: (BuildContext context) => TransactionsBloc(),
+                ),
+                BlocProvider<PlanBloc>(
+                  create: (BuildContext context) => PlanBloc(),
                 ),
               ],
               child: BlocBuilder<LocaleCubit, LocaleState>(

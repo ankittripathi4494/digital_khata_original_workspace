@@ -53,7 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       RefreshController(initialRefresh: false);
   RefreshController refreshController2 =
       RefreshController(initialRefresh: false);
-   RefreshController refreshController3 =
+  RefreshController refreshController3 =
       RefreshController(initialRefresh: false);
 
 // Option 2
@@ -1539,12 +1539,22 @@ class _ProfileScreenState extends State<ProfileScreen>
               if (mounted) setState(() {});
               refreshController2.loadComplete();
             }),
-            child: const Center(
+            child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    width: 100,
+                    height: 100,
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage(
+                                "resources/images/empty-folder.png"))),
+                  ),
+                  const Text(
                     "No Transactions to Show",
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -1553,7 +1563,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         fontWeight: FontWeight.w600,
                         fontSize: 16),
                   ),
-                  Text(
+                  const Text(
                     "Add your transactions to see overdue amount and send remainders",
                     textAlign: TextAlign.center,
                     style: TextStyle(

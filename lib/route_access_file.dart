@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
-import 'module/emi/emi_screen.dart';
 import 'module/account/account_screen.dart';
 import 'module/add_business/add_address_business_screen.dart';
 import 'module/add_business/add_new_business_screen.dart';
@@ -28,6 +27,7 @@ import 'module/customers/select_customer_screen.dart';
 import 'module/dashboard/screens/dashboard_screen.dart';
 import 'module/discount/discount_screen.dart';
 import 'module/edit_profile/edit_personal_profile.dart';
+import 'module/emi/emi_screen.dart';
 import 'module/errors/screens/network_error_screen.dart';
 import 'module/errors/screens/page_error_screen.dart';
 import 'module/help_support/help_support_screen.dart';
@@ -44,6 +44,7 @@ import 'module/payments/payment_configuration_screen.dart';
 import 'module/payments/upi_payment_screen.dart';
 import 'module/plan/emi_plan_screen.dart';
 import 'module/plan/new_emi_plan_screen.dart';
+import 'module/plan/plan_bloc/plan_bloc.dart';
 import 'module/plan/plan_screen.dart';
 import 'module/plan/recurring_new_bill_plan_screen.dart';
 import 'module/privacy_policy/privacy_policy_screen.dart';
@@ -1274,16 +1275,22 @@ class RouteAccessGenerator {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
-            child: PlanScreen(
-              argus: arguments,
+            child: BlocProvider(
+              create: (context) => PlanBloc(),
+              child: PlanScreen(
+                argus: arguments,
+              ),
             ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: PlanScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => PlanBloc(),
+            child: PlanScreen(
+              argus: const {},
+            ),
           ),
         );
       case '/bill-plan':

@@ -197,7 +197,8 @@ class _RecurringTransactionScreenState
               ),
               InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, '/plan');
+                  Navigator.pushNamed(context, '/plan',
+                      arguments: widget.argus);
                 },
                 child: TextFormField(
                   enabled: false,
