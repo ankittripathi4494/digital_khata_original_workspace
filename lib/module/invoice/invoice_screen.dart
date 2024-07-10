@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_chips_input/select_chips_input.dart';
+import 'package:talker/talker.dart';
 import 'dart:convert' as convert;
 import '../dashboard/screens/dashboard_screen.dart';
 
@@ -44,7 +45,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
     });
     tabController.addListener(() {
       if (kDebugMode) {
-        print('my index is${tabController.index}');
+        Talker().info('my index is${tabController.index}');
       }
     });
     super.initState();

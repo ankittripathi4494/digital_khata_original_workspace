@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:async' as t1;
 
 import 'package:pinput/pinput.dart';
+import 'package:talker/talker.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 
@@ -90,14 +91,14 @@ class _ContactVerificationScreenState extends State<ContactVerificationScreen> {
     //       headers: {
     //         "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
     //       });
-    //   print(response.body);
+    //   Talker().info(response.body);
     //   if (response.statusCode == 200) {
     //     MobileOtpResponseModel jsonResponse =
     //         MobileOtpResponseModel.fromJson(convert.jsonDecode(response.body));
-    //     print(response.body);
+    //     Talker().info(response.body);
     //     if (jsonResponse.response != "failure") {
     //       if (kDebugMode) {
-    //         print(jsonResponse.toString());
+    //         Talker().info(jsonResponse.toString());
     //       }
     //       Navigator.pushReplacementNamed(context, '/mobile-otp', arguments: {
     //         "loginResponseData":
@@ -281,7 +282,7 @@ class _ContactVerificationScreenState extends State<ContactVerificationScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(8.0)),
                                       onCompleted: (pin) {
-                                        debugPrint('onCompleted: $pin');
+                                        Talker().info('onCompleted: $pin');
                                         setState(() {
                                           inputPinned = pin;
                                         });
@@ -295,7 +296,7 @@ class _ContactVerificationScreenState extends State<ContactVerificationScreen> {
                                         }
                                       },
                                       onChanged: (value) {
-                                        debugPrint('onChanged: $value');
+                                        Talker().info('onChanged: $value');
                                       },
                                     ),
                                   ),

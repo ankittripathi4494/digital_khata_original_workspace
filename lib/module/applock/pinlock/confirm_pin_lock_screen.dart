@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:numpad/numpad.dart';
 import 'package:pinput/pinput.dart';
+import 'package:talker/talker.dart';
 
 class ConfirmPinLockScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -80,7 +81,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                       : 'Pin and Confirm Pin are not matched';
                 },
                 onCompleted: (pin) {
-                  debugPrint('onCompleted: ');
+                  Talker().info('onCompleted: ');
                   if (pin == widget.argus['devicePin']) {
                     setState(() {
                       showDialog(
@@ -123,7 +124,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                                         setState(() {
                                           // initScreen = 1;
                                           if (kDebugMode) {
-                                            print('init-={initScreen}');
+                                            Talker().info('init-={initScreen}');
                                           }
                                           Navigator.pushNamed(
                                               context, '/dashboard');
@@ -147,7 +148,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                   }
                 },
                 onChanged: (value) {
-                  debugPrint('onChanged: $value');
+                  Talker().info('onChanged: $value');
                 },
                 cursor: Container(),
                 focusedPinTheme: defaultPinTheme.copyWith(
@@ -205,7 +206,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                 //     code += "$val";
                 //   });
                 // }
-                // print(code);
+                // Talker().info(code);
               },
             ),
             // NumericKeyboard(
@@ -249,7 +250,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
     }
 
     if (kDebugMode) {
-      print(textController.text);
+      Talker().info(textController.text);
     }
   }
 }

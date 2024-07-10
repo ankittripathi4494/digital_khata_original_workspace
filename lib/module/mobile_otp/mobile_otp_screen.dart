@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:pinput/pinput.dart';
+import 'package:talker/talker.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import 'dart:convert' as convert;
@@ -66,7 +67,7 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-     bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
+    bool keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom != 0.0;
     return BlocListener<InternetCubit, InternetState>(
       bloc: InternetCubit(),
       listener: (context, state) {
@@ -84,7 +85,7 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
         child: Scaffold(
           // appBar: AppBar(backgroundColor: Colors.blue,),
           body: Container(
-             decoration: BoxDecoration(color: Colors.grey[100]),
+            decoration: BoxDecoration(color: Colors.grey[100]),
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: Padding(
@@ -155,8 +156,9 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                         autofocus: true,
                         validator: (value) {
                           return value ==
-                                  (widget.argus['loginResponseData']
-                                          as LoginResponseData)
+                                  (widget.argus['loginResponseModel']
+                                          as LoginResponseModel)
+                                      .data!
                                       .otp
                               ? null
                               : 'OTP does not matched.';
@@ -174,119 +176,137 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                             ),
                             borderRadius: BorderRadius.circular(8.0)),
                         onCompleted: (pin) {
-                          debugPrint('onCompleted: $pin');
+                          Talker().info('onCompleted: $pin');
                           setState(() {
                             inputPinned = pin;
                           });
                         },
                         onChanged: (value) {
-                          debugPrint('onChanged: $value');
+                          Talker().info('onChanged: $value');
                         },
                       ),
                     ),
                     SizedBox(
                       height: screenSize.height / 1.9,
                     ),
-                   ],
+                  ],
                 ),
               ),
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          floatingActionButton:  keyboardIsOpened
-            ? null
-            :Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              (showResendButton == true)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Need help?',
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        // SizedBox(
-                        //   width: screenSize.width * 0.01,
-                        // ),
-                        TextButton(
-                          onPressed: () {
-                            resendOTP(widget.argus);
-                          },
-                          child: const Text(
-                            'Click here',
-                            style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15),
-                          ),
-                        ),
-                        // TextButton(
-                        //   onPressed: () {},
-                        //   style: TextButton.styleFrom(),
-                        //   child: Text(
-                        //     'Click here',
-                        //     style: TextStyle(color: Colors.grey, fontSize: 12),
-                        //   ),
-                        // )
-                      ],
-                    )
-                  : Container(),
-              Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: screenSize.width * 0.06,
-                    vertical: screenSize.height * 0.01),
-                // width: screenSize.width,
-                decoration: const BoxDecoration(
-                  color: Color.fromARGB(245, 12, 44, 104),
-                ),
-                child: InkWell(
-                  onTap: () {
-                    if (inputPinned ==
-                        (widget.argus['loginResponseData'] as LoginResponseData)
-                            .otp) {
-                      sph.setBool("userLoggedIn", true);
-                      sph.setString(
-                          "userid",
-                          (widget.argus['loginResponseData']
-                                  as LoginResponseData)
-                              .userId!);
-                      sph.setString(
-                          "emailORmobile",
-                          (widget.argus['loginResponseData']
-                                  as LoginResponseData)
-                              .emailORmobile!);
-                      Navigator.pushReplacementNamed(context, '/dashboard');
-                      EssentialWidgetsCollection.showSuccessSnackbar(
-                          context, title: null, description: "Login Successful!");
-                    }
-                  },
-                  child: Container(
-                      height: 50.0,
-                      width: screenSize.width,
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(245, 12, 44, 104),
-                          borderRadius: BorderRadius.circular(8.0)),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: keyboardIsOpened
+              ? null
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    (showResendButton == true)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Need help?',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              // SizedBox(
+                              //   width: screenSize.width * 0.01,
+                              // ),
+                              TextButton(
+                                onPressed: () {
+                                  resendOTP(widget.argus);
+                                },
+                                child: const Text(
+                                  'Click here',
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15),
+                                ),
+                              ),
+                              // TextButton(
+                              //   onPressed: () {},
+                              //   style: TextButton.styleFrom(),
+                              //   child: Text(
+                              //     'Click here',
+                              //     style: TextStyle(color: Colors.grey, fontSize: 12),
+                              //   ),
+                              // )
+                            ],
+                          )
+                        : Container(),
+                    Container(
                       margin: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.001,
-                          vertical: screenSize.height * 0.001),
-                      // padding: EdgeInsets.symmetric(
-                      //   horizontal: screenSize.width * 0.01,
-                      // ),
-                      child: const Center(
-                        child: Text(
-                          'Verify code',
-                          style: TextStyle(color: Colors.white, fontSize: 18.0),
-                        ),
-                      )),
+                          horizontal: screenSize.width * 0.06,
+                          vertical: screenSize.height * 0.01),
+                      // width: screenSize.width,
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(245, 12, 44, 104),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          if (inputPinned ==
+                              (widget.argus['loginResponseModel']
+                                      as LoginResponseModel)
+                                  .data!
+                                  .otp) {
+                            sph.setBool("userLoggedIn", true);
+                            sph.setString(
+                                "userid",
+                                (widget.argus['loginResponseModel']
+                                        as LoginResponseModel)
+                                    .data!
+                                    .userId!);
+                            sph.setString(
+                                "emailORmobile",
+                                (widget.argus['loginResponseModel']
+                                        as LoginResponseModel)
+                                    .data!
+                                    .emailORmobile!);
+                            if ((widget.argus['loginResponseModel']
+                                        as LoginResponseModel)
+                                    .loginType ==
+                                "login") {
+                              Navigator.pushReplacementNamed(
+                                  context, '/dashboard');
+                            } else {
+                              Navigator.pushReplacementNamed(
+                                  context, '/add-new-business',
+                                  arguments: {"fromLoginPage": true});
+                            }
+                            EssentialWidgetsCollection.showSuccessSnackbar(
+                                context,
+                                title: null,
+                                description: "Login Successful!");
+                          }
+                        },
+                        child: Container(
+                            height: 50.0,
+                            width: screenSize.width,
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(245, 12, 44, 104),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: screenSize.width * 0.001,
+                                vertical: screenSize.height * 0.001),
+                            // padding: EdgeInsets.symmetric(
+                            //   horizontal: screenSize.width * 0.01,
+                            // ),
+                            child: const Center(
+                              child: Text(
+                                'Verify code',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18.0),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -296,11 +316,13 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
     var map = {};
     try {
       map['emailORmobile'] =
-          (widget.argus['loginResponseData'] as LoginResponseData)
+          (widget.argus['loginResponseModel'] as LoginResponseModel)
+              .data!
               .emailORmobile;
       map['token'] = 'bnbuujn';
 
-      map['type'] = ((widget.argus['loginResponseData'] as LoginResponseData)
+      map['type'] = ((widget.argus['loginResponseModel'] as LoginResponseModel)
+              .data!
               .emailORmobile!
               .isValidEmail())
           ? '2'
@@ -312,33 +334,33 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
           headers: {
             "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
           });
-      print(response.body);
+      Talker().info(response.body);
       if (response.statusCode == 200) {
         MobileOtpResponseModel jsonResponse =
             MobileOtpResponseModel.fromJson(convert.jsonDecode(response.body));
-        print(response.body);
+        Talker().info(response.body);
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            print(jsonResponse.toString());
+            Talker().info(jsonResponse.toString());
           }
           Navigator.pushReplacementNamed(context, '/mobile-otp', arguments: {
-            "loginResponseData":
-                (widget.argus['loginResponseData'] as LoginResponseData)
+            "loginResponseModel":
+                (widget.argus['loginResponseModel'] as LoginResponseModel)
           });
-          EssentialWidgetsCollection.showSuccessSnackbar(
-              context, title: null, description: jsonResponse.message!);
+          EssentialWidgetsCollection.showSuccessSnackbar(context,
+              title: null, description: jsonResponse.message!);
         } else {
-          EssentialWidgetsCollection.showErrorSnackbar(
-              context, title: null, description: jsonResponse.message!);
+          EssentialWidgetsCollection.showErrorSnackbar(context,
+              title: null, description: jsonResponse.message!);
         }
       } else {
-        EssentialWidgetsCollection.showErrorSnackbar(
-            context, title: null, description: 'Request failed with status: ${response.statusCode}.');
+        EssentialWidgetsCollection.showErrorSnackbar(context,
+            title: null,
+            description: 'Request failed with status: ${response.statusCode}.');
       }
     } on PlatformException {
-      EssentialWidgetsCollection.showErrorSnackbar(
-          context, title: null, description: 'Failed to get platform version.');
+      EssentialWidgetsCollection.showErrorSnackbar(context,
+          title: null, description: 'Failed to get platform version.');
     }
   }
-
 }

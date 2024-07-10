@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:switcher_button/switcher_button.dart';
+import 'package:talker/talker.dart';
 
 class ReminderSettingScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -82,7 +83,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          print(value);
+                          Talker().info(value);
 
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -121,7 +122,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          print(value);
+                          Talker().info(value);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             margin: EdgeInsets.symmetric(
@@ -159,7 +160,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          print(value);
+                          Talker().info(value);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             margin: EdgeInsets.symmetric(
@@ -197,7 +198,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          print(value);
+                          Talker().info(value);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             margin: EdgeInsets.symmetric(

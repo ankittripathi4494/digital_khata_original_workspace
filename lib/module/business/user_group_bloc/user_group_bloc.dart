@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'package:talker/talker.dart';
 
 class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
   UserGroupBloc() : super(UserGroupInitial()) {
@@ -23,7 +24,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
         map['token'] = 'bnbuujn';
         map['user_id'] = event.userId;
         map['business_id'] = event.businessId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getUserGroupList),
@@ -31,14 +32,14 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        // print(response.body);
+        // Talker().info(response.body);
         if (response.statusCode == 200) {
           UserGroupResponseModel jsonResponse = UserGroupResponseModel.fromJson(
               convert.jsonDecode(response.body));
 
           if (jsonResponse.response != "failure") {
             // if (kDebugMode) {
-            //   print(jsonResponse.data!.toString());
+            //   Talker().info(jsonResponse.data!.toString());
             // }
 
             emit(UserGroupListLoadedState(
@@ -93,7 +94,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
         map['name'] = event.groupName;
         map['mobile'] = event.groupMobile;
         map['description'] = event.groupDescription;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.createUserGroup),
@@ -101,7 +102,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           AddNewUserGroupResponseModel jsonResponse =
               AddNewUserGroupResponseModel.fromJson(
@@ -109,7 +110,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.message!.toString());
+              Talker().info(jsonResponse.message!.toString());
             }
 
             emit(AddNewUserGroupSuccessState(
@@ -145,7 +146,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
         map['name'] = event.groupName;
         map['mobile'] = event.groupMobile;
         map['description'] = event.groupDescription;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.updateUserGroup),
@@ -153,7 +154,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           UpdateUserGroupResponseModel jsonResponse =
               UpdateUserGroupResponseModel.fromJson(
@@ -161,7 +162,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.message!.toString());
+              Talker().info(jsonResponse.message!.toString());
             }
 
             emit(UpdateUserGroupSuccessState(
@@ -193,7 +194,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
         map['token'] = 'bnbuujn';
         map['user_id'] = event.userId;
         map['group_id'] = event.groupId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.deleteUserGroup),
@@ -201,7 +202,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           DeleteUserGroupResponseModel jsonResponse =
               DeleteUserGroupResponseModel.fromJson(
@@ -209,7 +210,7 @@ class UserGroupBloc extends Bloc<UserGroupEvent, UserGroupState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.message!.toString());
+              Talker().info(jsonResponse.message!.toString());
             }
 
             emit(DeleteUserGroupSuccessState(

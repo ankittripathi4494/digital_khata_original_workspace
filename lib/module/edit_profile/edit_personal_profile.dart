@@ -14,6 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:talker/talker.dart';
 
 class EditPersonalProfileScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -61,7 +62,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
 
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            print(jsonResponse.toString());
+            Talker().info(jsonResponse.toString());
           }
 
           setState(() {
@@ -171,7 +172,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        debugPrint(
+                                        Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile = retailerImage!.path;
@@ -230,7 +231,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        debugPrint(
+                                        Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile = retailerImage!.path;
@@ -272,7 +273,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        debugPrint(
+                                        Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile = retailerImage!.path;
@@ -310,7 +311,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        debugPrint(
+                                        Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile = retailerImage!.path;
@@ -358,9 +359,9 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                       },
                       onChanged: (value) {
                         // if (_formKey.currentState!.validate()) {
-                        //   print("Validated");
+                        //   Talker().info("Validated");
                         // } else {
-                        //   print("Not Validated");
+                        //   Talker().info("Not Validated");
                         // }
                       },
                       keyboardType: TextInputType.name,
@@ -408,9 +409,9 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                       },
                       onChanged: (value) {
                         // if (_formKey.currentState!.validate()) {
-                        //   print("Validated");
+                        //   Talker().info("Validated");
                         // } else {
-                        //   print("Not Validated");
+                        //   Talker().info("Not Validated");
                         // }
                       },
                       keyboardType: TextInputType.number,
@@ -600,7 +601,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     InkWell(
                       onTap: () {
                         if (retailerImage != null) {
-                          print("Update Data:- ${retailerImage!.path}");
+                          Talker().info("Update Data:- ${retailerImage!.path}");
                           updatePersonalProfileImage();
                         } else {
                           updatePersonalProfile();
@@ -649,7 +650,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
       request.files.add(await http.MultipartFile.fromPath(
           "profile_image", File(retailerImageFile!).path));
 
-      print(request.files.first.filename);
+      Talker().info(request.files.first.filename);
 
       var response = await request.send();
       if (response.statusCode == 200) {
@@ -678,21 +679,21 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
       map['email'] = emailController.text;
       map['country_id'] = selectedCountry?.id;
       map['dob'] = dobController.text;
-      print("Input Map :- $map");
+      Talker().info("Input Map :- $map");
       http.Response response = await http.post(
           Uri.http(APIPathList.mainDomain, APIPathList.updateUserProfile),
           body: map,
           headers: {
             "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
           });
-      print(response.body);
+      Talker().info(response.body);
       if (response.statusCode == 200) {
         AccountResponseModel jsonResponse =
             AccountResponseModel.fromJson(convert.jsonDecode(response.body));
 
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            print(jsonResponse.response.toString());
+            Talker().info(jsonResponse.response.toString());
           }
 
           Navigator.pushReplacementNamed(context, '/accounts');

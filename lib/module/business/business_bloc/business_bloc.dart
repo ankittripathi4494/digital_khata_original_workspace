@@ -9,6 +9,7 @@ import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talker/talker.dart';
 import '../model/business_list_response_model.dart';
 import 'business_event.dart';
 import 'business_state.dart';
@@ -27,7 +28,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       try {
         map['token'] = 'bnbuujn';
         map['user_id'] = event.userId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(
@@ -36,7 +37,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           BusinessListResponseModel jsonResponse =
               BusinessListResponseModel.fromJson(
@@ -44,7 +45,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.data!
+              Talker().info(jsonResponse.data!
                   .map((c) {
                     return c.toJson();
                   })
@@ -251,14 +252,14 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         map['website'] = event.businessWebsite;
         map['address'] = event.businessAddress;
         map['business_type'] = event.businessType;
-        print("Input Map :- $map");
+        Talker().info("Input Map :- $map");
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.createBusiness),
             body: map,
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           AddNewBusinessResponseModel jsonResponse =
               AddNewBusinessResponseModel.fromJson(
@@ -266,7 +267,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.response.toString());
+              Talker().info(jsonResponse.response.toString());
             }
 
             emit(AddNewBusinessSuccessState(
@@ -292,7 +293,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       try {
         map['token'] = 'bnbuujn';
         map['user_id'] = event.userId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(
@@ -301,7 +302,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           BusinessListResponseModel jsonResponse =
               BusinessListResponseModel.fromJson(
@@ -309,7 +310,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.data!
+              Talker().info(jsonResponse.data!
                   .map((c) {
                     return c.toJson();
                   })
@@ -319,8 +320,8 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
             for (var i = 0; i < jsonResponse.data!.length; i++) {
               if (jsonResponse.data![i].bName == event.businessData.bName) {
-                print(jsonResponse.data![i].bName == event.businessData.bName);
-                print(event.businessData.toJson());
+                Talker().info(jsonResponse.data![i].bName == event.businessData.bName);
+                Talker().info(event.businessData.toJson());
                 selectedBusiness = BusinessListResponseData(
                     id: jsonResponse.data![i].id,
                     userId: jsonResponse.data![i].userId,
@@ -412,7 +413,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       try {
         map['token'] = 'bnbuujn';
         map['user_id'] = event.userId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(
@@ -421,7 +422,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           BusinessListResponseModel jsonResponse =
               BusinessListResponseModel.fromJson(
@@ -429,7 +430,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.data!
+              Talker().info(jsonResponse.data!
                   .map((c) {
                     return c.toJson();
                   })
@@ -479,7 +480,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         map['token'] = 'bnbuujn';
         map['user_id'] = event.userId;
         map['id'] = event.businessId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(
@@ -488,7 +489,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           DeleteSelectedBusinessResponseModel jsonResponse =
               DeleteSelectedBusinessResponseModel.fromJson(
@@ -496,7 +497,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.message!.toString());
+              Talker().info(jsonResponse.message!.toString());
             }
 
             businessList.clear();
@@ -505,7 +506,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
             try {
               map2['token'] = 'bnbuujn';
               map2['user_id'] = event.userId;
-              print(map2);
+              Talker().info(map2);
 
               http.Response response2 = await http.post(
                   Uri.http(APIPathList.mainDomain,
@@ -515,7 +516,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
                     "HTTP_AUTHORIZATION":
                         '${DateTime.now().millisecondsSinceEpoch}',
                   });
-              print(response2.body);
+              Talker().info(response2.body);
               if (response2.statusCode == 200) {
                 BusinessListResponseModel jsonResponse2 =
                     BusinessListResponseModel.fromJson(
@@ -523,7 +524,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
                 if (jsonResponse2.response != "failure") {
                   if (kDebugMode) {
-                    print(jsonResponse2.data!
+                    Talker().info(jsonResponse2.data!
                         .map((c) {
                           return c.toJson();
                         })
@@ -749,7 +750,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
       var responseBusinessProfileImage = await requestForImage.send();
       if (responseBusinessProfileImage.statusCode == 200) {
-        print("Image uplodade success");
+        Talker().info("Image uplodade success");
         await updatePersonalProfile(event, emit);
       } else {
         emit(UpdateBusinessFailedState(
@@ -776,7 +777,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       map['website'] = event.businessWebsite;
       map['address'] = event.businessAddress;
       map['business_type'] = event.businessType;
-      print("Input Map :- $map");
+      Talker().info("Input Map :- $map");
       http.Response response = await http.post(
           Uri.http(
               APIPathList.mainDomain, APIPathList.updateBusinessProfileData),
@@ -784,7 +785,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
           headers: {
             "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
           });
-      print(response.body);
+      Talker().info(response.body);
       if (response.statusCode == 200) {
         UpdateBusinessResponseModel jsonResponse =
             UpdateBusinessResponseModel.fromJson(
@@ -792,7 +793,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
 
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            print(jsonResponse.response.toString());
+            Talker().info(jsonResponse.response.toString());
           }
 
           emit(UpdateBusinessSuccessState(

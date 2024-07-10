@@ -14,6 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'package:talker/talker.dart';
 
 class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   CustomerBloc() : super(CustomerInitial()) {
@@ -100,7 +101,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         map['fullname'] = event.customerName;
         map['mobile'] = event.customerMobile;
         map['email'] = event.customerEmail;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.createCustomer),
@@ -108,7 +109,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           AddNewCustomerResponseModel jsonResponse =
               AddNewCustomerResponseModel.fromJson(
@@ -116,7 +117,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.message!.toString());
+              Talker().info(jsonResponse.message!.toString());
             }
 
             emit(AddNewCustomerSuccessState(
@@ -156,7 +157,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         map['billing_cycle'] = event.customerBilling;
         map['dob'] = event.customerDob;
         map['address'] = event.customerAddress;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.updateCustomer),
@@ -164,7 +165,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           UpdateCustomerResponseModel jsonResponse =
               UpdateCustomerResponseModel.fromJson(
@@ -172,7 +173,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.message!.toString());
+              Talker().info(jsonResponse.message!.toString());
             }
 
             emit(UpdateCustomerSuccessState(
@@ -204,7 +205,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         map['token'] = 'bnbuujn';
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getCustomerList),
@@ -212,14 +213,14 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           CustomerResponseModel jsonResponse =
               CustomerResponseModel.fromJson(convert.jsonDecode(response.body));
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.data!.toString());
+              Talker().info(jsonResponse.data!.toString());
             }
 
             emit(CustomerListLoadedState(
@@ -252,7 +253,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['id'] = event.customerId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getCustomerDetails),
@@ -260,7 +261,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        // print(response.body);
+        // Talker().info(response.body);
         if (response.statusCode == 200) {
           SelectedCustomerResponseModel jsonResponse =
               SelectedCustomerResponseModel.fromJson(
@@ -268,7 +269,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.data!.toString());
+              Talker().info(jsonResponse.data!.toString());
             }
 
             emit(SelectedCustomerDetailsLoadedState(
@@ -301,7 +302,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['id'] = event.customerId;
-        print(map);
+        Talker().info(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.deleteCustomer),
@@ -309,7 +310,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           DeleteCustomerResponseModel jsonResponse =
               DeleteCustomerResponseModel.fromJson(
@@ -317,7 +318,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.message!.toString());
+              Talker().info(jsonResponse.message!.toString());
             }
 
             emit(DeleteCustomerSuccessState(

@@ -8,6 +8,7 @@ import 'package:dkapp/module/business_type/model/business_type_list_response_mod
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:talker/talker.dart';
 
 class BusinessTypeScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -39,7 +40,7 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
 // order
     if ((widget.argus.containsKey('selectedData')) &&
         (!widget.argus.containsKey('choices'))) {
-      print(widget.argus['selectedData']);
+      Talker().info(widget.argus['selectedData']);
       BlocProvider.of<BusinessTypeBloc>(context).add(
           BusinessTypeListSelectedFilterEvent(
               userId: prefs.getString("userid")!,
@@ -50,7 +51,7 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
               choiceAndType: ''));
     } else if ((!widget.argus.containsKey('selectedData')) &&
         (widget.argus.containsKey('choices'))) {
-      print(widget.argus['choices']);
+      Talker().info(widget.argus['choices']);
       BlocProvider.of<BusinessTypeBloc>(context).add(
           BusinessTypeListSelectedFilterEvent(
               userId: prefs.getString("userid")!,
@@ -60,7 +61,7 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
               choiceAndType: ''));
     } else if ((widget.argus.containsKey('selectedData')) &&
         (widget.argus.containsKey('choices'))) {
-      print(widget.argus['choices']);
+      Talker().info(widget.argus['choices']);
 
       BlocProvider.of<BusinessTypeBloc>(context).add(
           BusinessTypeListSelectedFilterEvent(

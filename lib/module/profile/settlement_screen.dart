@@ -20,6 +20,7 @@ import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
+import 'package:talker/talker.dart';
 
 class SettlementScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -116,7 +117,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                 context,
                                 taskWaitDuration: Durations.medium3,
                                 task: () {
-                                  print(
+                                  Talker().info(
                                       "Same Page Redirection:- ${state.samePageRedirection}");
                                   if (state.samePageRedirection == true) {
                                     setState(() {
@@ -392,7 +393,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                                 setState(() {
                                                   attachImage = c;
                                                 });
-                                                debugPrint(
+                                                Talker().info(
                                                     "Captured Image From Camera :- ${attachImage!.path}");
                                                 Navigator.pop(context);
                                               });
@@ -423,7 +424,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                                   setState(() {
                                                     attachImage = c;
                                                   });
-                                                  debugPrint(
+                                                  Talker().info(
                                                       "Captured Image From gallery :- ${attachImage!.path}");
                                                   Navigator.pop(context);
                                                 });

@@ -4,6 +4,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:talker/talker.dart';
 
 class FirebaseMessagingHelper {
   static final FirebaseMessagingHelper _instance =
@@ -66,19 +67,19 @@ class FirebaseMessagingHelper {
       provisional: false,
       sound: true,
     );
-    print('User granted permission: ${settings.authorizationStatus}');
+    Talker().info('User granted permission: ${settings.authorizationStatus}');
   }
 
 // Handle foreground messages
   void _onMessage(RemoteMessage message) {
-    print('Received a message while in the foreground: ${message.messageId}');
+    Talker().info('Received a message while in the foreground: ${message.messageId}');
     // Handle the message here
     _showNotification(message);
   }
 
   // Handle messages when the app is opened from a notification
   void _onMessageOpenedApp(RemoteMessage message) {
-    print('Message clicked!: ${message.messageId}');
+    Talker().info('Message clicked!: ${message.messageId}');
     // Handle the message here
     _showNotification(message);
   }
@@ -96,18 +97,18 @@ class FirebaseMessagingHelper {
 // Handle notification tap when app is terminated or in the background
   Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp();
-    print("background Notification is empty");
+    Talker().info("background Notification is empty");
     if (message.data.isNotEmpty) {
       _showNotification(message);
     } else {
-      print("background Notification is empty");
+      Talker().info("background Notification is empty");
     }
   }
 
   // Handle the received message
   void _showNotification(RemoteMessage message) {
     // Custom logic for handling the message
-    print('Handling message: ${message.data}');
+    Talker().info('Handling message: ${message.data}');
 
     String? title = (message.notification != null)
         ? message.notification?.title

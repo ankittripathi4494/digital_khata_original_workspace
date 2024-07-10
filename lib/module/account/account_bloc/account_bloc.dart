@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_Talker().info
 
 import 'package:dkapp/module/account/account_bloc/account_event.dart';
 import 'package:dkapp/module/account/account_bloc/account_state.dart';
@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+
+import 'package:talker/talker.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   AccountBloc() : super(AccountInitial()) {
@@ -26,19 +28,19 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        print(response.body);
+        Talker().info(response.body);
         if (response.statusCode == 200) {
           AccountResponseModel jsonResponse =
               AccountResponseModel.fromJson(convert.jsonDecode(response.body));
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              print(jsonResponse.response.toString());
+              Talker().info(jsonResponse.response.toString());
             }
 
             if (kDebugMode) {
-              print(jsonResponse.data!.first.dob);
-              print(jsonResponse.data!.first.fullname);
+              Talker().info(jsonResponse.data!.first.dob);
+              Talker().info(jsonResponse.data!.first.fullname);
             }
             emit(AccountDetailSuccessState(
                 successData: jsonResponse.data!.first));

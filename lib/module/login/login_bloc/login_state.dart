@@ -11,7 +11,7 @@ class LoginPhoneNumberValidState extends LoginState {}
 class LoginPhoneNumberLoadingState extends LoginState {}
 
 class LoginPhoneNumberSuccessState extends LoginState {
-  late final LoginResponseData successData;
+  late final LoginResponseModel successData;
   LoginPhoneNumberSuccessState({required this.successData});
 }
 
@@ -32,7 +32,7 @@ class LoginEmailIDValidState extends LoginState {}
 class LoginEmailIDLoadingState extends LoginState {}
 
 class LoginEmailIDSuccessState extends LoginState {
-  late final LoginResponseData successData;
+  late final LoginResponseModel successData;
   LoginEmailIDSuccessState({required this.successData});
 }
 

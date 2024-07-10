@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:talker/talker.dart';
 
 class EditCustomerScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -57,7 +58,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
   }
 
   fillFormDetails() {
-    print((widget.argus['customerData'] as SelectedCustomerResponseData)
+    Talker().info((widget.argus['customerData'] as SelectedCustomerResponseData)
         .toJson());
     nameController.text =
         ((widget.argus['customerData'] as SelectedCustomerResponseData)
@@ -107,7 +108,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
         if (ex.id ==
             (widget.argus['customerData'] as SelectedCustomerResponseData)
                 .groupId) {
-          print("Selected");
+          Talker().info("Selected");
           setState(() {
             selectedGroup = ex;
             groupController.text = selectedGroup?.name ?? '';
@@ -167,7 +168,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
               (updatedData == true)
                   ? EssentialWidgetsCollection.autoScheduleTask(context,
                       task: () {
-                      print("datya");
+                      Talker().info("datya");
                       setState(() {
                         updatedData = false;
                       });
@@ -203,7 +204,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                       childWidget: Container(),
                       taskWaitDuration: Durations.short4,
                       task: () {
-                        print("faield");
+                        Talker().info("faield");
                         setState(() {
                           usergroupList.addAll([]);
                         });
@@ -932,7 +933,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                       });
                                       Navigator.pop(context);
 
-                                      print(selectedGroup!.name);
+                                      Talker().info(selectedGroup!.name);
                                     },
                                   ),
                                 ),
@@ -1155,7 +1156,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       '/add-business-address',
     ) as Map<String, dynamic>?;
 
-    print("Selected address:- ${res!['completeAddress'].toString()}");
+    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     String add = '';
@@ -1187,7 +1188,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
     }) as Map<String, dynamic>?;
 
     // Sending result back to FirstScreen
-    print("Selected address:- ${res!['completeAddress'].toString()}");
+    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     addressController.clear();

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:numpad/numpad.dart';
 import 'package:pinput/pinput.dart';
+import 'package:talker/talker.dart';
 
 class PinLockScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -86,12 +87,12 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 hapticFeedbackType: HapticFeedbackType.vibrate,
                 onCompleted: (pin) {
                   devicePin = pin;
-                  debugPrint('onCompleted: ');
+                  Talker().info('onCompleted: ');
                   Navigator.pushNamed(context, '/app-lock/confirm-pin-lock',
                       arguments: {devicePin: devicePin.toString()});
                 },
                 onChanged: (value) {
-                  debugPrint('onChanged: $value');
+                  Talker().info('onChanged: $value');
                 },
                 cursor: Container(),
                 focusedPinTheme: defaultPinTheme.copyWith(
@@ -150,7 +151,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 //     code += "$val";
                 //   });
                 // }
-                // print(code);
+                // Talker().info(code);
               },
             ),
             // NumericKeyboard(
@@ -192,7 +193,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
     }
 
     if (kDebugMode) {
-      print(textController.text);
+      Talker().info(textController.text);
     }
   }
 }

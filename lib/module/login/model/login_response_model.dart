@@ -4,14 +4,20 @@ class LoginResponseModel {
   String? status;
   String? response;
   String? message;
+  String? loginType;
+
   LoginResponseData? data;
 
-  LoginResponseModel({this.status, this.response, this.message, this.data});
+  LoginResponseModel(
+      {this.status, this.response, this.message, this.loginType, this.data});
 
   LoginResponseModel.fromJson(Map<String, dynamic> json) {
     status = json["status"];
     response = json["response"];
     message = json["message"];
+    if (json["login_type"] is String) {
+      loginType = json["login_type"];
+    }
     data =
         json["data"] == null ? null : LoginResponseData.fromJson(json["data"]);
   }
@@ -21,6 +27,7 @@ class LoginResponseModel {
     _data["status"] = status;
     _data["response"] = response;
     _data["message"] = message;
+    _data["login_type"] = loginType;
     if (data != null) {
       _data["data"] = data?.toJson();
     }

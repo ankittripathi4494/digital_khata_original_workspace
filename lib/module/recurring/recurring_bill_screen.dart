@@ -370,14 +370,14 @@ class _RecurringBillScreenState extends State<RecurringBillScreen> {
                     //             // showShareScreenPopup(context);
                     //             setState(() {
                     //               isCheckbox = true;
-                    //               print(isCheckbox);
+                    //               Talker().info(isCheckbox);
                     //             });
                     //             // isCheckbox = false;
                     //           },
                     //           // onTap: () {
                     //           // setState(() {
                     //           //   isCheckbox = true;
-                    //           //   print(isCheckbox);
+                    //           //   Talker().info(isCheckbox);
                     //           // });
                     //           // },
                     //           items: _locations.map((location) {
@@ -385,7 +385,7 @@ class _RecurringBillScreenState extends State<RecurringBillScreen> {
                     //               onTap: () {
                     //                 setState(() {
                     //                   isCheckbox = true;
-                    //                   print(isCheckbox);
+                    //                   Talker().info(isCheckbox);
                     //                 });
                     //               },
                     //               value: location,

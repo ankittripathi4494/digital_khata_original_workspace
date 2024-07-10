@@ -20,6 +20,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:switcher_button/switcher_button.dart';
+import 'package:talker/talker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BusinessScreen extends StatefulWidget {
@@ -824,7 +825,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     value: true,
                                     onChange: (value) {
                                       if (kDebugMode) {
-                                        print(value);
+                                        Talker().info(value);
                                       }
                                     },
                                   ),
@@ -886,7 +887,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     value: true,
                                     onChange: (value) {
                                       if (kDebugMode) {
-                                        print(value);
+                                        Talker().info(value);
                                       }
                                     },
                                   ),
@@ -944,7 +945,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     value: true,
                                     onChange: (value) {
                                       if (kDebugMode) {
-                                        print(value);
+                                        Talker().info(value);
                                       }
                                     },
                                   ),

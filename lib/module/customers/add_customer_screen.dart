@@ -18,6 +18,7 @@ import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talker/talker.dart';
 
 class AddCustomerScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -101,7 +102,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
               (updatedData == true)
                   ? EssentialWidgetsCollection.autoScheduleTask(context,
                       task: () {
-                      print("datya");
+                      Talker().info("datya");
                       setState(() {
                         updatedData = false;
                       });
@@ -133,7 +134,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       childWidget: Container(),
                       taskWaitDuration: Durations.short4,
                       task: () {
-                        print("faield");
+                        Talker().info("faield");
                         setState(() {
                           usergroupList.addAll([]);
                         });
@@ -665,7 +666,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                             });
                                             Navigator.pop(context);
 
-                                            print(selectedGroup!.name);
+                                            Talker().info(selectedGroup!.name);
                                           },
                                         ),
                                       ),

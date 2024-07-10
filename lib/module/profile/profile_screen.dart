@@ -66,7 +66,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
     tabController.addListener(() {
       if (kDebugMode) {
-        print('my index is${tabController.index}');
+        Talker().info('my index is${tabController.index}');
       }
     });
     fetchSelectedCustomerData();
@@ -173,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         _addtoContactForm(
                             context, state.selectedCustomerDetailedData);
                       case '2':
-                        print('Edit Form');
+                        Talker().info('Edit Form');
 
                         Navigator.pushNamed(context, '/edit-customer-screen',
                             arguments: {
@@ -185,18 +185,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                             });
                         break;
                       case '3':
-                        print('Enable DND');
+                        Talker().info('Enable DND');
                         break;
                       case '4':
-                        print('Delete Customer');
+                        Talker().info('Delete Customer');
                         _deleteCustomer(
                             context, state.selectedCustomerDetailedData);
                         break;
                       case '5':
-                        print('Show Remainders');
+                        Talker().info('Show Remainders');
                         break;
                       case '6':
-                        print('Reports');
+                        Talker().info('Reports');
                         break;
                     }
                   },
@@ -229,10 +229,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                         children: <Widget>[
                           ButtonsTabBar(
                             // onTap: (index) {
-                            //   print(tabController.index);
-                            //   print(index);
+                            //   Talker().info(tabController.index);
+                            //   Talker().info(index);
                             //   if (tabController.index == index) {
-                            //     print('Same Tab Clicked');
+                            //     Talker().info('Same Tab Clicked');
                             //   }
                             // },
                             controller: tabController,
@@ -1597,7 +1597,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       BuildContext context, SelectedCustomerResponseData customerData) async {
     // Add the contact
     try {
-      print("saving Conatct");
+      Talker().info("saving Conatct");
       PermissionStatus permission = await Permission.contacts.status;
 
       if (permission != PermissionStatus.granted) {
@@ -1708,7 +1708,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         );
       }
     } catch (e) {
-      print(e);
+      Talker().info(e);
     }
   }
 

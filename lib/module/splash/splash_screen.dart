@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:talker/talker.dart';
 
 import '../../global_blocs/internet/internet_cubit.dart';
 import '../../global_blocs/internet/internet_state.dart';
@@ -23,13 +24,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    print("Called Splash");
+    Talker().info("Called Splash");
   }
 
   redirectPage() async {
     if (sph.containsKey("userLoggedIn") == true) {
       if (sph.getBool("userLoggedIn") == true) {
-        print("Arguments:- ${widget.argus.toString()}");
+        Talker().info("Arguments:- ${widget.argus.toString()}");
         Navigator.pushReplacementNamed(
           context,
           '/dashboard',

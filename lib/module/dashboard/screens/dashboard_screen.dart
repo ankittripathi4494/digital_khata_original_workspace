@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:simple_chips_input/select_chips_input.dart';
+import 'package:talker/talker.dart';
 
 import '../../../global_blocs/internet/internet_cubit.dart';
 import '../../../global_blocs/internet/internet_state.dart';
@@ -134,7 +135,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     itemBuilder: (context, index) {
                                       BusinessListResponseData businessData =
                                           state.successData![index];
-                                      print(
+                                      Talker().info(
                                           "Business Name:- ${businessData.bName}");
                                       return Material(
                                         color: Colors.white,
@@ -3673,7 +3674,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             itemCount: customerData.length,
             itemBuilder: (context, index) {
               CustomerResponseData cd = customerData[index];
-              // print(customerData[index].toJson());
+              // Talker().info(customerData[index].toJson());
               return Container(
                 margin: EdgeInsets.symmetric(
                     vertical: screenSize.height * 0.008,

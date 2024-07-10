@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: PopScope(
         canPop: false,
         child: Scaffold(
-          backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
           body: Container(
              decoration: BoxDecoration(color: Colors.grey[100]),
             child: SingleChildScrollView(
@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             Navigator.pushNamed(
                                                 context, '/mobile-otp',
                                                 arguments: {
-                                                  "loginResponseData":
+                                                  "loginResponseModel":
                                                       state.successData
                                                 });
                                           },
@@ -352,10 +352,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           taskWaitDuration: Durations.long3,
                                           task: () {
-                                            Navigator.pushNamed(
+                                             Navigator.pushNamed(
                                                 context, '/mobile-otp',
                                                 arguments: {
-                                                  "loginResponseData":
+                                                  "loginResponseModel":
                                                       state.successData
                                                 });
                                           },
@@ -492,7 +492,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                         // ignore: avoid_print
                         onChange: (index) {
-                          print(index);
+                          // Talker().error(index);
                           if (index == 0) {
                             setState(() {
                               emailIdController.text = "";
