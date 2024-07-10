@@ -80,7 +80,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
           ),
         ),
         body: Container(
-           decoration: BoxDecoration(color: Colors.grey[100]),
+          decoration: BoxDecoration(color: Colors.grey[100]),
           child: BlocBuilder<UserGroupBloc, UserGroupState>(
             builder: (context, state) {
               if (state is UserGroupListLoadedState) {
@@ -96,7 +96,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                     // monitor network fetch
                     await Future.delayed(const Duration(milliseconds: 1000));
                     // if failed,use refreshFailed()
-          
+
                     setState(() {
                       nameController.text = '';
                       mobileController.text = '';
@@ -106,14 +106,14 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                         UserGroupListFetchEvent(
                             userId: sph.getString("userid")!,
                             businessId: BusinessListResponseData.fromJson(
-                                    jsonDecode(
-                                        jsonEncode(widget.argus['businessData'])))
+                                    jsonDecode(jsonEncode(
+                                        widget.argus['businessData'])))
                                 .id!));
                   }),
                   onLoading: (() async {
                     await Future.delayed(const Duration(milliseconds: 1000));
                     // if failed,use loadFailed(),if no data return,use LoadNodata()
-          
+
                     if (mounted) setState(() {});
                     refreshController.loadComplete();
                   }),
@@ -153,7 +153,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                       color: Color.fromARGB(255, 31, 1, 102),
                                       fontWeight: FontWeight.w400),
                                 ),
-                                 Text(
+                                Text(
                                   userGroupData.description!,
                                   style: const TextStyle(
                                       fontSize: 14,
@@ -252,8 +252,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                   child: const Text(
                                     "Update Group",
                                     style: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 31, 1, 102),
+                                        color: Color.fromARGB(255, 31, 1, 102),
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -756,8 +755,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                   child: const Text(
                                     "Add Group",
                                     style: TextStyle(
-                                        color: Color.fromARGB(
-                                            255, 31, 1, 102),
+                                        color: Color.fromARGB(255, 31, 1, 102),
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -1102,8 +1100,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                                                         10)),
                                                         child: Center(
                                                             child: Text(
-                                                          "Add"
-                                                              .toCapitalized(),
+                                                          "Add".toCapitalized(),
                                                           style: const TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -1137,8 +1134,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                                                       10)),
                                                       child: Center(
                                                           child: Text(
-                                                        "Add"
-                                                            .toCapitalized(),
+                                                        "Add".toCapitalized(),
                                                         style: const TextStyle(
                                                             color: Colors.white,
                                                             fontWeight:
@@ -1183,8 +1179,12 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
         groupDescription: groupDescription!,
         userId: userId!,
         businessId: businessId!));
-    Navigator.pushReplacementNamed(context, '/manage-user-group',
-        arguments: widget.argus);
+    if (widget.argus.containsKey("fromUserGroup")) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pushReplacementNamed(context, '/manage-user-group',
+          arguments: widget.argus);
+    }
   }
 
   pickContactAndSelect() async {

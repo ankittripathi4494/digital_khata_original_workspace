@@ -51,6 +51,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   ];
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
+  RefreshController refreshController2 =
+      RefreshController(initialRefresh: false);
+   RefreshController refreshController3 =
+      RefreshController(initialRefresh: false);
 
 // Option 2
   @override
@@ -1518,7 +1522,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               waterDropColor: Color.fromARGB(255, 31, 1, 102),
               idleIcon: AnimatedImagePlaceholderLoader(),
             ),
-            controller: refreshController,
+            controller: refreshController2,
             onRefresh: (() async {
               // monitor network fetch
               await Future.delayed(const Duration(milliseconds: 1000));
@@ -1533,7 +1537,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               // if failed,use loadFailed(),if no data return,use LoadNodata()
 
               if (mounted) setState(() {});
-              refreshController.loadComplete();
+              refreshController2.loadComplete();
             }),
             child: const Center(
               child: Column(
@@ -1569,7 +1573,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             waterDropColor: Color.fromARGB(255, 31, 1, 102),
             idleIcon: AnimatedImagePlaceholderLoader(),
           ),
-          controller: refreshController,
+          controller: refreshController3,
           onRefresh: (() async {
             // monitor network fetch
             await Future.delayed(const Duration(milliseconds: 1000));
@@ -1583,7 +1587,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             // if failed,use loadFailed(),if no data return,use LoadNodata()
 
             if (mounted) setState(() {});
-            refreshController.loadComplete();
+            refreshController3.loadComplete();
           }),
           child: const Center(
             child: AnimatedImageLoader(),

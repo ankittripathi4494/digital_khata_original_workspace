@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, avoid_print
+// ignore_for_file: must_be_immutable, avoid_print, use_build_context_synchronously
 
 import 'dart:async';
 
@@ -18,6 +18,7 @@ import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:talker/talker.dart';
 
 class AddCustomerScreen extends StatefulWidget {
@@ -45,6 +46,21 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   }
 
   fetchUserGroupList() {
+    if (widget.argus.containsKey("groupName")) {
+      setState(() {
+        nameController.text = widget.argus["groupName"];
+      });
+    }
+    if (widget.argus.containsKey("groupMobile")) {
+      setState(() {
+        mobileController.text = widget.argus["groupMobile"];
+      });
+    }
+    if (widget.argus.containsKey("groupEmail")) {
+      setState(() {
+        emailController.text = widget.argus["groupEmail"];
+      });
+    }
     BlocProvider.of<UserGroupBloc>(context).add(UserGroupListFetchEvent(
         businessId:
             (widget.argus['selectedBusiness'] as BusinessListResponseData).id!,
@@ -90,6 +106,18 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 fontWeight: FontWeight.bold),
           ),
           actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, '/add-customer',
+                      arguments: {
+                        "selectedBusiness": (widget.argus['selectedBusiness']
+                            as BusinessListResponseData),
+                        "groupName": nameController.text,
+                        "groupMobile": mobileController.text,
+                        "groupEmail": emailController.text,
+                      });
+                },
+                icon: const Icon(FontAwesomeIcons.arrowsRotate)),
             IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.contact_phone_outlined)),
@@ -604,22 +632,25 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             builder: (context, setState) {
               return BlocBuilder<UserGroupBloc, UserGroupState>(
                 builder: (context, state) {
-                  return Container(
-                    padding: MediaQuery.of(context).viewInsets,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(0.0),
-                            topRight: Radius.circular(0.0)),
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomLeft,
-                            end: Alignment.topRight,
-                            colors: [Colors.white, Colors.white])),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: (state is UserGroupListLoadedState)
-                              ? ListView.builder(
+                  return (state is UserGroupListLoadedState)
+                      ? Container(
+                          padding: MediaQuery.of(context).viewInsets,
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(0.0),
+                                  topRight: Radius.circular(0.0)),
+                              gradient: LinearGradient(
+                                  begin: Alignment.bottomLeft,
+                                  end: Alignment.topRight,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.transparent
+                                  ])),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: state.successData!.length,
                                   itemBuilder: (context, index) {
@@ -641,13 +672,39 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                                   Colors.white
                                                 ])),
                                         child: ListTile(
-                                          title: Text(
-                                            userGroupData.name ?? '',
+                                          title: Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10),
+                                            child: RichText(
+                                                text: TextSpan(
+                                                    text: userGroupData.name ??
+                                                        '',
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        color: Color.fromARGB(
+                                                            255, 31, 1, 102),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    children: [
+                                                  TextSpan(
+                                                    text:
+                                                        "( ${userGroupData.mobile ?? ''} )",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Color.fromARGB(
+                                                            255, 31, 1, 102),
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  )
+                                                ])),
+                                          ),
+                                          subtitle: Text(
+                                            userGroupData.description ?? '',
                                             style: const TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 color: Color.fromARGB(
                                                     255, 31, 1, 102),
-                                                fontWeight: FontWeight.w400),
+                                                fontWeight: FontWeight.normal),
                                           ),
                                           trailing: const Icon(
                                             Icons.arrow_forward_ios,
@@ -672,44 +729,91 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                       ),
                                     );
                                   },
-                                )
-                              : Material(
-                                  elevation: 20,
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 10),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        gradient: const LinearGradient(colors: [
-                                          Colors.white,
-                                          Colors.white
-                                        ])),
-                                    child: const ListTile(
-                                      title: Text(
-                                        "No Group Available",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                      subtitle: Text(
-                                        "Please add user group in business section",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            fontWeight: FontWeight.w400),
-                                      ),
-                                    ),
-                                  ),
                                 ),
-                        ),
-                      ],
-                    ),
-                  );
+                              ),
+                              Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 20),
+                                width: MediaQuery.of(context).size.width,
+                                height: 40,
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      elevation: 20,
+                                      backgroundColor: Colors.blue,
+                                      foregroundColor: Colors.white),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pushNamed(
+                                        context, '/manage-user-group',
+                                        arguments: {
+                                          "businessData":
+                                              (widget.argus['selectedBusiness']
+                                                  as BusinessListResponseData),
+                                          "fromUserGroup": true
+                                        });
+                                  },
+                                  child: const Text("Add New User Group"),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container(
+                          padding: MediaQuery.of(context).viewInsets,
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.0),
+                                  topRight: Radius.circular(20.0)),
+                              gradient: LinearGradient(
+                                  begin: Alignment.bottomLeft,
+                                  end: Alignment.topRight,
+                                  colors: [Colors.white, Colors.white])),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(10),
+                                  width: 100,
+                                  height: 100,
+                                  decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.fill,
+                                          image: AssetImage(
+                                              "resources/images/empty-folder.png"))),
+                                ),
+                                const Text(
+                                  "No User Group Found",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: 1.2),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.blue,
+                                        foregroundColor: Colors.white),
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+                                      Navigator.pushNamed(
+                                          context, '/manage-user-group',
+                                          arguments: {
+                                            "businessData": (widget
+                                                    .argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                            "fromUserGroup": true
+                                          });
+                                    },
+                                    child: const Text("Add User Group"))
+                              ],
+                            ),
+                          ),
+                        );
                 },
               );
             },
@@ -737,7 +841,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                         gradient: LinearGradient(
                             begin: Alignment.bottomLeft,
                             end: Alignment.topRight,
-                            colors: [Colors.white, Colors.white])),
+                            colors: [Colors.transparent, Colors.transparent])),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -753,12 +857,34 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                 gradient: const LinearGradient(
                                     colors: [Colors.white, Colors.white])),
                             child: ListTile(
-                              title: Text(
-                                selectedGroup?.name ?? '',
+                              title: Padding(
+                                padding: const EdgeInsets.only(bottom: 10),
+                                child: RichText(
+                                    text: TextSpan(
+                                        text: selectedGroup!.name ?? '',
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            fontWeight: FontWeight.bold),
+                                        children: [
+                                      TextSpan(
+                                        text:
+                                            "( ${selectedGroup!.mobile ?? ''} )",
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                            fontWeight: FontWeight.w500),
+                                      )
+                                    ])),
+                              ),
+                              subtitle: Text(
+                                selectedGroup!.description ?? '',
                                 style: const TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 12,
                                     color: Color.fromARGB(255, 31, 1, 102),
-                                    fontWeight: FontWeight.w400),
+                                    fontWeight: FontWeight.normal),
                               ),
                               trailing: const Icon(
                                 Icons.arrow_forward_ios,

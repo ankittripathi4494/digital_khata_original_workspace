@@ -42,22 +42,22 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
     final screenSize = MediaQuery.of(context).size;
     return PopScope(
       canPop: (widget.argus.containsKey("fromLoginPage") ? false : true),
+      onPopInvoked: (didPop) {
+        if (!didPop) {
+          EssentialWidgetsCollection.showAlertDialogForLogout(context,
+              content: "Do you want to exit from App?", taskOne: () {
+            exit(0);
+          }, taskTwo: () {
+            Navigator.pop(context);
+          });
+        }
+      },
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading:
               (widget.argus.containsKey("fromLoginPage") ? false : true),
+          iconTheme: const IconThemeData(color: Colors.white, weight: 3),
           backgroundColor: Colors.blue,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              size: 30,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/dashboard');
-            },
-          ),
           title: const Text(
             'Create New Business',
             style: TextStyle(color: Colors.white, fontSize: 25),
@@ -81,7 +81,9 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                       task: () {
                         EssentialWidgetsCollection.showSuccessSnackbar(context,
                             title: null, description: state.successMessage);
-
+                        if (widget.argus.containsKey("fromLoginPage")) {
+                          SharedPreferencesHelper().remove("loginType");
+                        }
                         Navigator.pop(context);
                         Navigator.pushNamed(context, '/dashboard');
                       },

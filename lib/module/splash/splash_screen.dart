@@ -31,10 +31,15 @@ class _SplashScreenState extends State<SplashScreen> {
     if (sph.containsKey("userLoggedIn") == true) {
       if (sph.getBool("userLoggedIn") == true) {
         Talker().info("Arguments:- ${widget.argus.toString()}");
-        Navigator.pushReplacementNamed(
-          context,
-          '/dashboard',
-        );
+        if (sph.containsKey("loginType") == true) {
+          Navigator.pushReplacementNamed(context, '/add-new-business',
+              arguments: {"fromLoginPage": true});
+        } else {
+          Navigator.pushReplacementNamed(
+            context,
+            '/dashboard',
+          );
+        }
       } else {
         Navigator.pushReplacementNamed(
           context,

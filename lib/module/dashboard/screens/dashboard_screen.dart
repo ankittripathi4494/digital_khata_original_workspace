@@ -3817,7 +3817,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   addBusiness() {
     Navigator.pop(context);
-    Navigator.pushNamed(context, '/add-new-business');
+    Navigator.pushNamed(context, '/add-new-business').then((_) {
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    });
   }
 }
 

@@ -269,6 +269,16 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                                     .emailORmobile!);
                             if ((widget.argus['loginResponseModel']
                                         as LoginResponseModel)
+                                    .loginType !=
+                                "login") {
+                              sph.setString(
+                                  "loginType",
+                                  (widget.argus['loginResponseModel']
+                                          as LoginResponseModel)
+                                      .loginType!);
+                            }
+                            if ((widget.argus['loginResponseModel']
+                                        as LoginResponseModel)
                                     .loginType ==
                                 "login") {
                               Navigator.pushReplacementNamed(
