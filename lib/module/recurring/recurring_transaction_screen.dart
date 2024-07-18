@@ -1,7 +1,20 @@
-// ignore_for_file: must_be_immutable, unnecessary_to_list_in_spreads, deprecated_member_use, unused_field, unused_local_variable
+// ignore_for_file: must_be_immutable, unnecessary_to_list_in_spreads, deprecated_member_use, unused_field, unused_local_variable, avoid_print
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
+import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
+import 'package:dkapp/module/plan/model/plan_list_response_model.dart';
+import 'package:dkapp/module/plan/plan_bloc/plan_bloc.dart';
+import 'package:dkapp/module/plan/plan_bloc/plan_event.dart';
+import 'package:dkapp/module/plan/plan_bloc/plan_state.dart';
+import 'package:dkapp/utils/image_list.dart';
+import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class RecurringTransactionScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -14,10 +27,226 @@ class RecurringTransactionScreen extends StatefulWidget {
 
 class _RecurringTransactionScreenState
     extends State<RecurringTransactionScreen> {
-  bool? isCheckbox = false;
-  final List<String> _locations = ['Select'];
+  List<Map<String, dynamic>>? dateTimeList;
+  SharedPreferencesHelper sph = SharedPreferencesHelper();
+  TextEditingController planNameController = TextEditingController();
+  TextEditingController planAmountController = TextEditingController();
+  TextEditingController planDescController = TextEditingController();
+  TextEditingController planStartDateController = TextEditingController();
+  TextEditingController planEndDateController = TextEditingController();
   String? _selectedLocation;
+  DateTime? planStartDate;
+  DateTime? planEndDate;
   int count = 1;
+  Map<String, dynamic>? selectedTimeDuration;
+  List<Map<String, dynamic>> timeDurationOptions = [
+    {'text': 'Daily', 'parameter': 'daily'},
+    {'text': 'Weekly', 'parameter': 'weekly'},
+    {'text': 'Monthly', 'parameter': 'monthly'},
+    {'text': 'Quarterly', 'parameter': 'quarterly'},
+    {'text': 'HalfYearly', 'parameter': 'halfyearly'},
+    {'text': 'Yearly', 'parameter': 'yearly'},
+  ];
+  String? planImage;
+  getDataTimeofStartFormat(
+      {Map<String, dynamic>? selectedTimeDuration,
+      int? dataCount,
+      DateTime? planStartDate,
+      DateTime? planEndDate,
+      String? amount}) {
+    List<Map<String, dynamic>> dateTimeList = [];
+    switch (selectedTimeDuration!['parameter']) {
+      case 'daily':
+        for (int i = 0; i < dataCount!; i++) {
+          Map<String, dynamic> map = {};
+          map['datetime'] = DateTime(
+            planStartDate!.year,
+            planStartDate.month,
+            planStartDate.day,
+            planStartDate.hour,
+            planStartDate.minute,
+          ).add(Duration(days: i));
+          map['amount'] = amount;
+          dateTimeList.add(map);
+        }
+        return dateTimeList;
+      case 'weekly':
+        for (int i = 0; i < dataCount!; i++) {
+          Map<String, dynamic> map = {};
+          map['datetime'] = DateTime(
+            planStartDate!.year,
+            planStartDate.month,
+            planStartDate.day,
+            planStartDate.hour,
+            planStartDate.minute,
+          ).add(Duration(days: i * 7));
+          map['amount'] = amount;
+          dateTimeList.add(map);
+        }
+        return dateTimeList;
+
+      case 'monthly':
+        for (int i = 0; i < dataCount!; i++) {
+          Map<String, dynamic> map = {};
+          map['datetime'] = DateTime(
+            planStartDate!.year,
+            planStartDate.month + (i * 1),
+            planStartDate.day,
+            planStartDate.hour,
+            planStartDate.minute,
+          );
+
+          map['amount'] = amount;
+          dateTimeList.add(map);
+        }
+        return dateTimeList;
+
+      case 'quarterly':
+        for (int i = 0; i < dataCount!; i++) {
+          Map<String, dynamic> map = {};
+          map['datetime'] = DateTime(
+            planStartDate!.year,
+            planStartDate.month + (i * 3),
+            planStartDate.day,
+            planStartDate.hour,
+            planStartDate.minute,
+          );
+
+          map['amount'] = amount;
+          dateTimeList.add(map);
+        }
+        return dateTimeList;
+
+      case 'halfyearly':
+        for (int i = 0; i < dataCount!; i++) {
+          Map<String, dynamic> map = {};
+          map['datetime'] = DateTime(
+            planStartDate!.year,
+            planStartDate.month + (i * 6),
+            planStartDate.day,
+            planStartDate.hour,
+            planStartDate.minute,
+          );
+
+          map['amount'] = amount;
+          dateTimeList.add(map);
+        }
+        return dateTimeList;
+
+      case 'yearly':
+        for (int i = 0; i < dataCount!; i++) {
+          Map<String, dynamic> map = {};
+          map['datetime'] = DateTime(
+            planStartDate!.year + (i * 1),
+            planStartDate.month,
+            planStartDate.day,
+            planStartDate.hour,
+            planStartDate.minute,
+          );
+
+          map['amount'] = amount;
+          dateTimeList.add(map);
+        }
+        return dateTimeList;
+    }
+  }
+
+  changeDeployDropdown(
+      {Map<String, dynamic>? selectedTimeDuration,
+      int? dataCount,
+      DateTime? planStartDate,
+      DateTime? planEndDate}) {
+    switch (selectedTimeDuration!['parameter']) {
+      case 'daily':
+        planEndDate = DateTime(
+          planStartDate!.year,
+          planStartDate.month,
+          planStartDate.day,
+          planStartDate.hour,
+          planStartDate.minute,
+        ).add(Duration(days: dataCount!));
+
+        planEndDateController.text =
+            DateFormat('dd-MM-yyyy').format(planEndDate);
+      case 'weekly':
+        planEndDate = DateTime(
+          planStartDate!.year,
+          planStartDate.month,
+          planStartDate.day,
+          planStartDate.hour,
+          planStartDate.minute,
+        ).add(Duration(days: dataCount! * 7));
+
+        planEndDateController.text =
+            DateFormat('dd-MM-yyyy').format(planEndDate);
+      case 'monthly':
+        planEndDate = DateTime(
+          planStartDate!.year,
+          planStartDate.month + (dataCount! * 1),
+          planStartDate.day,
+          planStartDate.hour,
+          planStartDate.minute,
+        );
+
+        planEndDateController.text =
+            DateFormat('dd-MM-yyyy').format(planEndDate);
+      case 'quarterly':
+        planEndDate = DateTime(
+          planStartDate!.year,
+          planStartDate.month + (dataCount! * 3),
+          planStartDate.day,
+          planStartDate.hour,
+          planStartDate.minute,
+        );
+
+        planEndDateController.text =
+            DateFormat('dd-MM-yyyy').format(planEndDate);
+      case 'halfyearly':
+        planEndDate = DateTime(
+          planStartDate!.year,
+          planStartDate.month + (dataCount! * 6),
+          planStartDate.day,
+          planStartDate.hour,
+          planStartDate.minute,
+        );
+
+        planEndDateController.text =
+            DateFormat('dd-MM-yyyy').format(planEndDate);
+      case 'yearly':
+        planEndDate = DateTime(
+          planStartDate!.year + (dataCount! * 1),
+          planStartDate.month,
+          planStartDate.day,
+          planStartDate.hour,
+          planStartDate.minute,
+        );
+
+        planEndDateController.text =
+            DateFormat('dd-MM-yyyy').format(planEndDate);
+
+      default:
+    }
+  }
+
+  @override
+  void initState() {
+    (widget.argus.containsKey("selectedPlan"))
+        ? fetchSelectedPlan(
+            widget.argus["selectedPlan"] as PlanListResponseData)
+        : null;
+    super.initState();
+  }
+
+  fetchSelectedPlan(PlanListResponseData planData) {
+    print("Selected Plan:- ${planData.toJson()}");
+    BlocProvider.of<PlanBloc>(context).add(PlanDetailFetchEvent(
+        businessId:
+            (widget.argus['selectedBusiness'] as BusinessListResponseData).id!,
+        customerId:
+            (widget.argus['customerData'] as SelectedCustomerResponseData).id!,
+        userId: sph.getString("userid")!,
+        loanPlanId: planData.id!));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +254,7 @@ class _RecurringTransactionScreenState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/invoice');
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Recurring Transaction',
           style: TextStyle(color: Colors.white),
@@ -140,6 +361,97 @@ class _RecurringTransactionScreenState
           padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.07),
           child: Column(
             children: [
+              widget.argus.containsKey("selectedPlan")
+                  ? (BlocBuilder<PlanBloc, PlanState>(
+                      builder: (context, state) {
+                        if (state is PlanDetailLoadedState) {
+                          return EssentialWidgetsCollection.autoScheduleTask(
+                              context, task: () {
+                            for (Map<String, dynamic> e
+                                in timeDurationOptions) {
+                              if (e['parameter']
+                                      .toString()
+                                      .toLowerCase()
+                                      .trim() ==
+                                  (widget.argus["selectedPlan"]
+                                          as PlanListResponseData)
+                                      .emiType!
+                                      .toLowerCase()
+                                      .trim()) {
+                                setState(() {
+                                  selectedTimeDuration = e;
+                                });
+                              }
+                            }
+                            setState(() {
+                              planNameController.text =
+                                  (widget.argus["selectedPlan"]
+                                          as PlanListResponseData)
+                                      .title!;
+                              planAmountController.text =
+                                  (widget.argus["selectedPlan"]
+                                          as PlanListResponseData)
+                                      .amount!;
+                              planDescController.text =
+                                  (widget.argus["selectedPlan"]
+                                          as PlanListResponseData)
+                                      .notes!;
+                              count = int.parse((widget.argus["selectedPlan"]
+                                      as PlanListResponseData)
+                                  .noOfEmi!);
+                              planImage = ((widget.argus["selectedPlan"]
+                                              as PlanListResponseData)
+                                          .image !=
+                                      null)
+                                  ? (widget.argus["selectedPlan"]
+                                          as PlanListResponseData)
+                                      .image
+                                  : null;
+                              planStartDate = DateTime(
+                                  DateTime.parse((widget.argus["selectedPlan"]
+                                              as PlanListResponseData)
+                                          .createdDate
+                                          .toString())
+                                      .year,
+                                  DateTime.parse((widget.argus["selectedPlan"]
+                                              as PlanListResponseData)
+                                          .createdDate
+                                          .toString())
+                                      .month,
+                                  DateTime.parse((widget.argus["selectedPlan"]
+                                              as PlanListResponseData)
+                                          .createdDate
+                                          .toString())
+                                      .day,
+                                  DateTime.parse((widget.argus["selectedPlan"]
+                                              as PlanListResponseData)
+                                          .createdDate
+                                          .toString())
+                                      .hour,
+                                  DateTime.parse((widget.argus["selectedPlan"] as PlanListResponseData).createdDate.toString()).minute);
+
+                              String formattedPlanStartDate =
+                                  DateFormat('dd-MM-yyyy HH:mm a')
+                                      .format(planStartDate!);
+                              planStartDateController.text =
+                                  formattedPlanStartDate;
+                              planEndDate = planStartDate;
+                              String formattedPlanEndDate =
+                                  DateFormat('dd-MM-yyyy').format(planEndDate!);
+                              planEndDateController.text = formattedPlanEndDate;
+                            });
+
+                            changeDeployDropdown(
+                                selectedTimeDuration: selectedTimeDuration,
+                                dataCount: count,
+                                planStartDate: planStartDate,
+                                planEndDate: planEndDate);
+                          }, taskWaitDuration: Durations.short2);
+                        }
+                        return Container();
+                      },
+                    ))
+                  : Container(),
               (!widget.argus.containsKey('fromCustomerScreen'))
                   ? Column(
                       children: [
@@ -191,46 +503,118 @@ class _RecurringTransactionScreenState
                       ],
                     )
                   : Container(),
-
               SizedBox(
                 height: screenSize.height * 0.02,
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/plan',
-                      arguments: widget.argus);
-                },
-                child: TextFormField(
-                  enabled: false,
-                  enableInteractiveSelection: false,
-                  style: const TextStyle(
-                    color: Color.fromARGB(255, 31, 1, 102),
-                  ),
-                  decoration: InputDecoration(
-                    hintText: 'Plan',
-                    hintStyle: const TextStyle(color: Colors.black),
-                    suffixIcon: const Icon(
-                      Icons.arrow_forward_ios_outlined,
-                      color: Colors.black,
-                      size: 18,
-                    ),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(
+              (planNameController.text.isNotEmpty)
+                  ? TextFormField(
+                      enabled: true,
+                      enableInteractiveSelection: false,
+                      controller: planNameController,
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 31, 1, 102),
+                      ),
+                      decoration: InputDecoration(
+                        hintText: 'Plan',
+                        hintStyle: const TextStyle(color: Colors.black),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                planNameController.text = '';
+                                planAmountController.text = '';
+                                planDescController.text = '';
+                                count = 1;
+                                planImage = null;
+                                selectedTimeDuration =
+                                    (selectedTimeDuration != null)
+                                        ? selectedTimeDuration
+                                        : timeDurationOptions[2];
+                                planStartDate = DateTime(
+                                  DateTime.now().year,
+                                  DateTime.now().month,
+                                  DateTime.now().day,
+                                  (DateTime.now().minute < 30)
+                                      ? DateTime.now().hour
+                                      : DateTime.now().hour + 1,
+                                  (DateTime.now().minute < 30) ? 30 : 00,
+                                );
+
+                                String formattedPlanStartDate =
+                                    DateFormat('dd-MM-yyyy HH:mm a')
+                                        .format(planStartDate!);
+                                planStartDateController.text =
+                                    formattedPlanStartDate;
+                                planEndDate = planStartDate;
+                                String formattedPlanEndDate =
+                                    DateFormat('dd-MM-yyyy')
+                                        .format(planEndDate!);
+                                planEndDateController.text =
+                                    formattedPlanEndDate;
+                              });
+                            },
+                            icon: const Icon(Icons.cancel_rounded)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey)),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(
+                              color: Color.fromARGB(255, 31, 1, 102),
+                            )),
+                        disabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            borderSide: const BorderSide(color: Colors.grey)),
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () async {
+                        Navigator.pushNamed(context, '/plan', arguments: {
+                          'customerData': (widget.argus['customerData']
+                              as SelectedCustomerResponseData),
+                          'selectedBusiness': (widget.argus['selectedBusiness']
+                              as BusinessListResponseData),
+                          "updatePlan": true,
+                          'fromCustomerScreen':
+                              (widget.argus.containsKey('fromCustomerScreen'))
+                                  ? true
+                                  : false
+                        });
+                      },
+                      child: TextFormField(
+                        enabled: false,
+                        enableInteractiveSelection: false,
+                        controller: planNameController,
+                        style: const TextStyle(
                           color: Color.fromARGB(255, 31, 1, 102),
-                        )),
-                    disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: const BorderSide(color: Colors.grey)),
-                  ),
-                ),
-              ),
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Plan',
+                          hintStyle: const TextStyle(color: Colors.black),
+                          suffixIcon: const Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: Colors.black,
+                            size: 18,
+                          ),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(color: Colors.grey)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(color: Colors.grey)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(
+                                color: Color.fromARGB(255, 31, 1, 102),
+                              )),
+                          disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: const BorderSide(color: Colors.grey)),
+                        ),
+                      ),
+                    ),
               SizedBox(
                 height: screenSize.height * 0.02,
               ),
@@ -245,24 +629,24 @@ class _RecurringTransactionScreenState
                 ),
               ),
               TextFormField(
-                enabled: false,
+                enabled: true,
                 enableInteractiveSelection: false,
+                controller: planAmountController,
                 style: const TextStyle(
                   color: Color.fromARGB(255, 31, 1, 102),
                 ),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
+                ],
                 decoration: InputDecoration(
-                  prefixIcon: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: screenSize.width * 0.05,
-                        vertical: screenSize.height * 0.01),
-                    child: const Text(
-                      '\u{20B9} ${0}',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 114, 113, 113),
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.w800),
-                    ),
-                  ),
+                  prefixText:
+                      planAmountController.text.isEmpty ? '\u{20B9}\t' : null,
+                  prefixStyle:
+                      const TextStyle(color: Colors.grey, fontSize: 20),
+                  hintText: '${0}',
+                  hintStyle: const TextStyle(color: Colors.grey, fontSize: 20),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                       borderSide: const BorderSide(color: Colors.grey)),
@@ -285,72 +669,6 @@ class _RecurringTransactionScreenState
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Column(
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     const Text(
-                  //       'Repeate Every',
-                  //       style: TextStyle(color: Colors.black),
-                  //     ),
-                  //     SizedBox(
-                  //       height: screenSize.height * 0.01,
-                  //     ),
-                  //     Container(
-                  //       padding: EdgeInsets.symmetric(
-                  //           horizontal: screenSize.width * 0.08),
-                  //       decoration: BoxDecoration(
-                  //           border: Border.all(color: Colors.grey),
-                  //           color: Colors.white,
-                  //           borderRadius: BorderRadius.circular(8.0)),
-                  //       child: DropdownButtonHideUnderline(
-                  //         child: DropdownButton(
-                  //           // padding: EdgeInsets.symmetric(horizontal: 10.0),
-                  //           icon: const Icon(
-                  //             Icons.arrow_drop_down,
-                  //             color: Colors.black,
-                  //           ), //
-                  //           dropdownColor: Colors.black,
-
-                  //           hint: const Text(
-                  //             'Monthly',
-                  //             style: TextStyle(color: Colors.black),
-                  //           ), //necessary for Option 1
-                  //           value: _selectedLocation,
-                  //           onChanged: (newValue) {
-                  //             // showShareScreenPopup(context);
-                  //             setState(() {
-                  //               isCheckbox = true;
-                  //               Talker().info(isCheckbox);
-                  //             });
-                  //             // isCheckbox = false;
-                  //           },
-                  //           // onTap: () {
-                  //           // setState(() {
-                  //           //   isCheckbox = true;
-                  //           //   Talker().info(isCheckbox);
-                  //           // });
-                  //           // },
-                  //           items: _locations.map((location) {
-                  //             return DropdownMenuItem(
-                  //               onTap: () {
-                  //                 setState(() {
-                  //                   isCheckbox = true;
-                  //                   Talker().info(isCheckbox);
-                  //                 });
-                  //               },
-                  //               value: location,
-                  //               child: Text(
-                  //                 location,
-                  //                 style: const TextStyle(color: Colors.white),
-                  //               ),
-                  //             );
-                  //           }).toList(),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -367,20 +685,17 @@ class _RecurringTransactionScreenState
                       ),
                       InkWell(
                         onTap: () {
+                          setState(() {
+                            selectedTimeDuration =
+                                (selectedTimeDuration != null)
+                                    ? selectedTimeDuration
+                                    : timeDurationOptions[2];
+                          });
                           showModalBottomSheet<void>(
                             showDragHandle: true,
                             backgroundColor: Colors.white,
                             context: context,
                             builder: (BuildContext context) {
-                              List<Map<String, dynamic>> options = [
-                                {'text': 'Daily', 'isChecked': false},
-                                {'text': 'Weekly', 'isChecked': false},
-                                {'text': 'Monthly', 'isChecked': false},
-                                {'text': 'Quarterly', 'isChecked': false},
-                                {'text': 'HalfYearly', 'isChecked': false},
-                                {'text': 'Yearly', 'isChecked': false},
-                              ];
-
                               return StatefulBuilder(
                                 builder: (BuildContext context,
                                     StateSetter setState) {
@@ -407,33 +722,36 @@ class _RecurringTransactionScreenState
                                           ),
                                           SizedBox(
                                               height: screenSize.height * 0.04),
-                                          ...options.map((option) {
-                                            return CheckboxListTile(
+                                          ...timeDurationOptions.map((option) {
+                                            return RadioListTile(
                                               selectedTileColor: Colors.green,
+                                              groupValue: selectedTimeDuration,
                                               title: Text(
                                                 option['text'],
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                   color: Colors.black,
-                                                  fontWeight:
-                                                      option['isChecked']
-                                                          ? FontWeight.w600
-                                                          : FontWeight.normal,
-                                                  fontSize: option['isChecked']
-                                                      ? 17
-                                                      : 15,
+                                                  fontWeight: FontWeight.normal,
+                                                  fontSize: 15,
                                                 ),
                                               ),
-                                              value: option['isChecked'],
-                                              onChanged: (bool? value) {
+                                              value: option,
+                                              onChanged: (v) {
                                                 setState(() {
-                                                  option['isChecked'] = value!;
+                                                  count = 1;
+                                                  selectedTimeDuration = v;
                                                 });
+                                                changeDeployDropdown(
+                                                    selectedTimeDuration:
+                                                        selectedTimeDuration,
+                                                    dataCount: count,
+                                                    planStartDate:
+                                                        planStartDate,
+                                                    planEndDate: planEndDate);
                                               },
                                               controlAffinity:
                                                   ListTileControlAffinity
-                                                      .leading,
+                                                      .trailing,
                                               activeColor: Colors.green,
-                                              checkColor: Colors.white,
                                             );
                                           }).toList(),
                                         ],
@@ -443,7 +761,9 @@ class _RecurringTransactionScreenState
                                 },
                               );
                             },
-                          );
+                          ).then((c) {
+                            setState(() {});
+                          });
                         },
                         child: Container(
                             padding: EdgeInsets.symmetric(
@@ -456,9 +776,11 @@ class _RecurringTransactionScreenState
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Monthly',
-                                  style: TextStyle(
+                                Text(
+                                  (selectedTimeDuration != null)
+                                      ? selectedTimeDuration!['text']
+                                      : 'Monthly',
+                                  style: const TextStyle(
                                       // fontSize: 12,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500),
@@ -506,6 +828,12 @@ class _RecurringTransactionScreenState
                                   setState(() {
                                     count++;
                                   });
+                                  changeDeployDropdown(
+                                      selectedTimeDuration:
+                                          selectedTimeDuration,
+                                      dataCount: count,
+                                      planStartDate: planStartDate,
+                                      planEndDate: planEndDate);
                                 },
                                 icon: const Icon(
                                   Icons.add_circle_outline,
@@ -531,6 +859,12 @@ class _RecurringTransactionScreenState
                                   setState(() {
                                     count--;
                                   });
+                                  changeDeployDropdown(
+                                      selectedTimeDuration:
+                                          selectedTimeDuration,
+                                      dataCount: count,
+                                      planStartDate: planStartDate,
+                                      planEndDate: planEndDate);
                                 },
                                 icon: const Icon(
                                   Icons.remove_circle_outline,
@@ -559,7 +893,7 @@ class _RecurringTransactionScreenState
               ),
               InkWell(
                 onTap: () async {
-                  DateTime? pickedStartDate = await showDatePicker(
+                  showDatePicker(
                     context: context,
 
                     initialDate: DateTime.now(),
@@ -585,7 +919,24 @@ class _RecurringTransactionScreenState
                       );
                     },
                     // currentDate: DateTime(DateTime.january),
-                  );
+                  ).then((c) {
+                    setState(() {
+                      planStartDate = DateTime(
+                        c!.year,
+                        c.month,
+                        c.day,
+                        (DateTime.now().minute < 30)
+                            ? DateTime.now().hour
+                            : DateTime.now().hour + 1,
+                        (DateTime.now().minute < 30) ? 30 : 00,
+                      );
+
+                      String formattedPlanStartDate =
+                          DateFormat('dd-MM-yyyy HH:mm a')
+                              .format(planStartDate!);
+                      planStartDateController.text = formattedPlanStartDate;
+                    });
+                  });
                 },
                 child: TextFormField(
                   enabled: false,
@@ -593,6 +944,7 @@ class _RecurringTransactionScreenState
                   style: const TextStyle(
                     color: Color.fromARGB(255, 31, 1, 102),
                   ),
+                  controller: planStartDateController,
                   decoration: InputDecoration(
                     hintText: '24-05-2024 10:30 AM',
                     hintStyle: const TextStyle(
@@ -627,10 +979,6 @@ class _RecurringTransactionScreenState
               SizedBox(
                 height: screenSize.height * 0.02,
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   crossAxisAlignment: CrossAxisAlignment.center,
-              //   children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -653,7 +1001,7 @@ class _RecurringTransactionScreenState
                         ),
                         InkWell(
                           onTap: () async {
-                            DateTime? pickedStartDate = await showDatePicker(
+                            showDatePicker(
                               context: context,
 
                               initialDate: DateTime.now(),
@@ -679,7 +1027,16 @@ class _RecurringTransactionScreenState
                                 );
                               },
                               // currentDate: DateTime(DateTime.january),
-                            );
+                            ).then((c) {
+                              setState(() {
+                                planEndDate = c;
+                                String formattedPlanEndDate =
+                                    DateFormat('dd-MM-yyyy')
+                                        .format(planEndDate!);
+                                planEndDateController.text =
+                                    formattedPlanEndDate;
+                              });
+                            });
                           },
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -690,6 +1047,7 @@ class _RecurringTransactionScreenState
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 31, 1, 102),
                               ),
+                              controller: planEndDateController,
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: screenSize.height * 0.017,
@@ -751,6 +1109,7 @@ class _RecurringTransactionScreenState
                           padding: EdgeInsets.symmetric(
                               horizontal: screenSize.width * 0.02),
                           child: TextFormField(
+                            controller: planNameController,
                             cursorColor: const Color.fromARGB(255, 31, 1, 102),
                             showCursor: true,
                             canRequestFocus: true,
@@ -814,21 +1173,57 @@ class _RecurringTransactionScreenState
                       borderRadius: BorderRadius.circular(10.0)),
                   shadowColor: const Color.fromARGB(255, 203, 202, 202),
                   elevation: 2.0,
-                  child: const Padding(
-                    padding: EdgeInsets.all(15.0),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.download_for_offline_rounded,
-                          color: Colors.grey,
-                          size: 18,
-                        ),
-                        Text(
-                          'Add New',
-                          style: TextStyle(color: Colors.grey, fontSize: 10),
-                        )
-                      ],
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: (planImage != null)
+                        ? CachedNetworkImage(
+                            imageUrl:
+                                "${NetworkImagePathList.imagePathTrans}$planImage",
+                            imageBuilder: (context, imageProvider) => Container(
+                              color: Colors.transparent,
+                              width: 100,
+                              height: 100,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        fit: BoxFit.cover,
+                                        image: imageProvider)),
+                              ),
+                            ),
+                            placeholder: (context, url) => CircleAvatar(
+                              backgroundColor: Colors.grey[300],
+                              radius: 45,
+                              child: const AnimatedImagePlaceholderLoader(),
+                            ),
+                            errorWidget: (context, url, error) => const Column(
+                              children: [
+                                Icon(
+                                  Icons.download_for_offline_rounded,
+                                  color: Color.fromARGB(255, 8, 7, 7),
+                                  size: 18,
+                                ),
+                                Text(
+                                  'Add New',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 10),
+                                )
+                              ],
+                            ),
+                          )
+                        : const Column(
+                            children: [
+                              Icon(
+                                Icons.download_for_offline_rounded,
+                                color: Color.fromARGB(255, 8, 7, 7),
+                                size: 18,
+                              ),
+                              Text(
+                                'Add New',
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 10),
+                              )
+                            ],
+                          ),
                   ),
                 ),
               ),
@@ -837,6 +1232,7 @@ class _RecurringTransactionScreenState
               ),
               TextFormField(
                 enabled: true,
+                controller: planDescController,
                 scrollPadding:
                     EdgeInsets.symmetric(vertical: screenSize.height * 0.1),
                 enableInteractiveSelection: true,
@@ -880,18 +1276,187 @@ class _RecurringTransactionScreenState
           ),
         ),
       ),
-      floatingActionButton: Container(
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 31, 1, 102),
-        ),
-        padding: EdgeInsets.symmetric(
-            vertical: screenSize.height * 0.015,
-            horizontal: screenSize.width * 0.27),
-        child: const Text(
-          'Preview and SAVE',
-          style: TextStyle(color: Colors.white, fontSize: 20),
+      floatingActionButton: InkWell(
+        onTap: () {
+          previewPart(context, screenSize);
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 31, 1, 102),
+          ),
+          padding: EdgeInsets.symmetric(
+              vertical: screenSize.height * 0.015,
+              horizontal: screenSize.width * 0.27),
+          child: const Text(
+            'Preview and SAVE',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
         ),
       ),
+    );
+  }
+
+  Future<void> previewPart(BuildContext context, Size screenSize) {
+    dateTimeList = getDataTimeofStartFormat(
+        selectedTimeDuration: selectedTimeDuration,
+        dataCount: count,
+        planStartDate: DateFormat("dd-MM-yyyy hh:mm a")
+            .parse(planStartDateController.text),
+        planEndDate: DateFormat("dd-MM-yyyy").parse(planEndDateController.text),
+        amount: planAmountController.text);
+    return showModalBottomSheet<void>(
+      backgroundColor: Colors.white,
+      scrollControlDisabledMaxHeightRatio: 0.9,
+      showDragHandle: true,
+      context: context,
+      builder: (BuildContext context) {
+        return PopScope(
+          canPop: true,
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+              title: const Text(
+                'Billing Calander',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+            body: SizedBox(
+              width: screenSize.width,
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.grey, width: 2)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            const Text(
+                              'Billing Calander',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              (int.parse(planAmountController.text) * count)
+                                  .toStringAsFixed(2),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            const Text(
+                              'Transactions',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              count.toString(),
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "${DateFormat('dd-MM-yyyy').format(DateFormat("dd-MM-yyyy hh:mm a").parse(planStartDateController.text))} - ${planEndDateController.text}",
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: dateTimeList!.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.grey, width: 2)),
+                          child: ListTile(
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  DateFormat('dd-MM-yyyy\nhh:mm a')
+                                      .format(dateTimeList![index]["datetime"]),
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  "\u{20B9} ${dateTimeList![index]["amount"]}",
+                                  style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 90,
+                  ),
+                ],
+              ),
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: screenSize.width * 0.03),
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero),
+                      backgroundColor: const Color.fromARGB(255, 31, 1, 102),
+                      minimumSize:
+                          Size(screenSize.width, screenSize.height * 0.05)),
+                  onPressed: () {},
+                  child: const Text(
+                    'SAVE',
+                    style: TextStyle(color: Colors.white),
+                  )),
+            ),
+          ),
+        );
+      },
     );
   }
 }

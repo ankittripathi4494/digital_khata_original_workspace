@@ -609,16 +609,22 @@ class RouteAccessGenerator {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
-            child: NewTransactionPlanScreen(
-              argus: arguments,
+            child: BlocProvider(
+              create: (context) => PlanBloc(),
+              child: NewTransactionPlanScreen(
+                argus: arguments,
+              ),
             ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: NewTransactionPlanScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => PlanBloc(),
+            child: NewTransactionPlanScreen(
+              argus: const {},
+            ),
           ),
         );
       case '/new-emi-plan':

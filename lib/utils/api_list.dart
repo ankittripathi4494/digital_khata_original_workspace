@@ -34,4 +34,8 @@ class APIPathList {
       "${subfolder}Updatecash_transaction";
   static const String getCashTransactionList = "${subfolder}cash_transactionList";
   static const String getPlanList = "${subfolder}getLoanPlanList";
+   static const String getLoanPlanDetails = "${subfolder}getLoanPlanDetails";
+
+    static const String createLoanPlan =
+      "${subfolder}create_LoanPlan";
 }

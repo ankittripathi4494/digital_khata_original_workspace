@@ -86,7 +86,7 @@ class _PlanScreenState extends State<PlanScreen> {
                     return Container(
                       margin: EdgeInsets.symmetric(
                           horizontal: screenSize.width * 0.05,
-                          vertical: screenSize.height * 0.02),
+                          vertical: screenSize.height * 0.01),
                       decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
@@ -97,7 +97,23 @@ class _PlanScreenState extends State<PlanScreen> {
                                 offset: Offset(0.0, 0.1))
                           ]),
                       child: ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.pushReplacementNamed(
+                              context, '/recurring-transaction',
+                              arguments: {
+                                'customerData': (widget.argus['customerData']
+                                    as SelectedCustomerResponseData),
+                                'selectedBusiness':
+                                    (widget.argus['selectedBusiness']
+                                        as BusinessListResponseData),
+                                "selectedPlan": state.successData![index],
+                                'fromCustomerScreen': (widget.argus
+                                        .containsKey('fromCustomerScreen'))
+                                    ? true
+                                    : false
+                              });
+                        },
                         title: Text(planData.title!),
                         subtitle: Text(planData.amount!),
                         trailing: const Icon(Icons.arrow_forward_ios,
@@ -204,7 +220,8 @@ class _PlanScreenState extends State<PlanScreen> {
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
         onPressed: () {
-          Navigator.pushNamed(context, '/new-transaction-plan');
+          Navigator.pushNamed(context, '/new-transaction-plan',
+              arguments: widget.argus);
         },
         child: const Icon(
           Icons.add,

@@ -36,3 +36,17 @@ class PlanListFetchEvent extends PlanEvent {
     required this.businessId,
   });
 }
+
+class PlanDetailFetchEvent extends PlanEvent {
+  late final String customerId;
+  late final String userId;
+  late final String businessId;
+  late final String loanPlanId;
+  PlanDetailFetchEvent({
+    required this.customerId,
+    required this.userId,
+    required this.businessId,
+    required this.loanPlanId,
+  });
+ 
+}
