@@ -71,6 +71,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.blue,
           iconTheme: const IconThemeData(color: Colors.white),
@@ -566,6 +567,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
                                     width: screenSize.width,
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
+                                          shape: const ContinuousRectangleBorder(),
                                             elevation: 10,
                                             foregroundColor: Colors.blue,
                                             side: const BorderSide(
@@ -628,6 +630,7 @@ class _CashOutScreenState extends State<CashOutScreen> {
                 width: screenSize.width,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      shape: const ContinuousRectangleBorder(),
                       elevation: 10,
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,

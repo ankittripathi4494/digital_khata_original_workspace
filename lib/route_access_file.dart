@@ -1,3 +1,5 @@
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_bloc.dart';
+import 'package:dkapp/module/recurring/recurring_transaction_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
@@ -575,18 +577,47 @@ class RouteAccessGenerator {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
-            child: RecurringTransactionScreen(
-              argus: arguments,
+            child: BlocProvider(
+              create: (context) => RecurringBloc(),
+              child: RecurringTransactionScreen(
+                argus: arguments,
+              ),
             ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: RecurringTransactionScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => RecurringBloc(),
+            child: RecurringTransactionScreen(
+              argus: const {},
+            ),
           ),
         );
+      case '/recurring-transaction-details':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+              duration: const Duration(milliseconds: 500),
+              type: PageTransitionType.fade,
+              child: BlocProvider(
+                create: (context) => RecurringBloc(),
+                child: RecurringTransactionDetailsScreen(
+                  argus: arguments,
+                ),
+              ),
+              fullscreenDialog: true);
+        }
+        return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => RecurringBloc(),
+              child: RecurringTransactionDetailsScreen(
+                argus: const {},
+              ),
+            ),
+            fullscreenDialog: true);
       case '/recurring-new-bill-plan':
         if (arguments is Map<String, dynamic>) {
           return PageTransition(

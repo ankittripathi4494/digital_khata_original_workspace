@@ -7,7 +7,7 @@ class AddPlanEvent extends PlanEvent {
   late final String customerId;
   late final String userId;
   late final String businessId;
-  late final String planTile;
+  late final String planTitle;
   late final String planAmount;
   late final String planNotes;
   late final String planType;
@@ -17,7 +17,7 @@ class AddPlanEvent extends PlanEvent {
     required this.customerId,
     required this.userId,
     required this.businessId,
-    required this.planTile,
+    required this.planTitle,
     required this.planAmount,
     required this.planNotes,
     required this.planType,

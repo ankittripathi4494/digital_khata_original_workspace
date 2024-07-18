@@ -1,7 +1,8 @@
 // ignore_for_file: must_be_immutable, unnecessary_to_list_in_spreads, deprecated_member_use, unused_field, unused_local_variable, avoid_print
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'dart:io';
+
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
@@ -9,12 +10,18 @@ import 'package:dkapp/module/plan/model/plan_list_response_model.dart';
 import 'package:dkapp/module/plan/plan_bloc/plan_bloc.dart';
 import 'package:dkapp/module/plan/plan_bloc/plan_event.dart';
 import 'package:dkapp/module/plan/plan_bloc/plan_state.dart';
-import 'package:dkapp/utils/image_list.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_bloc.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_event.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_state.dart';
+import 'package:dkapp/utils/api_list.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:talker/talker.dart';
+import 'package:http/http.dart' as http;
 
 class RecurringTransactionScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -38,6 +45,7 @@ class _RecurringTransactionScreenState
   DateTime? planStartDate;
   DateTime? planEndDate;
   int count = 1;
+  bool updateStatus = false;
   Map<String, dynamic>? selectedTimeDuration;
   List<Map<String, dynamic>> timeDurationOptions = [
     {'text': 'Daily', 'parameter': 'daily'},
@@ -47,7 +55,9 @@ class _RecurringTransactionScreenState
     {'text': 'HalfYearly', 'parameter': 'halfyearly'},
     {'text': 'Yearly', 'parameter': 'yearly'},
   ];
-  String? planImage;
+
+  final ImagePicker _picker = ImagePicker();
+  XFile? planImage;
   getDataTimeofStartFormat(
       {Map<String, dynamic>? selectedTimeDuration,
       int? dataCount,
@@ -252,6 +262,7 @@ class _RecurringTransactionScreenState
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blue,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -399,14 +410,14 @@ class _RecurringTransactionScreenState
                               count = int.parse((widget.argus["selectedPlan"]
                                       as PlanListResponseData)
                                   .noOfEmi!);
-                              planImage = ((widget.argus["selectedPlan"]
-                                              as PlanListResponseData)
-                                          .image !=
-                                      null)
-                                  ? (widget.argus["selectedPlan"]
-                                          as PlanListResponseData)
-                                      .image
-                                  : null;
+                              // planImage = ((widget.argus["selectedPlan"]
+                              //                 as PlanListResponseData)
+                              //             .image !=
+                              //         null)
+                              //     ? (widget.argus["selectedPlan"]
+                              //             as PlanListResponseData)
+                              //         .image
+                              //     : null;
                               planStartDate = DateTime(
                                   DateTime.parse((widget.argus["selectedPlan"]
                                               as PlanListResponseData)
@@ -825,18 +836,24 @@ class _RecurringTransactionScreenState
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  setState(() {
-                                    count++;
-                                  });
-                                  changeDeployDropdown(
-                                      selectedTimeDuration:
-                                          selectedTimeDuration,
-                                      dataCount: count,
-                                      planStartDate: planStartDate,
-                                      planEndDate: planEndDate);
+                                  if (count >= 2) {
+                                    setState(() {
+                                      count--;
+                                    });
+                                    changeDeployDropdown(
+                                        selectedTimeDuration:
+                                            selectedTimeDuration,
+                                        dataCount: count,
+                                        planStartDate: planStartDate,
+                                        planEndDate: planEndDate);
+                                  } else {
+                                    setState(() {
+                                      count = 1;
+                                    });
+                                  }
                                 },
                                 icon: const Icon(
-                                  Icons.add_circle_outline,
+                                  Icons.remove_circle_outline,
                                   color: Colors.grey,
                                   size: 30,
                                 ),
@@ -857,7 +874,7 @@ class _RecurringTransactionScreenState
                               IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    count--;
+                                    count++;
                                   });
                                   changeDeployDropdown(
                                       selectedTimeDuration:
@@ -867,11 +884,11 @@ class _RecurringTransactionScreenState
                                       planEndDate: planEndDate);
                                 },
                                 icon: const Icon(
-                                  Icons.remove_circle_outline,
+                                  Icons.add_circle_outline,
                                   color: Colors.grey,
                                   size: 30,
                                 ),
-                              )
+                              ),
                             ],
                           )),
                     ],
@@ -1162,44 +1179,215 @@ class _RecurringTransactionScreenState
                       fontWeight: FontWeight.w500),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(right: screenSize.width * 0.69),
-                child: Card(
-                  margin:
-                      EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
-                  color: Colors.grey[100],
-                  surfaceTintColor: Colors.grey[100],
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0)),
-                  shadowColor: const Color.fromARGB(255, 203, 202, 202),
-                  elevation: 2.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: (planImage != null)
-                        ? CachedNetworkImage(
-                            imageUrl:
-                                "${NetworkImagePathList.imagePathTrans}$planImage",
-                            imageBuilder: (context, imageProvider) => Container(
-                              color: Colors.transparent,
-                              width: 100,
-                              height: 100,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: imageProvider)),
+              (planImage != null)
+                  ? Padding(
+                      padding: EdgeInsets.only(right: screenSize.width * 0.69),
+                      child: Stack(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              EssentialWidgetsCollection.showAlertDialog(
+                                  context,
+                                  icon: const Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "Choose Option",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            letterSpacing: 1.2,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black),
+                                      ),
+                                      Divider(color: Colors.green, thickness: 2)
+                                    ],
+                                  ),
+                                  title: TextButton.icon(
+                                    onPressed: () async {
+                                      _picker
+                                          .pickImage(
+                                              maxHeight: 480,
+                                              maxWidth: 640,
+                                              source: ImageSource.camera)
+                                          .then((c) {
+                                        setState(() {
+                                          planImage = c;
+                                        });
+                                        Talker().info(
+                                            "Captured Image From Camera :- ${planImage!.path}");
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                    label: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          letterSpacing: 1.2,
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.black),
+                                    ),
+                                    icon: const Icon(
+                                      Icons.camera,
+                                      size: 25,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  content: TextButton.icon(
+                                      onPressed: () {
+                                        _picker
+                                            .pickImage(
+                                                maxHeight: 480,
+                                                maxWidth: 640,
+                                                source: ImageSource.gallery)
+                                            .then((c) {
+                                          setState(() {
+                                            planImage = c;
+                                          });
+                                          Talker().info(
+                                              "Captured Image From gallery :- ${planImage!.path}");
+                                          Navigator.pop(context);
+                                        });
+                                      },
+                                      icon: const Icon(
+                                        Icons.image_search,
+                                        size: 25,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        "Gallery",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            letterSpacing: 1.2,
+                                            fontWeight: FontWeight.w300,
+                                            color: Colors.black),
+                                      )));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(15.0),
+                              margin: EdgeInsets.symmetric(
+                                  vertical: screenSize.height * 0.01),
+                              color: Colors.grey[100],
+                              child: Image.file(File(planImage!.path)),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    planImage = null;
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.cancel_rounded,
+                                  size: 40,
+                                  color: Colors.grey,
+                                )),
+                          )
+                        ],
+                      ),
+                    )
+                  : InkWell(
+                      onTap: () {
+                        EssentialWidgetsCollection.showAlertDialog(context,
+                            icon: const Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Choose Option",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      letterSpacing: 1.2,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black),
+                                ),
+                                Divider(color: Colors.green, thickness: 2)
+                              ],
+                            ),
+                            title: TextButton.icon(
+                              onPressed: () async {
+                                _picker
+                                    .pickImage(
+                                        maxHeight: 480,
+                                        maxWidth: 640,
+                                        source: ImageSource.camera)
+                                    .then((c) {
+                                  setState(() {
+                                    planImage = c;
+                                  });
+                                  Talker().info(
+                                      "Captured Image From Camera :- ${planImage!.path}");
+                                  Navigator.pop(context);
+                                });
+                              },
+                              label: const Text(
+                                "Camera",
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    letterSpacing: 1.2,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.black),
+                              ),
+                              icon: const Icon(
+                                Icons.camera,
+                                size: 25,
+                                color: Colors.black,
                               ),
                             ),
-                            placeholder: (context, url) => CircleAvatar(
-                              backgroundColor: Colors.grey[300],
-                              radius: 45,
-                              child: const AnimatedImagePlaceholderLoader(),
-                            ),
-                            errorWidget: (context, url, error) => const Column(
+                            content: TextButton.icon(
+                                onPressed: () {
+                                  _picker
+                                      .pickImage(
+                                          maxHeight: 480,
+                                          maxWidth: 640,
+                                          source: ImageSource.gallery)
+                                      .then((c) {
+                                    setState(() {
+                                      planImage = c;
+                                    });
+                                    Talker().info(
+                                        "Captured Image From gallery :- ${planImage!.path}");
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.image_search,
+                                  size: 25,
+                                  color: Colors.black,
+                                ),
+                                label: const Text(
+                                  "Gallery",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      letterSpacing: 1.2,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black),
+                                )));
+                      },
+                      child: Padding(
+                        padding:
+                            EdgeInsets.only(right: screenSize.width * 0.69),
+                        child: Card(
+                          margin: EdgeInsets.symmetric(
+                              vertical: screenSize.height * 0.01),
+                          color: Colors.grey[100],
+                          surfaceTintColor: Colors.grey[100],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0)),
+                          shadowColor: const Color.fromARGB(255, 203, 202, 202),
+                          elevation: 2.0,
+                          child: const Padding(
+                            padding: EdgeInsets.all(15.0),
+                            child: Column(
                               children: [
                                 Icon(
                                   Icons.download_for_offline_rounded,
-                                  color: Color.fromARGB(255, 8, 7, 7),
+                                  color: Colors.grey,
                                   size: 18,
                                 ),
                                 Text(
@@ -1209,24 +1397,10 @@ class _RecurringTransactionScreenState
                                 )
                               ],
                             ),
-                          )
-                        : const Column(
-                            children: [
-                              Icon(
-                                Icons.download_for_offline_rounded,
-                                color: Color.fromARGB(255, 8, 7, 7),
-                                size: 18,
-                              ),
-                              Text(
-                                'Add New',
-                                style:
-                                    TextStyle(color: Colors.grey, fontSize: 10),
-                              )
-                            ],
                           ),
-                  ),
-                ),
-              ),
+                        ),
+                      ),
+                    ),
               SizedBox(
                 height: screenSize.height * 0.03,
               ),
@@ -1312,151 +1486,336 @@ class _RecurringTransactionScreenState
       builder: (BuildContext context) {
         return PopScope(
           canPop: true,
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-              title: const Text(
-                'Billing Calander',
-                style: TextStyle(
+          child: PreviewScreen(
+              planAmountController: planAmountController,
+              count: count,
+              planStartDateController: planStartDateController,
+              planEndDateController: planEndDateController,
+              dateTimeList: dateTimeList,
+              widget: widget,
+              sph: sph,
+              planNameController: planNameController,
+              planDescController: planDescController,
+              selectedTimeDuration: selectedTimeDuration,
+              planImage: planImage),
+        );
+      },
+    );
+  }
+
+  Future<void> updateRecurringTransactionPart(BuildContext context) async {}
+}
+
+class PreviewScreen extends StatelessWidget {
+  const PreviewScreen({
+    super.key,
+    required this.planAmountController,
+    required this.count,
+    required this.planStartDateController,
+    required this.planEndDateController,
+    required this.dateTimeList,
+    required this.widget,
+    required this.sph,
+    required this.planNameController,
+    required this.planDescController,
+    required this.selectedTimeDuration,
+    required this.planImage,
+  });
+
+  final TextEditingController planAmountController;
+  final int count;
+  final TextEditingController planStartDateController;
+  final TextEditingController planEndDateController;
+  final List<Map<String, dynamic>>? dateTimeList;
+  final RecurringTransactionScreen widget;
+  final SharedPreferencesHelper sph;
+  final TextEditingController planNameController;
+  final TextEditingController planDescController;
+  final Map<String, dynamic>? selectedTimeDuration;
+  final XFile? planImage;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text(
+          'Billing Calander',
+          style: TextStyle(
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
+        ),
+      ),
+      body: SizedBox(
+        width: screenSize.width,
+        child: Column(
+          children: [
+            BlocBuilder<RecurringBloc, RecurringState>(
+              builder: (context, state) {
+                if (state is AddNewRecurringTransactionSuccessState) {
+                  return EssentialWidgetsCollection.autoScheduleTask(
+                    context,
+                    taskWaitDuration: Durations.medium3,
+                    task: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                          context, '/customer-screen-details',
+                          arguments: {
+                            'customerData': (widget.argus['customerData']
+                                as SelectedCustomerResponseData),
+                            'selectedBusiness':
+                                (widget.argus['selectedBusiness']
+                                    as BusinessListResponseData),
+                          });
+                      EssentialWidgetsCollection.showSuccessSnackbar(context,
+                          description: state.successMessage);
+                    },
+                  );
+                }
+                if (state is AddNewRecurringTransactionFailedState) {
+                  return EssentialWidgetsCollection.autoScheduleTask(
+                    context,
+                    taskWaitDuration: Durations.medium3,
+                    task: () {
+                      Navigator.pop(context);
+                      Navigator.pushReplacementNamed(
+                          context, '/recurring-transaction',
+                          arguments: widget.argus);
+                      EssentialWidgetsCollection.showErrorSnackbar(context,
+                          description: state.failedMessage);
+                    },
+                  );
+                }
+                if (state is AddNewRecurringTransactionLoadingState) {
+                  return const AnimatedImageLoader();
+                } 
+                return Container();
+              },
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.grey, width: 2)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      const Text(
+                        'Billing Calander',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        (double.parse(planAmountController.text) * count)
+                            .toStringAsFixed(2),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      const Text(
+                        'Transactions',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        count.toString(),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                "${DateFormat('dd-MM-yyyy').format(DateFormat("dd-MM-yyyy hh:mm a").parse(planStartDateController.text))} - ${planEndDateController.text}",
+                style: const TextStyle(
                     color: Colors.black,
-                    fontSize: 20,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600),
               ),
             ),
-            body: SizedBox(
-              width: screenSize.width,
-              child: Column(
-                children: [
-                  Container(
+            const SizedBox(
+              height: 10,
+            ),
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: dateTimeList!.length,
+                itemBuilder: (context, index) {
+                  return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: Colors.grey, width: 2)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Column(
-                          children: [
-                            const Text(
-                              'Billing Calander',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              (int.parse(planAmountController.text) * count)
-                                  .toStringAsFixed(2),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            const Text(
-                              'Transactions',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              count.toString(),
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "${DateFormat('dd-MM-yyyy').format(DateFormat("dd-MM-yyyy hh:mm a").parse(planStartDateController.text))} - ${planEndDateController.text}",
-                      style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Flexible(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: dateTimeList!.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.grey, width: 2)),
-                          child: ListTile(
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  DateFormat('dd-MM-yyyy\nhh:mm a')
-                                      .format(dateTimeList![index]["datetime"]),
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  "\u{20B9} ${dateTimeList![index]["amount"]}",
-                                  style: const TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600),
-                                )
-                              ],
-                            ),
+                    child: ListTile(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            DateFormat('dd-MM-yyyy\nhh:mm a')
+                                .format(dateTimeList![index]["datetime"]),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600),
                           ),
-                        );
-                      },
+                          Text(
+                            "\u{20B9} ${dateTimeList![index]["amount"]}",
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600),
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 90,
-                  ),
-                ],
+                  );
+                },
               ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            floatingActionButton: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: screenSize.width * 0.03),
-              child: TextButton(
-                  style: TextButton.styleFrom(
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.zero),
-                      backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-                      minimumSize:
-                          Size(screenSize.width, screenSize.height * 0.05)),
-                  onPressed: () {},
-                  child: const Text(
-                    'SAVE',
-                    style: TextStyle(color: Colors.white),
-                  )),
+            const SizedBox(
+              height: 90,
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.03),
+        child: TextButton(
+            style: TextButton.styleFrom(
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero),
+                backgroundColor: const Color.fromARGB(255, 31, 1, 102),
+                minimumSize: Size(screenSize.width, screenSize.height * 0.05)),
+            onPressed: () async {
+              BlocProvider.of<RecurringBloc>(context).add(
+                  AddRecurringTransactionEvent(
+                      customerId: (widget.argus['customerData']
+                              as SelectedCustomerResponseData)
+                          .id!,
+                      userId: sph.getString("userid")!,
+                      businessId: (widget.argus['selectedBusiness']
+                              as BusinessListResponseData)
+                          .id!,
+                      planTitle: planNameController.text,
+                      planAmount: planAmountController.text,
+                      planNotes: planDescController.text,
+                      planType: selectedTimeDuration!['parameter'],
+                      noOfEmis: count.toString(),
+                      planStartDate: DateFormat('yyyy-MM-dd').format(
+                          DateFormat("dd-MM-yyyy hh:mm a")
+                              .parse(planStartDateController.text)),
+                      planEndDate: DateFormat('yyyy-MM-dd').format(
+                          DateFormat("dd-MM-yyyy")
+                              .parse(planEndDateController.text))));
+              // await updateTranPart(context);
+            },
+            child: const Text(
+              'SAVE',
+              style: TextStyle(color: Colors.white),
+            )),
+      ),
     );
+  }
+
+  Future<void> updateTranPart(BuildContext context) async {
+    print("Data");
+    try {
+      var requestForImage = http.MultipartRequest(
+          'POST',
+          Uri.http(
+              APIPathList.mainDomain, APIPathList.createRecurringTransaction));
+      requestForImage.fields['branch_id'] =
+          (widget.argus['selectedBusiness'] as BusinessListResponseData).id!;
+      requestForImage.fields['token'] = 'bnbuujn';
+      requestForImage.fields['user_id'] = sph.getString("userid")!;
+      requestForImage.fields['customer_id'] =
+          (widget.argus['customerData'] as SelectedCustomerResponseData).id!;
+      requestForImage.fields['title'] = planNameController.text;
+      requestForImage.fields['amount'] = planAmountController.text;
+      requestForImage.fields['notes'] = planDescController.text;
+      requestForImage.fields['emi_type'] = selectedTimeDuration!['parameter'];
+      requestForImage.fields['no_of_EMI'] = count.toString();
+      requestForImage.fields['start_date'] = DateFormat('yyyy-MM-dd').format(
+          DateFormat("dd-MM-yyyy hh:mm a").parse(planStartDateController.text));
+      requestForImage.fields['end_date'] = DateFormat('yyyy-MM-dd')
+          .format(DateFormat("dd-MM-yyyy").parse(planEndDateController.text));
+
+      requestForImage.headers["HTTP_AUTHORIZATION"] =
+          '${DateTime.now().millisecondsSinceEpoch}';
+
+      if ((planImage != null)) {
+        requestForImage.files
+            .add(await http.MultipartFile.fromPath("images", planImage!.path));
+      } else {
+        requestForImage.files
+            .add(http.MultipartFile.fromBytes("images", [], filename: ''));
+      }
+
+      var responsePlanImage = await requestForImage.send();
+      if (responsePlanImage.statusCode == 200) {
+        Talker().info("Image uplodade success with plan Creation");
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pushReplacementNamed(context, '/customer-screen-details',
+            arguments: {
+              'customerData': (widget.argus['customerData']
+                  as SelectedCustomerResponseData),
+              'selectedBusiness': (widget.argus['selectedBusiness']
+                  as BusinessListResponseData),
+            });
+        EssentialWidgetsCollection.autoScheduleTask(
+          context,
+          taskWaitDuration: Durations.medium3,
+          task: () {
+            EssentialWidgetsCollection.showSuccessSnackbar(context,
+                description: responsePlanImage.reasonPhrase!);
+          },
+        );
+      } else {
+        EssentialWidgetsCollection.autoScheduleTask(
+          context,
+          taskWaitDuration: Durations.medium3,
+          task: () {
+            EssentialWidgetsCollection.showErrorSnackbar(context,
+                description:
+                    'Request failed with status: ${responsePlanImage.statusCode}.');
+          },
+        );
+      }
+    } on PlatformException {
+      EssentialWidgetsCollection.autoScheduleTask(
+        context,
+        taskWaitDuration: Durations.medium3,
+        task: () {
+          EssentialWidgetsCollection.showErrorSnackbar(context,
+              description: 'Failed to get platform version.');
+        },
+      );
+    }
   }
 }

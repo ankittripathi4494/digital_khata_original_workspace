@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable, use_build_context_synchronously, prefer_const_constructors, avoid_print
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
@@ -16,6 +15,7 @@ import 'package:dkapp/module/customers/customer_bloc/customer_event.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_state.dart';
 import 'package:dkapp/module/customers/model/customer_response_model.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
+import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,22 +76,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
           });
         }
       },
-      child: PopScope(
-        canPop: false,
-        onPopInvoked: (didPop) {
-          if (!didPop) {
-            EssentialWidgetsCollection.showAlertDialogForLogout(context,
-                content: "Do you want to exit from App?", taskOne: () {
-              exit(0);
-            }, taskTwo: () {
-              Navigator.pop(context);
-            });
-          }
-        },
+      child: DoubleBack(
+         message:"Press back again to close",
+        // canPop: false,
+        // onPopInvoked: (didPop) {
+        //   if (!didPop) {
+        //     EssentialWidgetsCollection.showAlertDialogForLogoutMain(context,
+        //         content: "Do you want to exit from App?", taskOne: () {
+        //       exit(0);
+        //     }, taskTwo: () {
+        //       Navigator.pop(context);
+        //     });
+        //   }
+        // },
         child: BlocBuilder<BusinessBloc, BusinessState>(
           builder: (context, state) {
             if (state is BusinessListLoadedState) {
               return Scaffold(
+                backgroundColor: Colors.white,
                 appBar: AppBar(
                   leading: Container(),
                   backgroundColor: Colors.blue,
@@ -203,7 +205,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                               ),
-
+        
                               actions: [
                                 const Divider(),
                                 Align(
@@ -409,6 +411,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             }
             if (state is BusinessListFailedState) {
               return Scaffold(
+                backgroundColor: Colors.white,
                 appBar: AppBar(
                   leading: Container(),
                   backgroundColor: Colors.blue,
@@ -458,7 +461,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                               ),
-
+        
                               actions: [
                                 const Divider(),
                                 Align(
@@ -971,7 +974,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 255, 31, 1, 102),
                                             borderRadius:
                                                 BorderRadius.circular(30)),
-
+        
                                         // borderWidth: 2,
                                         // borderColor: Colors.black,
                                         labelStyle: const TextStyle(
@@ -1138,7 +1141,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ],
                                               ),
                                             ),
-
+        
                                             //tab 3: Overdue
                                             Container(
                                               color: Colors.grey[100],
@@ -1214,7 +1217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ],
                                               ),
                                             ),
-
+        
                                             //tab 4: UpComing
                                             Container(
                                               color: Colors.grey[100],
@@ -1290,7 +1293,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ],
                                               ),
                                             ),
-
+        
                                             //tab 5: Tag
                                             Container(
                                               color: Colors.grey[100],
@@ -1395,7 +1398,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 )
                                               ],
                                             ),
-
+        
                                             //tab 7: DND
                                             Container(
                                               color: Colors.grey[100],
@@ -1530,6 +1533,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             }
             return Scaffold(
+              backgroundColor: Colors.white,
               appBar: AppBar(
                 leading: Container(),
                 backgroundColor: Colors.blue,
@@ -1554,7 +1558,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               width: 1,
                               height: 1,
                             ),
-
+        
                             actions: [
                               const Divider(),
                               Align(
@@ -2050,7 +2054,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               255, 31, 1, 102),
                                           borderRadius:
                                               BorderRadius.circular(30)),
-
+        
                                       // borderWidth: 2,
                                       // borderColor: Colors.black,
                                       labelStyle: const TextStyle(
@@ -2208,7 +2212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ],
                                             ),
                                           ),
-
+        
                                           //tab 3: Overdue
                                           Container(
                                             color: Colors.grey[100],
@@ -2275,7 +2279,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ],
                                             ),
                                           ),
-
+        
                                           //tab 4: UpComing
                                           Container(
                                             color: Colors.grey[100],
@@ -2342,7 +2346,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ],
                                             ),
                                           ),
-
+        
                                           //tab 5: Tag
                                           Container(
                                             color: Colors.grey[100],
@@ -2438,7 +2442,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               )
                                             ],
                                           ),
-
+        
                                           //tab 7: DND
                                           Container(
                                             color: Colors.grey[100],

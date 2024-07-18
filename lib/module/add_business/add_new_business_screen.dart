@@ -6,6 +6,7 @@ import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_event.dart';
 import 'package:dkapp/module/business_type/model/business_type_list_response_model.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
+import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,19 +41,21 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    return PopScope(
-      canPop: (widget.argus.containsKey("fromLoginPage") ? false : true),
-      onPopInvoked: (didPop) {
-        if (!didPop) {
-          EssentialWidgetsCollection.showAlertDialogForLogout(context,
-              content: "Do you want to exit from App?", taskOne: () {
-            exit(0);
-          }, taskTwo: () {
-            Navigator.pop(context);
-          });
-        }
-      },
+    return DoubleBack(
+       message:"Press back again to close",
+        // canPop: false,
+        // onPopInvoked: (didPop) {
+        //   if (!didPop) {
+        //     EssentialWidgetsCollection.showAlertDialogForLogoutMain(context,
+        //         content: "Do you want to exit from App?", taskOne: () {
+        //       exit(0);
+        //     }, taskTwo: () {
+        //       Navigator.pop(context);
+        //     });
+        //   }
+        // },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           automaticallyImplyLeading:
               (widget.argus.containsKey("fromLoginPage") ? false : true),

@@ -15,6 +15,7 @@ class _BillPlansScreenState extends State<BillPlansScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blue,
         leading: IconButton(

@@ -74,6 +74,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.blue,
           iconTheme: const IconThemeData(color: Colors.white),

@@ -1,14 +1,15 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:dkapp/module/plan/plan_bloc/plan_bloc.dart';
-import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
+import 'module/plan/plan_bloc/plan_bloc.dart';
+import 'module/profile/transactions/transactions_bloc.dart';
+import 'module/recurring/recurring_bloc/recurring_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:dkapp/global_widget/animated_loading_widget.dart';
+import 'global_widget/animated_loading_widget.dart';
 import 'Localization/app_localizations_setup.dart';
 import 'firebase_options.dart';
 import 'global_blocs/internet/internet_cubit.dart';
@@ -114,6 +115,9 @@ class _MyAppState extends State<MyApp> {
                 ),
                 BlocProvider<PlanBloc>(
                   create: (BuildContext context) => PlanBloc(),
+                ),
+                 BlocProvider<RecurringBloc>(
+                  create: (BuildContext context) => RecurringBloc(), 
                 ),
               ],
               child: BlocBuilder<LocaleCubit, LocaleState>(

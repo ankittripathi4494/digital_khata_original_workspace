@@ -28,14 +28,16 @@ class APIPathList {
   static const String getCustomerList = "${subfolder}getcustomerList";
   static const String getCustomerDetails = "${subfolder}getcustomeDetails";
 
-  static const String cashTransaction =
-      "${subfolder}cash_transaction";
+  static const String cashTransaction = "${subfolder}cash_transaction";
   static const String cashTransactionUpdate =
       "${subfolder}Updatecash_transaction";
-  static const String getCashTransactionList = "${subfolder}cash_transactionList";
+  static const String getCashTransactionList =
+      "${subfolder}cash_transactionList";
   static const String getPlanList = "${subfolder}getLoanPlanList";
-   static const String getLoanPlanDetails = "${subfolder}getLoanPlanDetails";
+  static const String getLoanPlanDetails = "${subfolder}getLoanPlanDetails";
 
-    static const String createLoanPlan =
-      "${subfolder}create_LoanPlan";
+  static const String createLoanPlan = "${subfolder}create_LoanPlan";
+  static const String createRecurringTransaction = "${subfolder}create_RecurringTransaction";
+    static const String getLoanRecurringEMIList = "${subfolder}getLoanRecurringEMIList";
+    static const String getRecurringEMIDetails = "${subfolder}getRecurringEMIDetails";
 }

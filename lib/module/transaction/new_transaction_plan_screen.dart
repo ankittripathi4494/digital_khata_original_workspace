@@ -61,6 +61,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.blue,
           leading: IconButton(
@@ -744,6 +745,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                               ),
                             ),
                           ),
+                    
                     SizedBox(
                       height: screenSize.height * 0.03,
                     ),
@@ -822,7 +824,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                       as SelectedCustomerResponseData)
                                   .id!,
                               userId: sph.getString("userid")!,
-                              planTile: planNameController.text,
+                              planTitle: planNameController.text,
                               planAmount: planAmountController.text,
                               planNotes: planDescController.text,
                               planType: (selectedTimeDuration != null)

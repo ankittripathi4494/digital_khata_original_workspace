@@ -1,19 +1,19 @@
-import 'package:dkapp/module/plan/model/plan_detail_response_model.dart';
-import 'package:dkapp/module/plan/model/plan_list_response_model.dart';
-import 'package:dkapp/module/plan/plan_bloc/plan_event.dart';
-import 'package:dkapp/module/plan/plan_bloc/plan_state.dart';
+import 'package:dkapp/module/recurring/model/loan_recurring_emi_details_response_model.dart';
+import 'package:dkapp/module/recurring/model/loan_recurring_emi_list_response_model.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_event.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_state.dart';
 import 'package:dkapp/utils/api_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:talker/talker.dart';
-import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
-class PlanBloc extends Bloc<PlanEvent, PlanState> {
-  PlanBloc() : super(PlanInitial()) {
-    on<PlanListFetchEvent>((event, emit) async {
-      emit(PlanListLoadingState());
+class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
+  RecurringBloc() : super(RecurringInitial()) {
+    on<RecurringTransactionListFetchEvent>((event, emit) async {
+      emit(RecurringTransactionListLoadingState());
 
       var map = {};
       try {
@@ -24,67 +24,16 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
         Talker().debug(map);
 
         http.Response response = await http.post(
-            Uri.http(APIPathList.mainDomain, APIPathList.getPlanList),
+            Uri.http(
+                APIPathList.mainDomain, APIPathList.getLoanRecurringEMIList),
             body: map,
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
         Talker().debug("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
-          PlanListResponseModel jsonResponse =
-              PlanListResponseModel.fromJson(convert.jsonDecode(response.body));
-
-          if (jsonResponse.response != "failure") {
-            if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
-            }
-
-            emit(PlanListLoadedState(
-              successData: jsonResponse.data,
-            ));
-          } else {
-            emit(PlanListFailedState(
-              failedMessage: jsonResponse.message!,
-            ));
-          }
-        } else {
-          emit(PlanListFailedState(
-            failedMessage:
-                'Request failed with status: ${response.statusCode}.',
-          ));
-        }
-      } on PlatformException {
-        emit(PlanListFailedState(
-          failedMessage: 'Failed to get platform version.',
-        ));
-      }
-    });
-    on<AddPlanEvent>((event, emit) async {
-      emit(AddNewPlanLoadingState());
-      await addPlanImage(event, emit);
-    });
-    on<PlanDetailFetchEvent>((event, emit) async {
-      emit(PlanDetailLoadingState());
-
-      var map = {};
-      try {
-        map['token'] = 'bnbuujn';
-        map['user_id'] = event.userId;
-        map['branch_id'] = event.businessId;
-        map['customer_id'] = event.customerId;
-        map['loan_Plan_id'] = event.loanPlanId;
-        Talker().debug(map);
-
-        http.Response response = await http.post(
-            Uri.http(APIPathList.mainDomain, APIPathList.getLoanPlanDetails),
-            body: map,
-            headers: {
-              "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
-            });
-        Talker().debug("Response Data :- ${response.body}");
-        if (response.statusCode == 200) {
-          PlanDetailResponseModel jsonResponse =
-              PlanDetailResponseModel.fromJson(
+          LoanRecurringEmiListResponseModel jsonResponse =
+              LoanRecurringEmiListResponseModel.fromJson(
                   convert.jsonDecode(response.body));
 
           if (jsonResponse.response != "failure") {
@@ -92,33 +41,90 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
               Talker().info(jsonResponse.data!.toString());
             }
 
-            emit(PlanDetailLoadedState(
+            emit(RecurringTransactionListLoadedState(
               successData: jsonResponse.data,
             ));
           } else {
-            emit(PlanDetailFailedState(
+            emit(RecurringTransactionListFailedState(
               failedMessage: jsonResponse.message!,
             ));
           }
         } else {
-          emit(PlanDetailFailedState(
+          emit(RecurringTransactionListFailedState(
             failedMessage:
                 'Request failed with status: ${response.statusCode}.',
           ));
         }
       } on PlatformException {
-        emit(PlanDetailFailedState(
+        emit(RecurringTransactionListFailedState(
           failedMessage: 'Failed to get platform version.',
         ));
       }
     });
-  
-  }
 
-  addPlanImage(AddPlanEvent event, Emitter<PlanState> emit) async {
+    on<AddRecurringTransactionEvent>((event, emit) async {
+      emit(AddNewRecurringTransactionLoadingState());
+      await addRecurringTransactionImage(event, emit);
+    });
+
+    on<RecurringTransactionDetailFetchEvent>((event, emit) async {
+      emit(RecurringTransactionDetailLoadingState());
+
+      var map = {};
+      try {
+        map['token'] = 'bnbuujn';
+        map['user_id'] = event.userId;
+        map['branch_id'] = event.businessId;
+        map['customer_id'] = event.customerId;
+        map['recurring_emi_ID'] = event.recurringEmiId;
+        Talker().debug(map);
+
+        http.Response response = await http.post(
+            Uri.http(
+                APIPathList.mainDomain, APIPathList.getRecurringEMIDetails),
+            body: map,
+            headers: {
+              "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+            });
+        Talker().debug("Recurring Response Data :- ${response.body}");
+        if (response.statusCode == 200) {
+          LoanRecurringEmiDetailResponseModel jsonResponse =
+              LoanRecurringEmiDetailResponseModel.fromJson(
+                  convert.jsonDecode(response.body));
+
+          if (jsonResponse.response != "failure") {
+            if (kDebugMode) {
+              Talker().info(jsonResponse.data!.toString());
+            }
+
+            emit(RecurringTransactionDetailLoadedState(
+              successData: jsonResponse.data,
+            ));
+          } else {
+            emit(RecurringTransactionDetailFailedState(
+              failedMessage: jsonResponse.message!,
+            ));
+          }
+        } else {
+          emit(RecurringTransactionDetailFailedState(
+            failedMessage:
+                'Request failed with status: ${response.statusCode}.',
+          ));
+        }
+      } on PlatformException {
+        emit(RecurringTransactionDetailFailedState(
+          failedMessage: 'Failed to get platform version.',
+        ));
+      }
+    });
+  }
+  addRecurringTransactionImage(
+      AddRecurringTransactionEvent event, Emitter<RecurringState> emit) async {
     try {
       var requestForImage = http.MultipartRequest(
-          'POST', Uri.http(APIPathList.mainDomain, APIPathList.createLoanPlan));
+          'POST',
+          Uri.http(
+              APIPathList.mainDomain, APIPathList.createRecurringTransaction));
       requestForImage.fields['branch_id'] = event.businessId;
       requestForImage.fields['token'] = 'bnbuujn';
       requestForImage.fields['user_id'] = event.userId;
@@ -128,13 +134,15 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
       requestForImage.fields['notes'] = event.planNotes;
       requestForImage.fields['emi_type'] = event.planType;
       requestForImage.fields['no_of_EMI'] = event.noOfEmis;
+      requestForImage.fields['start_date'] = event.planStartDate;
+      requestForImage.fields['end_date'] = event.planEndDate;
 
       requestForImage.headers["HTTP_AUTHORIZATION"] =
           '${DateTime.now().millisecondsSinceEpoch}';
 
-      if ((event.planImages != null)) {
+      if ((event.recurringTransactionImages != null)) {
         requestForImage.files.add(await http.MultipartFile.fromPath(
-            "images", event.planImages!.path));
+            "images", event.recurringTransactionImages!.path));
       } else {
         requestForImage.files
             .add(http.MultipartFile.fromBytes("images", [], filename: ''));
@@ -144,18 +152,17 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
       if (responsePlanImage.statusCode == 200) {
         Talker().info("Image uplodade success with plan Creation");
         // await updateCashTransaction(event, emit);
-        emit(AddNewPlanSuccessState(
+        emit(AddNewRecurringTransactionSuccessState(
           successMessage: responsePlanImage.reasonPhrase!,
         ));
       } else {
-        emit(AddNewPlanFailedState(
+        emit(AddNewRecurringTransactionFailedState(
             failedMessage:
                 'Request failed with status: ${responsePlanImage.statusCode}.'));
       }
     } on PlatformException {
-      emit(AddNewPlanFailedState(
+      emit(AddNewRecurringTransactionFailedState(
           failedMessage: 'Failed to get platform version.'));
     }
   }
-
 }

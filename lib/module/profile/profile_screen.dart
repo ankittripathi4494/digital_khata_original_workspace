@@ -1,7 +1,19 @@
-// ignore_for_file: must_be_immutable, use_build_context_synchronously, avoid_print
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: must_be_immutable, use_build_context_synchronously, avoid_print, prefer_const_constructors
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart' as i;
+import 'package:permission_handler/permission_handler.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:talker/talker.dart';
+
 import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
@@ -15,16 +27,13 @@ import 'package:dkapp/module/profile/model/transaction_list_response_model.dart'
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
 import 'package:dkapp/module/profile/transactions/transactions_event.dart';
 import 'package:dkapp/module/profile/transactions/transactions_state.dart';
+import 'package:dkapp/module/recurring/model/loan_recurring_emi_list_response_model.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_bloc.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_event.dart';
+import 'package:dkapp/module/recurring/recurring_bloc/recurring_state.dart';
+import 'package:dkapp/utils/exceptions.dart';
+import 'package:dkapp/utils/image_list.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart' as i;
-import 'package:permission_handler/permission_handler.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:talker/talker.dart';
 
 class ProfileScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -49,11 +58,18 @@ class _ProfileScreenState extends State<ProfileScreen>
     {"id": "5", "title": "Show Remainder"},
     {"id": "6", "title": "Reports"}
   ];
-  RefreshController refreshController =
+  RefreshController refreshForTransController =
       RefreshController(initialRefresh: false);
-  RefreshController refreshController2 =
+  RefreshController refreshForTransController2 =
       RefreshController(initialRefresh: false);
-  RefreshController refreshController3 =
+  RefreshController refreshForTransController3 =
+      RefreshController(initialRefresh: false);
+
+  RefreshController refreshForRecurTransController =
+      RefreshController(initialRefresh: false);
+  RefreshController refreshForRecurTransController2 =
+      RefreshController(initialRefresh: false);
+  RefreshController refreshForRecurTransController3 =
       RefreshController(initialRefresh: false);
 
 // Option 2
@@ -122,6 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       builder: (context, state) {
         if (state is SelectedCustomerDetailsLoadedState) {
           return Scaffold(
+            backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.blue,
               iconTheme: const IconThemeData(color: Colors.white),
@@ -540,12 +557,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ),
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation: (tabIndex == 1)
+                ? FloatingActionButtonLocation.endFloat
+                : FloatingActionButtonLocation.centerDocked,
             floatingActionButton: keyboardIsOpened
                 ? null
                 : ((tabIndex == 1)
-                    ? FloatingActionButton.large(
+                    ? FloatingActionButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50.0)),
                         backgroundColor: const Color.fromARGB(255, 31, 1, 102),
@@ -626,7 +644,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         child: const Icon(
                           Icons.add,
                           color: Colors.white,
-                          size: 50,
+                          size: 28,
                         ))
                     : (tabIndex == 2)
                         ? FloatingActionButton.large(
@@ -938,38 +956,328 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   recurringPart(Size screenSize, BuildContext context,
       SelectedCustomerResponseData selectedCustomerData) {
-    return Container(
-      color: Colors.white,
-      height: screenSize.height,
-      // width: 100,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Center(
-            // color: Colors.grey,
-            child: Icon(
-              Icons.receipt_long_sharp,
-              size: 100,
-              color: Colors.blue,
+    return BlocBuilder<RecurringBloc, RecurringState>(
+      bloc: RecurringBloc()
+        ..add(RecurringTransactionListFetchEvent(
+            businessId:
+                (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                    .id!,
+            customerId: selectedCustomerData.id!,
+            userId: sph.getString("userid")!)),
+      builder: (context, state) {
+        if (state is RecurringTransactionListLoadedState) {
+          return SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: false,
+              header: const WaterDropHeader(
+                waterDropColor: Color.fromARGB(255, 31, 1, 102),
+                idleIcon: AnimatedImagePlaceholderLoader(),
+              ),
+              controller: refreshForRecurTransController,
+              onRefresh: (() async {
+                // monitor network fetch
+                await Future.delayed(const Duration(milliseconds: 1000));
+                // if failed,use refreshFailed()
+
+                Navigator.pushReplacementNamed(
+                    context, '/customer-screen-details',
+                    arguments: widget.argus);
+              }),
+              onLoading: (() async {
+                await Future.delayed(const Duration(milliseconds: 1000));
+                // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+                if (mounted) setState(() {});
+                refreshForRecurTransController.loadComplete();
+              }),
+              child: ListView.builder(
+                itemCount: state.successData!.length,
+                itemBuilder: (context, index) {
+                  LoanRecurringEmiListResponseData recurEmiData =
+                      state.successData![index];
+
+                  return Container(
+                    margin: EdgeInsets.symmetric(
+                        vertical: screenSize.height * 0.008,
+                        horizontal: screenSize.width * 0.05),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 203, 202, 202),
+                          offset: Offset(0.0, 1.0),
+                          blurRadius: 6.0,
+                        ),
+                      ],
+                    ),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 0),
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, '/recurring-transaction-details',
+                            arguments: {
+                              'customerData': selectedCustomerData,
+                              'selectedBusiness':
+                                  (widget.argus['selectedBusiness']
+                                      as BusinessListResponseData),
+                              'recurEmiData': recurEmiData
+                            });
+                      },
+                      leading: (recurEmiData.images != null)
+                          ? CachedNetworkImage(
+                              imageUrl:
+                                  "${NetworkImagePathList.imagePathTrans}${recurEmiData.images}",
+                              imageBuilder: (context, imageProvider) => InkWell(
+                                onTap: () {
+                                  EssentialWidgetsCollection
+                                      .showAlertDialogBack(
+                                    context,
+                                    icon: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          icon: Icon(
+                                            Icons.cancel_rounded,
+                                            size: 40,
+                                            color: Colors.white,
+                                          )),
+                                    ),
+                                    title: CachedNetworkImage(
+                                      imageUrl:
+                                          "${NetworkImagePathList.imagePathTrans}${recurEmiData.images}",
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        width: 400,
+                                        height: 400,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: imageProvider)),
+                                      ),
+                                      placeholder: (context, url) =>
+                                          const AnimatedImagePlaceholderLoader(),
+                                      errorWidget: (context, url, error) =>
+                                          const CircleAvatar(
+                                        radius: 25,
+                                        backgroundColor: Colors.grey,
+                                        child: Center(
+                                          child: Icon(
+                                            FontAwesomeIcons.indianRupeeSign,
+                                            color: Colors.white,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: imageProvider,
+                                ),
+                              ),
+                              placeholder: (context, url) =>
+                                  const AnimatedImagePlaceholderLoader(),
+                              errorWidget: (context, url, error) =>
+                                  const CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.grey,
+                                child: Center(
+                                  child: Icon(
+                                    FontAwesomeIcons.indianRupeeSign,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : const CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.grey,
+                              child: Center(
+                                child: Icon(
+                                  FontAwesomeIcons.indianRupeeSign,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                      title: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RichText(
+                                text: TextSpan(
+                                    text: recurEmiData.title!,
+                                    children: [
+                                      TextSpan(
+                                          text:
+                                              "\n(${recurEmiData.emiType!.toTitleCase()})",
+                                          style: const TextStyle(
+                                              color: Colors.blueGrey,
+                                              fontSize: 12))
+                                    ],
+                                    style: const TextStyle(
+                                        letterSpacing: 1.2,
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500))),
+                            RichText(
+                                text: TextSpan(
+                                    text: "Emis : \t",
+                                    children: [
+                                      TextSpan(
+                                          text: "${recurEmiData.noOfEmi}",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w400))
+                                    ],
+                                    style: const TextStyle(
+                                        letterSpacing: 1.2,
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700)))
+                          ],
+                        ),
+                      ),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 50,
+                              padding: const EdgeInsets.all(0),
+                              child: Text(recurEmiData.notes!,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: true,
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.normal)),
+                            ),
+                            RichText(
+                                text: TextSpan(
+                                    text: "Amount : \t",
+                                    children: [
+                                      TextSpan(
+                                          text: "${recurEmiData.amount}",
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w400))
+                                    ],
+                                    style: const TextStyle(
+                                        letterSpacing: 1.2,
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700))),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                
+                },
+              ));
+        }
+        if (state is RecurringTransactionListFailedState) {
+          return SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: false,
+            header: const WaterDropHeader(
+              waterDropColor: Color.fromARGB(255, 31, 1, 102),
+              idleIcon: AnimatedImagePlaceholderLoader(),
             ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Center(
-              // color: Colors.grey,
-              child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1),
-            child: const Text(
-              'You can now automatically enter monthly        or weekly repeating transactions',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+            controller: refreshForRecurTransController2,
+            onRefresh: (() async {
+              // monitor network fetch
+              await Future.delayed(const Duration(milliseconds: 1000));
+              // if failed,use refreshFailed()
+
+              Navigator.pushReplacementNamed(
+                  context, '/customer-screen-details',
+                  arguments: widget.argus);
+            }),
+            onLoading: (() async {
+              await Future.delayed(const Duration(milliseconds: 1000));
+              // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+              if (mounted) setState(() {});
+              refreshForRecurTransController2.loadComplete();
+            }),
+            child: Container(
+              color: Colors.white,
+              height: screenSize.height,
+              // width: 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Center(
+                    // color: Colors.grey,
+                    child: Icon(
+                      Icons.receipt_long_sharp,
+                      size: 100,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Center(
+                      // color: Colors.grey,
+                      child: Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: screenSize.width * 0.1),
+                    child: const Text(
+                      'You can now automatically enter monthly        or weekly repeating transactions',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ))
+                ],
+              ),
             ),
-          ))
-        ],
-      ),
+          );
+        }
+
+        return SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: false,
+          header: const WaterDropHeader(
+            waterDropColor: Color.fromARGB(255, 31, 1, 102),
+            idleIcon: AnimatedImagePlaceholderLoader(),
+          ),
+          controller: refreshForRecurTransController3,
+          onRefresh: (() async {
+            // monitor network fetch
+            await Future.delayed(const Duration(milliseconds: 1000));
+            // if failed,use refreshFailed()
+
+            Navigator.pushReplacementNamed(context, '/customer-screen-details',
+                arguments: widget.argus);
+          }),
+          onLoading: (() async {
+            await Future.delayed(const Duration(milliseconds: 1000));
+            // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+            if (mounted) setState(() {});
+            refreshForRecurTransController3.loadComplete();
+          }),
+          child: const Center(
+            child: AnimatedImageLoader(),
+          ),
+        );
+      
+      },
     );
   }
 
@@ -1277,7 +1585,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     waterDropColor: Color.fromARGB(255, 31, 1, 102),
                     idleIcon: AnimatedImagePlaceholderLoader(),
                   ),
-                  controller: refreshController,
+                  controller: refreshForTransController,
                   onRefresh: (() async {
                     // monitor network fetch
                     await Future.delayed(const Duration(milliseconds: 1000));
@@ -1292,7 +1600,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     // if failed,use loadFailed(),if no data return,use LoadNodata()
 
                     if (mounted) setState(() {});
-                    refreshController.loadComplete();
+                    refreshForTransController.loadComplete();
                   }),
                   child: ListView.builder(
                     // physics: const NeverScrollableScrollPhysics(),
@@ -1522,7 +1830,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               waterDropColor: Color.fromARGB(255, 31, 1, 102),
               idleIcon: AnimatedImagePlaceholderLoader(),
             ),
-            controller: refreshController2,
+            controller: refreshForTransController2,
             onRefresh: (() async {
               // monitor network fetch
               await Future.delayed(const Duration(milliseconds: 1000));
@@ -1537,7 +1845,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               // if failed,use loadFailed(),if no data return,use LoadNodata()
 
               if (mounted) setState(() {});
-              refreshController2.loadComplete();
+              refreshForTransController2.loadComplete();
             }),
             child: Center(
               child: Column(
@@ -1583,7 +1891,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             waterDropColor: Color.fromARGB(255, 31, 1, 102),
             idleIcon: AnimatedImagePlaceholderLoader(),
           ),
-          controller: refreshController3,
+          controller: refreshForTransController3,
           onRefresh: (() async {
             // monitor network fetch
             await Future.delayed(const Duration(milliseconds: 1000));
@@ -1597,7 +1905,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             // if failed,use loadFailed(),if no data return,use LoadNodata()
 
             if (mounted) setState(() {});
-            refreshController3.loadComplete();
+            refreshForTransController3.loadComplete();
           }),
           child: const Center(
             child: AnimatedImageLoader(),

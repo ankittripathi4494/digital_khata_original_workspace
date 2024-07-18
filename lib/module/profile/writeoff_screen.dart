@@ -74,6 +74,7 @@ class _WriteOffScreenState extends State<WriteOffScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.blue,
           iconTheme: const IconThemeData(color: Colors.white),

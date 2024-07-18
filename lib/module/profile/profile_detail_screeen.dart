@@ -78,6 +78,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen>
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
          decoration: BoxDecoration(color: Colors.grey[100]),
         child: NestedScrollView(

@@ -69,6 +69,7 @@ class _CashInScreenState extends State<CashInScreen> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.blue,
           iconTheme: const IconThemeData(color: Colors.white),
@@ -564,6 +565,7 @@ class _CashInScreenState extends State<CashInScreen> {
                                     width: screenSize.width,
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
+                                          shape: const ContinuousRectangleBorder(),
                                             elevation: 10,
                                             foregroundColor: Colors.blue,
                                             side: const BorderSide(
@@ -626,6 +628,7 @@ class _CashInScreenState extends State<CashInScreen> {
                 width: screenSize.width,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                     shape: const ContinuousRectangleBorder(),
                       elevation: 10,
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
