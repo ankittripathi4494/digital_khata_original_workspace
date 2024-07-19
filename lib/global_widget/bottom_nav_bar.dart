@@ -14,6 +14,13 @@ class BottomNavBarWidget {
       iconSize: screenSize.height * 0.035,
       currentIndex: currentPageIndexValue,
       onTap: e,
+      // BottomNavigationBarItem(
+        //   backgroundColor: Colors.white,
+        //   icon: Icon(
+        //     Icons.record_voice_over,
+        //   ),
+        //   label: 'Invoices',
+        // ),
       items: const [
         BottomNavigationBarItem(
           backgroundColor: Colors.white,
@@ -22,13 +29,7 @@ class BottomNavBarWidget {
           ),
           label: 'Customers',
         ),
-        BottomNavigationBarItem(
-          backgroundColor: Colors.white,
-          icon: Icon(
-            Icons.record_voice_over,
-          ),
-          label: 'Invoices',
-        ),
+        
         BottomNavigationBarItem(
           backgroundColor: Colors.white,
           icon: Icon(

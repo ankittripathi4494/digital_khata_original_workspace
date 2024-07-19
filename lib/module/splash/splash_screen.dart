@@ -61,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
       bloc: InternetCubit(),
       listener: (context, state) {
         if (state == InternetState.internetAvailable) {
-          Timer(Durations.short2, () => redirectPage());
+          Timer(Durations.medium2, () => redirectPage());
         }
         if (state == InternetState.internetLost) {
           Timer(Durations.short2, () {

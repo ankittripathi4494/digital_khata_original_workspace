@@ -382,6 +382,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
                     screenSize, context, currentPageIndexValue, (index) {
+                      print("Current Index :- $index");
                   setState(() {
                     currentPageIndexValue = index;
                   });
@@ -390,17 +391,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       context,
                       '/dashboard',
                     );
-                  } else if (currentPageIndexValue == 1) {
-                    Navigator.pushNamed(
-                      context,
-                      '/invoice',
-                    );
-                  } else if (currentPageIndexValue == 2) {
+                  } 
+                  // else if (currentPageIndexValue == 1) {
+                  //   Navigator.pushNamed(
+                  //     context,
+                  //     '/invoice',
+                  //   );
+                  // } 
+                  else if (currentPageIndexValue == 1) {
                     Navigator.pushNamed(
                       context,
                       '/business',
                     );
-                  } else if (currentPageIndexValue == 3) {
+                  } else if (currentPageIndexValue == 2) {
                     Navigator.pushNamed(
                       context,
                       '/accounts',
@@ -1505,6 +1508,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
                     screenSize, context, currentPageIndexValue, (index) {
+                      print("Current Index :- $index");
                   setState(() {
                     currentPageIndexValue = index;
                   });
@@ -1513,17 +1517,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       context,
                       '/dashboard',
                     );
-                  } else if (currentPageIndexValue == 1) {
-                    Navigator.pushNamed(
-                      context,
-                      '/invoice',
-                    );
-                  } else if (currentPageIndexValue == 2) {
+                  } 
+                  // else if (currentPageIndexValue == 1) {
+                  //   Navigator.pushNamed(
+                  //     context,
+                  //     '/invoice',
+                  //   );
+                  // } 
+                  else if (currentPageIndexValue == 1) {
                     Navigator.pushNamed(
                       context,
                       '/business',
                     );
-                  } else if (currentPageIndexValue == 3) {
+                  } else if (currentPageIndexValue == 2) {
                     Navigator.pushNamed(
                       context,
                       '/accounts',
@@ -1533,7 +1539,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
               );
             }
             return Scaffold(
-              backgroundColor: Colors.white,
               appBar: AppBar(
                 leading: Container(),
                 backgroundColor: Colors.blue,
@@ -2540,6 +2545,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
                   screenSize, context, currentPageIndexValue, (index) {
+                    print("Current Index :- $index");
                 setState(() {
                   currentPageIndexValue = index;
                 });
@@ -2548,17 +2554,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     context,
                     '/dashboard',
                   );
-                } else if (currentPageIndexValue == 1) {
-                  Navigator.pushNamed(
-                    context,
-                    '/invoice',
-                  );
-                } else if (currentPageIndexValue == 2) {
+                } 
+                // else if (currentPageIndexValue == 1) {
+                //   Navigator.pushNamed(
+                //     context,
+                //     '/invoice',
+                //   );
+                // } 
+                else if (currentPageIndexValue == 1) {
                   Navigator.pushNamed(
                     context,
                     '/business',
                   );
-                } else if (currentPageIndexValue == 3) {
+                } else if (currentPageIndexValue == 2) {
                   Navigator.pushNamed(
                     context,
                     '/accounts',

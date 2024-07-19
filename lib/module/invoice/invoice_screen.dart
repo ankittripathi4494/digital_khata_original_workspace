@@ -2629,7 +2629,8 @@ class _InVoiceScreenState extends State<InVoiceScreen>
             context,
             '/dashboard',
           );
-        } else if (currentPageIndexValue == 1) {
+        } 
+        else if (currentPageIndexValue == 1) {
           Navigator.pushNamed(
             context,
             '/invoice',

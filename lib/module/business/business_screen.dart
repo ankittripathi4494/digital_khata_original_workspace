@@ -32,7 +32,7 @@ class BusinessScreen extends StatefulWidget {
 class _BusinessScreenState extends State<BusinessScreen> {
   SharedPreferencesHelper sph = SharedPreferencesHelper();
   // int currentIndex = 0;
-  late int currentPageIndexValue = 2;
+  late int currentPageIndexValue = 1;
   @override
   void initState() {
     super.initState();
@@ -85,8 +85,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
           decoration: BoxDecoration(color: Colors.grey[100]),
           child: BlocBuilder<BusinessBloc, BusinessState>(
             bloc: BusinessBloc()
-              ..add(FetchSelectedBusinessEvent(
-                  userId: sph.getString("userid")!)),
+              ..add(
+                  FetchSelectedBusinessEvent(userId: sph.getString("userid")!)),
             builder: (context, state) {
               if (state is FetchSelectedBusinessSuccessState) {
                 return Container(
@@ -101,8 +101,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                         ListTile(
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 0.0, vertical: 0.0),
-                          visualDensity: const VisualDensity(
-                              horizontal: 0, vertical: -4),
+                          visualDensity:
+                              const VisualDensity(horizontal: 0, vertical: -4),
                           onTap: () {
                             Navigator.pushNamed(
                                 context, '/update-business-profile',
@@ -111,8 +111,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                       state.selectedBusinessData
                                 });
                           },
-                          leading: (state.selectedBusinessData!.profile ==
-                                  null)
+                          leading: (state.selectedBusinessData!.profile == null)
                               ? Stack(
                                   children: [
                                     Container(
@@ -228,10 +227,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   '${state.selectedBusinessData!.mobile ?? ''}\n${state.selectedBusinessData!.email ?? ''}',
                                   style: const TextStyle(color: Colors.grey),
                                 )
-                              : (((state.selectedBusinessData!.mobile !=
-                                          '') &&
-                                      (state.selectedBusinessData!.email ==
-                                          ''))
+                              : (((state.selectedBusinessData!.mobile != '') &&
+                                      (state.selectedBusinessData!.email == ''))
                                   ? Text(
                                       state.selectedBusinessData!.mobile!,
                                       style:
@@ -239,8 +236,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     )
                                   : (((state.selectedBusinessData!.mobile ==
                                               '') &&
-                                          (state.selectedBusinessData!
-                                                  .email !=
+                                          (state.selectedBusinessData!.email !=
                                               ''))
                                       ? Text(
                                           state.selectedBusinessData!.email!,
@@ -267,7 +263,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                         InkWell(
                           onTap: () async {
                             var callUrl = "http://vardanindia.in/";
-      
+
                             var url = Uri.parse(callUrl);
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
@@ -362,8 +358,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                         style: ElevatedButton.styleFrom(
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(
-                                                        10)),
+                                                    BorderRadius.circular(10)),
                                             backgroundColor:
                                                 const Color.fromARGB(
                                                     255, 255, 106, 0)),
@@ -373,8 +368,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                         },
                                         child: const Text(
                                           'Buy Premium',
-                                          style:
-                                              TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.white),
                                         ))
                                   ],
                                 ),
@@ -427,8 +421,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   child: const Text(
                                     'SMS Credits',
                                     style: TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 31, 1, 102),
+                                        color: Color.fromARGB(255, 31, 1, 102),
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -443,8 +436,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                           'Tap up your whatsapp status',
                                           style: TextStyle(
                                             fontSize: 15,
-                                            color: Color.fromARGB(
-                                                255, 31, 1, 102),
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
                                           ),
                                         ),
                                       ),
@@ -460,8 +453,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                           onPressed: () {},
                                           child: const Text(
                                             'Buy (50 Left)',
-                                            style: TextStyle(
-                                                color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ))
                                     ],
                                   ),
@@ -503,8 +496,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   child: const Text(
                                     'WhatsApp Credits',
                                     style: TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 31, 1, 102),
+                                        color: Color.fromARGB(255, 31, 1, 102),
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -519,8 +511,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                           'Tap up your whatsapp status',
                                           style: TextStyle(
                                             fontSize: 15,
-                                            color: Color.fromARGB(
-                                                255, 31, 1, 102),
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
                                           ),
                                         ),
                                       ),
@@ -536,8 +528,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                           onPressed: () {},
                                           child: const Text(
                                             'Buy (0 Left)',
-                                            style: TextStyle(
-                                                color: Colors.white),
+                                            style:
+                                                TextStyle(color: Colors.white),
                                           ))
                                     ],
                                   ),
@@ -617,6 +609,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                             ),
                           ),
                         ),
+                        /*
                         Container(
                           margin: EdgeInsets.symmetric(
                               horizontal: screenSize.width * 0.045,
@@ -707,6 +700,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                             ],
                           ),
                         ),
+                       */
                         Container(
                           margin: EdgeInsets.symmetric(
                               horizontal: screenSize.width * 0.045,
@@ -807,8 +801,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   size: screenSize.width * 0.09,
                                   onColor:
                                       const Color.fromARGB(255, 31, 1, 102),
-                                  offColor: const Color.fromARGB(
-                                      255, 203, 203, 203),
+                                  offColor:
+                                      const Color.fromARGB(255, 203, 203, 203),
                                   value: true,
                                   onChange: (value) {
                                     if (kDebugMode) {
@@ -869,8 +863,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   size: screenSize.width * 0.09,
                                   onColor:
                                       const Color.fromARGB(255, 31, 1, 102),
-                                  offColor: const Color.fromARGB(
-                                      255, 203, 203, 203),
+                                  offColor:
+                                      const Color.fromARGB(255, 203, 203, 203),
                                   value: true,
                                   onChange: (value) {
                                     if (kDebugMode) {
@@ -904,6 +898,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                     color: Colors.black,
                                   )),
                               const Divider(),
+                              /*
                               ListTile(
                                 minLeadingWidth: screenSize.width * 0.1,
                                 horizontalTitleGap: 0.0,
@@ -938,6 +933,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                 ),
                               ),
                               const Divider(),
+                              */
                               ListTile(
                                   minLeadingWidth: screenSize.width * 0.1,
                                   horizontalTitleGap: 0.0,
@@ -1108,6 +1104,12 @@ class _BusinessScreenState extends State<BusinessScreen> {
                               ],
                               borderRadius: BorderRadius.circular(10.0)),
                           child: ListTile(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/other-features',
+                              );
+                            },
                             minLeadingWidth: screenSize.width * 0.1,
                             horizontalTitleGap: 0.0,
                             leading: const Icon(
@@ -1218,6 +1220,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
         ),
         bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
             screenSize, context, currentPageIndexValue, (index) {
+          print("Current Index :- $index");
           setState(() {
             currentPageIndexValue = index;
           });
@@ -1226,17 +1229,19 @@ class _BusinessScreenState extends State<BusinessScreen> {
               context,
               '/dashboard',
             );
-          } else if (currentPageIndexValue == 1) {
-            Navigator.pushNamed(
-              context,
-              '/invoice',
-            );
-          } else if (currentPageIndexValue == 2) {
+          }
+          // else if (currentPageIndexValue == 1) {
+          //   Navigator.pushNamed(
+          //     context,
+          //     '/invoice',
+          //   );
+          // }
+          else if (currentPageIndexValue == 1) {
             Navigator.pushNamed(
               context,
               '/business',
             );
-          } else if (currentPageIndexValue == 3) {
+          } else if (currentPageIndexValue == 2) {
             Navigator.pushNamed(
               context,
               '/accounts',

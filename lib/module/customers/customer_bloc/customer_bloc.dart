@@ -49,14 +49,16 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
     on<UpdateCustomerTextChangeEvent>((event, emit) async {
       if ((event.customerName!.isNotEmpty) &&
-          ((event.customerMobile!.isNotEmpty) &&
-              (event.customerMobile!.length == 10)) &&
-          ((event.customerEmail!.isNotEmpty) &&
-              (event.customerEmail!.isValidEmail())) &&
-          (event.customerUserGroup!.isNotEmpty) &&
-          (event.customerAddress!.isNotEmpty) &&
-          (event.customerBilling!.isNotEmpty) &&
-          (event.customerDob!.isNotEmpty)) {
+              ((event.customerMobile!.isNotEmpty) &&
+                  (event.customerMobile!.length == 10)) &&
+              // ((event.customerEmail!.isNotEmpty) &&
+              //     (event.customerEmail!.isValidEmail())) &&
+              (event.customerUserGroup!.isNotEmpty)
+          // &&
+          // (event.customerAddress!.isNotEmpty) &&
+          // (event.customerBilling!.isNotEmpty) &&
+          // (event.customerDob!.isNotEmpty)
+          ) {
         emit(UpdateCustomerValidState());
       } else {
         emit(UpdateCustomerTextChangedErrorState(
@@ -68,23 +70,23 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
               : ((event.customerMobile!.length < 10)
                   ? "Please enter contact number upto 10 digits"
                   : null),
-          customerEmailError: (event.customerEmail!.isEmpty)
-              ? "Please enter customer email"
-              : ((!event.customerEmail!.isValidEmail())
-                  ? "Please enter valid customer email"
-                  : null),
+          // customerEmailError: (event.customerEmail!.isEmpty)
+          //     ? "Please enter customer email"
+          //     : ((!event.customerEmail!.isValidEmail())
+          //         ? "Please enter valid customer email"
+          //         : null),
           userGroupResponseDataError: (event.customerUserGroup!.isEmpty)
               ? "Please select customer user group"
               : null,
-          customerAddressError: (event.customerAddress!.isEmpty)
-              ? "Please select customer address"
-              : null,
-          customerBillingError: (event.customerBilling!.isEmpty)
-              ? "Please enter customer billing cycle"
-              : null,
-          customerDobError: (event.customerDob!.isEmpty)
-              ? "Please select customer date of birth"
-              : null,
+          // customerAddressError: (event.customerAddress!.isEmpty)
+          //     ? "Please select customer address"
+          //     : null,
+          // customerBillingError: (event.customerBilling!.isEmpty)
+          //     ? "Please enter customer billing cycle"
+          //     : null,
+          // customerDobError: (event.customerDob!.isEmpty)
+          //     ? "Please select customer date of birth"
+          //     : null,
         ));
       }
     });

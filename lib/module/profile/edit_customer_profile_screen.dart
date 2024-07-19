@@ -392,233 +392,236 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                     ),
                                   )),
                             ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              height:
-                                  (state is UpdateCustomerTextChangedErrorState)
-                                      ? 80
-                                      : 50,
-                              child: TextFormField(
-                                controller: emailController,
-                                keyboardType: TextInputType.emailAddress,
-                                style: const TextStyle(
-                                    color: Color.fromARGB(255, 31, 1, 102)),
-                                onChanged: (value) {
-                                  BlocProvider.of<CustomerBloc>(context).add(
-                                      UpdateCustomerTextChangeEvent(
-                                          customerName: nameController.text,
-                                          customerEmail: emailController.text,
-                                          customerMobile: mobileController.text,
-                                          customerUserGroup: groupController.text,
-                                          customerAddress: addressController.text,
-                                          customerBilling:
-                                              billingCycleController.text,
-                                          customerDob: dobController.text));
-                                },
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: Colors.grey.shade300,
-                                  counterText: '',
-                                  prefixIcon: const Icon(Icons.mail),
-                                  prefixIconColor:
-                                      const Color.fromARGB(255, 31, 1, 102),
-                                  labelText: "Enter Email",
-                                  labelStyle: const TextStyle(
-                                      color: Color.fromARGB(255, 31, 1, 102)),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        width: 2),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        width: 2),
-                                  ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        width: 2),
-                                  ),
-                                  errorText: (state
-                                          is UpdateCustomerTextChangedErrorState)
-                                      ? state.customerEmailError
-                                      : null,
-                                  errorBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                    borderSide: const BorderSide(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        width: 2),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              height:
-                                  (state is UpdateCustomerTextChangedErrorState)
-                                      ? 80
-                                      : 50,
-                              child: InkWell(
-                                onTap: () {
-                                  showDatePicker(
-                                          context: context,
-                                          firstDate: DateTime(1900),
-                                          lastDate: DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day))
-                                      .then((s) {
-                                    setState(() {
-                                      dobController.text = DateFormat('y-M-d')
-                                          .format(DateTime.parse(s.toString()));
-                                    });
-                                    BlocProvider.of<CustomerBloc>(context).add(
-                                        UpdateCustomerTextChangeEvent(
-                                            customerName: nameController.text,
-                                            customerEmail: emailController.text,
-                                            customerMobile: mobileController.text,
-                                            customerUserGroup:
-                                                groupController.text,
-                                            customerAddress:
-                                                addressController.text,
-                                            customerBilling:
-                                                billingCycleController.text,
-                                            customerDob: dobController.text));
-                                  });
-                                },
-                                child: TextFormField(
-                                    controller: dobController,
-                                    enabled: false,
-                                    maxLines:
-                                        null, // Allows the text field to grow vertically
-                                    keyboardType: TextInputType.multiline,
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        fontWeight: FontWeight.w600),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey.shade300,
-                                      counterText: '',
-                                      labelText: "Select DOB",
-                                      labelStyle: const TextStyle(
-                                          color: Color.fromARGB(255, 31, 1, 102)),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      errorText: (state
-                                              is UpdateCustomerTextChangedErrorState)
-                                          ? state.customerDobError
-                                          : null,
-                                      errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                    )),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              height:
-                                  (state is UpdateCustomerTextChangedErrorState)
-                                      ? 80
-                                      : 50,
-                              child: InkWell(
-                                onTap: () => (sendUpdateAddress != null)
-                                    ? _navigateAndGetResultAddressUpdate(context)
-                                    : _navigateAndGetResultAddress(context),
-                                child: TextFormField(
-                                    controller: addressController,
-                                    enabled: false,
-                                    maxLines:
-                                        null, // Allows the text field to grow vertically
-                                    keyboardType: TextInputType.multiline,
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        fontWeight: FontWeight.w600),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey.shade300,
-                                      counterText: '',
-                                      labelText: "Select Address",
-                                      labelStyle: const TextStyle(
-                                          color: Color.fromARGB(255, 31, 1, 102)),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      errorText: (state
-                                              is UpdateCustomerTextChangedErrorState)
-                                          ? state.customerAddressError
-                                          : null,
-                                      errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                    )),
-                              ),
-                            ),
+                            // Container(
+                            //   margin: const EdgeInsets.symmetric(
+                            //       horizontal: 20, vertical: 10),
+                            //   height:
+                            //       (state is UpdateCustomerTextChangedErrorState)
+                            //           ? 80
+                            //           : 50,
+                            //   child: TextFormField(
+                            //     controller: emailController,
+                            //     keyboardType: TextInputType.emailAddress,
+                            //     style: const TextStyle(
+                            //         color: Color.fromARGB(255, 31, 1, 102)),
+                            //     onChanged: (value) {
+                            //       BlocProvider.of<CustomerBloc>(context).add(
+                            //           UpdateCustomerTextChangeEvent(
+                            //               customerName: nameController.text,
+                            //               customerEmail: emailController.text,
+                            //               customerMobile: mobileController.text,
+                            //               customerUserGroup: groupController.text,
+                            //               customerAddress: addressController.text,
+                            //               customerBilling:
+                            //                   billingCycleController.text,
+                            //               customerDob: dobController.text));
+                            //     },
+                            //     decoration: InputDecoration(
+                            //       filled: true,
+                            //       fillColor: Colors.grey.shade300,
+                            //       counterText: '',
+                            //       prefixIcon: const Icon(Icons.mail),
+                            //       prefixIconColor:
+                            //           const Color.fromARGB(255, 31, 1, 102),
+                            //       labelText: "Enter Email",
+                            //       labelStyle: const TextStyle(
+                            //           color: Color.fromARGB(255, 31, 1, 102)),
+                            //       enabledBorder: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         borderSide: const BorderSide(
+                            //             color: Color.fromARGB(255, 31, 1, 102),
+                            //             width: 2),
+                            //       ),
+                            //       focusedBorder: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         borderSide: const BorderSide(
+                            //             color: Color.fromARGB(255, 31, 1, 102),
+                            //             width: 2),
+                            //       ),
+                            //       border: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         borderSide: const BorderSide(
+                            //             color: Color.fromARGB(255, 31, 1, 102),
+                            //             width: 2),
+                            //       ),
+                            //       errorText: (state
+                            //               is UpdateCustomerTextChangedErrorState)
+                            //           ? state.customerEmailError
+                            //           : null,
+                            //       errorBorder: OutlineInputBorder(
+                            //         borderRadius: BorderRadius.circular(10),
+                            //         borderSide: const BorderSide(
+                            //             color: Color.fromARGB(255, 31, 1, 102),
+                            //             width: 2),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            
+                            // Container(
+                            //   margin: const EdgeInsets.symmetric(
+                            //       horizontal: 20, vertical: 10),
+                            //   height:
+                            //       (state is UpdateCustomerTextChangedErrorState)
+                            //           ? 80
+                            //           : 50,
+                            //   child: InkWell(
+                            //     onTap: () {
+                            //       showDatePicker(
+                            //               context: context,
+                            //               firstDate: DateTime(1900),
+                            //               lastDate: DateTime(
+                            //                   DateTime.now().year,
+                            //                   DateTime.now().month,
+                            //                   DateTime.now().day))
+                            //           .then((s) {
+                            //         setState(() {
+                            //           dobController.text = DateFormat('y-M-d')
+                            //               .format(DateTime.parse(s.toString()));
+                            //         });
+                            //         BlocProvider.of<CustomerBloc>(context).add(
+                            //             UpdateCustomerTextChangeEvent(
+                            //                 customerName: nameController.text,
+                            //                 customerEmail: emailController.text,
+                            //                 customerMobile: mobileController.text,
+                            //                 customerUserGroup:
+                            //                     groupController.text,
+                            //                 customerAddress:
+                            //                     addressController.text,
+                            //                 customerBilling:
+                            //                     billingCycleController.text,
+                            //                 customerDob: dobController.text));
+                            //       });
+                            //     },
+                            //     child: TextFormField(
+                            //         controller: dobController,
+                            //         enabled: false,
+                            //         maxLines:
+                            //             null, // Allows the text field to grow vertically
+                            //         keyboardType: TextInputType.multiline,
+                            //         style: const TextStyle(
+                            //             color: Color.fromARGB(255, 31, 1, 102),
+                            //             fontWeight: FontWeight.w600),
+                            //         decoration: InputDecoration(
+                            //           filled: true,
+                            //           fillColor: Colors.grey.shade300,
+                            //           counterText: '',
+                            //           labelText: "Select DOB",
+                            //           labelStyle: const TextStyle(
+                            //               color: Color.fromARGB(255, 31, 1, 102)),
+                            //           disabledBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           enabledBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           focusedBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           border: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           errorText: (state
+                            //                   is UpdateCustomerTextChangedErrorState)
+                            //               ? state.customerDobError
+                            //               : null,
+                            //           errorBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //         )),
+                            //   ),
+                            // ),
+                            
+                            // Container(
+                            //   margin: const EdgeInsets.symmetric(
+                            //       horizontal: 20, vertical: 10),
+                            //   height:
+                            //       (state is UpdateCustomerTextChangedErrorState)
+                            //           ? 80
+                            //           : 50,
+                            //   child: InkWell(
+                            //     onTap: () => (sendUpdateAddress != null)
+                            //         ? _navigateAndGetResultAddressUpdate(context)
+                            //         : _navigateAndGetResultAddress(context),
+                            //     child: TextFormField(
+                            //         controller: addressController,
+                            //         enabled: false,
+                            //         maxLines:
+                            //             null, // Allows the text field to grow vertically
+                            //         keyboardType: TextInputType.multiline,
+                            //         style: const TextStyle(
+                            //             color: Color.fromARGB(255, 31, 1, 102),
+                            //             fontWeight: FontWeight.w600),
+                            //         decoration: InputDecoration(
+                            //           filled: true,
+                            //           fillColor: Colors.grey.shade300,
+                            //           counterText: '',
+                            //           labelText: "Select Address",
+                            //           labelStyle: const TextStyle(
+                            //               color: Color.fromARGB(255, 31, 1, 102)),
+                            //           disabledBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           enabledBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           focusedBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           border: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           errorText: (state
+                            //                   is UpdateCustomerTextChangedErrorState)
+                            //               ? state.customerAddressError
+                            //               : null,
+                            //           errorBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //         )),
+                            //   ),
+                            // ),
+                            
                             Container(
                               margin: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 10),
@@ -687,73 +690,75 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                     )),
                               ),
                             ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              height:
-                                  (state is UpdateCustomerTextChangedErrorState)
-                                      ? 80
-                                      : 50,
-                              child: InkWell(
-                                onTap: () {
-                                  showFormForBillingCycleBottomSheet(context);
-                                },
-                                child: TextFormField(
-                                    controller: billingCycleController,
-                                    enabled: false,
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                        fontWeight: FontWeight.w600),
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Colors.grey.shade300,
-                                      counterText: '',
-                                      labelText:
-                                          "Select Business Cycle (in Days)",
-                                      labelStyle: const TextStyle(
-                                          color: Color.fromARGB(255, 31, 1, 102)),
-                                      disabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                      errorText: (state
-                                              is UpdateCustomerTextChangedErrorState)
-                                          ? state.customerBillingError
-                                          : null,
-                                      errorBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: const BorderSide(
-                                            color:
-                                                Color.fromARGB(255, 31, 1, 102),
-                                            width: 2),
-                                      ),
-                                    )),
-                              ),
-                            ),
+                            
+                            // Container(
+                            //   margin: const EdgeInsets.symmetric(
+                            //       horizontal: 20, vertical: 10),
+                            //   height:
+                            //       (state is UpdateCustomerTextChangedErrorState)
+                            //           ? 80
+                            //           : 50,
+                            //   child: InkWell(
+                            //     onTap: () {
+                            //       showFormForBillingCycleBottomSheet(context);
+                            //     },
+                            //     child: TextFormField(
+                            //         controller: billingCycleController,
+                            //         enabled: false,
+                            //         style: const TextStyle(
+                            //             color: Color.fromARGB(255, 31, 1, 102),
+                            //             fontWeight: FontWeight.w600),
+                            //         decoration: InputDecoration(
+                            //           filled: true,
+                            //           fillColor: Colors.grey.shade300,
+                            //           counterText: '',
+                            //           labelText:
+                            //               "Select Business Cycle (in Days)",
+                            //           labelStyle: const TextStyle(
+                            //               color: Color.fromARGB(255, 31, 1, 102)),
+                            //           disabledBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           enabledBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           focusedBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           border: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //           errorText: (state
+                            //                   is UpdateCustomerTextChangedErrorState)
+                            //               ? state.customerBillingError
+                            //               : null,
+                            //           errorBorder: OutlineInputBorder(
+                            //             borderRadius: BorderRadius.circular(10),
+                            //             borderSide: const BorderSide(
+                            //                 color:
+                            //                     Color.fromARGB(255, 31, 1, 102),
+                            //                 width: 2),
+                            //           ),
+                            //         )),
+                            //   ),
+                            // ),
+                          
                           ],
                         ),
                       ),

@@ -27,7 +27,7 @@ class AccountScreeen extends StatefulWidget {
 
 class _AccountScreeenState extends State<AccountScreeen> {
   // int currentIndex = 0;
-  late int currentPageIndexValue = 3;
+  late int currentPageIndexValue = 2;
   Future<bool> showAboutPopup(context) async {
     // exit from app
     return await showDialog(
@@ -792,6 +792,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
         ),
         bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
             screenSize, context, currentPageIndexValue, (index) {
+              print("Current Index :- $index");
           setState(() {
             currentPageIndexValue = index;
           });
@@ -800,17 +801,19 @@ class _AccountScreeenState extends State<AccountScreeen> {
               context,
               '/dashboard',
             );
-          } else if (currentPageIndexValue == 1) {
-            Navigator.pushNamed(
-              context,
-              '/invoice',
-            );
-          } else if (currentPageIndexValue == 2) {
+          } 
+          // else if (currentPageIndexValue == 1) {
+          //   Navigator.pushNamed(
+          //     context,
+          //     '/invoice',
+          //   );
+          // } 
+          else if (currentPageIndexValue == 1) {
             Navigator.pushNamed(
               context,
               '/business',
             );
-          } else if (currentPageIndexValue == 3) {
+          } else if (currentPageIndexValue == 2) {
             Navigator.pushNamed(
               context,
               '/accounts',

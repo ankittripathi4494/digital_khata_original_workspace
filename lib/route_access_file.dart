@@ -1,3 +1,4 @@
+import 'package:dkapp/module/business/other_features_screen.dart';
 import 'package:dkapp/module/recurring/recurring_bloc/recurring_bloc.dart';
 import 'package:dkapp/module/recurring/recurring_transaction_detail_screen.dart';
 import 'package:flutter/material.dart';
@@ -441,6 +442,23 @@ class RouteAccessGenerator {
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
           child: AccountScreeen(
+            argus: const {},
+          ),
+        );
+      case '/other-features':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: OtherFeaturesScreen(
+              argus: arguments,
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: OtherFeaturesScreen(
             argus: const {},
           ),
         );

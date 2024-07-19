@@ -730,7 +730,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
     final Map<String, dynamic>? res =
         await Navigator.pushNamed(context, '/add-business-address', arguments: {
       "address": sendUpdateAddress!['completeAddress'],
-      "currentPostion": sendUpdateAddress!['currentPostion']
+      // "currentPostion": sendUpdateAddress!['currentPostion']
     }) as Map<String, dynamic>?;
 
     // Sending result back to FirstScreen

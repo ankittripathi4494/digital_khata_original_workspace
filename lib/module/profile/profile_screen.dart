@@ -608,6 +608,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ),
                                       ),
                                     ),
+                                    /*
                                     const Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 20.0, vertical: 10.0),
@@ -626,6 +627,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             color: Colors.black, fontSize: 20),
                                       ),
                                     ),
+                                    */
                                     const Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 20.0, vertical: 10.0),
