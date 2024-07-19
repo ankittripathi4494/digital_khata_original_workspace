@@ -130,6 +130,8 @@ class _WriteOffScreenState extends State<WriteOffScreen> {
                                         context, '/cash-in-screen',
                                         arguments: widget.argus);
                                   } else {
+                                    
+                                    Navigator.pop(context);
                                     Navigator.pushReplacementNamed(
                                         context, '/customer-screen-details',
                                         arguments: widget.argus);

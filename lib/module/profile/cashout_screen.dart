@@ -144,10 +144,13 @@ class _CashOutScreenState extends State<CashOutScreen> {
                                       attachImage = null;
                                       notesController.clear();
                                     });
+                                    
                                     Navigator.pushReplacementNamed(
                                         context, '/cash-out-screen',
                                         arguments: widget.argus);
                                   } else {
+                                    
+                                    Navigator.pop(context);
                                     Navigator.pushReplacementNamed(
                                         context, '/customer-screen-details',
                                         arguments: widget.argus);

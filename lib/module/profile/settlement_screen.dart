@@ -47,6 +47,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
 
   fetchTransactionData() {
     if (widget.argus.containsKey('transactionData')) {
+      print((widget.argus['transactionData'] as TransactionListResponseData)
+          .toJson());
       setState(() {
         amountController.text = double.parse(
                 (widget.argus['transactionData'] as TransactionListResponseData)
@@ -87,7 +89,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
             subtitle: Text(
-               '\u{20B9} ${(((widget.argus['customerData'] as SelectedCustomerResponseData).creditAmount != null) ? double.parse((widget.argus['customerData'] as SelectedCustomerResponseData).creditAmount!) : 0) - (((widget.argus['customerData'] as SelectedCustomerResponseData).debitAmount != null) ? double.parse((widget.argus['customerData'] as SelectedCustomerResponseData).debitAmount!) : 0)}',
+              '\u{20B9} ${(((widget.argus['customerData'] as SelectedCustomerResponseData).creditAmount != null) ? double.parse((widget.argus['customerData'] as SelectedCustomerResponseData).creditAmount!) : 0) - (((widget.argus['customerData'] as SelectedCustomerResponseData).debitAmount != null) ? double.parse((widget.argus['customerData'] as SelectedCustomerResponseData).debitAmount!) : 0)}',
               style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
@@ -104,7 +106,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
           ],
         ),
         body: Container(
-           decoration: BoxDecoration(color: Colors.grey[100]),
+          decoration: BoxDecoration(color: Colors.grey[100]),
           child: BlocBuilder<TransactionsBloc, TransactionsState>(
             builder: (context, state) {
               return Container(
@@ -126,17 +128,20 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                       attachImage = null;
                                       notesController.clear();
                                     });
+
                                     Navigator.pushReplacementNamed(
                                         context, '/cash-in-screen',
                                         arguments: widget.argus);
                                   } else {
+                                    Navigator.pop(context);
                                     Navigator.pushReplacementNamed(
                                         context, '/customer-screen-details',
                                         arguments: widget.argus);
                                   }
-                                  EssentialWidgetsCollection.showSuccessSnackbar(
-                                      context,
-                                      description: "Transaction Successfull");
+                                  EssentialWidgetsCollection
+                                      .showSuccessSnackbar(context,
+                                          description:
+                                              "Transaction Successfull");
                                 },
                               )
                             : Container(),
@@ -180,10 +185,24 @@ class _SettlementScreenState extends State<SettlementScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ((widget.argus['transactionData']
-                                                  as TransactionListResponseData)
-                                              .transType !=
-                                          'D')
+                                  ((((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .creditAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .creditAmount!)
+                                              : 0) >
+                                          (((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .debitAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .debitAmount!)
+                                              : 0))
                                       ? "Amount Due"
                                       : "Settle",
                                   style: const TextStyle(
@@ -201,10 +220,24 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                     keyboardType: TextInputType.number,
                                     enabled: false,
                                     style: TextStyle(
-                                        color: ((widget.argus['transactionData']
-                                                        as TransactionListResponseData)
-                                                    .transType !=
-                                                'D')
+                                        color: ((((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .creditAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .creditAmount!)
+                                              : 0) >
+                                          (((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .debitAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .debitAmount!)
+                                              : 0))
                                             ? Colors.red
                                             : Colors.green,
                                         letterSpacing: 1.2,
@@ -219,11 +252,24 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                         Icons.currency_rupee,
                                         size: 20,
                                       ),
-                                      prefixIconColor: ((widget.argus[
-                                                          'transactionData']
-                                                      as TransactionListResponseData)
-                                                  .transType !=
-                                              'D')
+                                      prefixIconColor: ((((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .creditAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .creditAmount!)
+                                              : 0) >
+                                          (((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .debitAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .debitAmount!)
+                                              : 0))
                                           ? Colors.red
                                           : Colors.green,
                                       hintText: "0",
@@ -309,7 +355,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                         },
                                         label: Text(
                                             i.DateFormat('MM-dd-y hh:mm a')
-                                                .format(((selectedDate != null) &&
+                                                .format(((selectedDate !=
+                                                            null) &&
                                                         (selectedTime != null))
                                                     ? _combineDateTime(
                                                         selectedDate!,
@@ -361,88 +408,92 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                 children: [
                                   ListTile(
                                     onTap: () {
-                                      EssentialWidgetsCollection.showAlertDialog(
-                                          context,
-                                          icon: const Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                "Choose Option",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    letterSpacing: 1.2,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black),
+                                      EssentialWidgetsCollection
+                                          .showAlertDialog(context,
+                                              icon: const Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    "Choose Option",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        letterSpacing: 1.2,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.black),
+                                                  ),
+                                                  Divider(
+                                                      color: Colors.green,
+                                                      thickness: 2)
+                                                ],
                                               ),
-                                              Divider(
-                                                  color: Colors.green,
-                                                  thickness: 2)
-                                            ],
-                                          ),
-                                          title: TextButton.icon(
-                                            onPressed: () async {
-                                              _picker
-                                                  .pickImage(
-                                                      maxHeight: 480,
-                                                      maxWidth: 640,
-                                                      source: ImageSource.camera)
-                                                  .then((c) {
-                                                setState(() {
-                                                  attachImage = c;
-                                                });
-                                                Talker().info(
-                                                    "Captured Image From Camera :- ${attachImage!.path}");
-                                                Navigator.pop(context);
-                                              });
-                                            },
-                                            label: const Text(
-                                              "Camera",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  letterSpacing: 1.2,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.black),
-                                            ),
-                                            icon: const Icon(
-                                              Icons.camera,
-                                              size: 25,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          content: TextButton.icon(
-                                              onPressed: () {
-                                                _picker
-                                                    .pickImage(
-                                                        maxHeight: 480,
-                                                        maxWidth: 640,
-                                                        source:
-                                                            ImageSource.gallery)
-                                                    .then((c) {
-                                                  setState(() {
-                                                    attachImage = c;
+                                              title: TextButton.icon(
+                                                onPressed: () async {
+                                                  _picker
+                                                      .pickImage(
+                                                          maxHeight: 480,
+                                                          maxWidth: 640,
+                                                          source: ImageSource
+                                                              .camera)
+                                                      .then((c) {
+                                                    setState(() {
+                                                      attachImage = c;
+                                                    });
+                                                    Talker().info(
+                                                        "Captured Image From Camera :- ${attachImage!.path}");
+                                                    Navigator.pop(context);
                                                   });
-                                                  Talker().info(
-                                                      "Captured Image From gallery :- ${attachImage!.path}");
-                                                  Navigator.pop(context);
-                                                });
-                                              },
-                                              icon: const Icon(
-                                                Icons.image_search,
-                                                size: 25,
-                                                color: Colors.black,
+                                                },
+                                                label: const Text(
+                                                  "Camera",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      letterSpacing: 1.2,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: Colors.black),
+                                                ),
+                                                icon: const Icon(
+                                                  Icons.camera,
+                                                  size: 25,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                              label: const Text(
-                                                "Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    letterSpacing: 1.2,
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.black),
-                                              )));
+                                              content: TextButton.icon(
+                                                  onPressed: () {
+                                                    _picker
+                                                        .pickImage(
+                                                            maxHeight: 480,
+                                                            maxWidth: 640,
+                                                            source: ImageSource
+                                                                .gallery)
+                                                        .then((c) {
+                                                      setState(() {
+                                                        attachImage = c;
+                                                      });
+                                                      Talker().info(
+                                                          "Captured Image From gallery :- ${attachImage!.path}");
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.image_search,
+                                                    size: 25,
+                                                    color: Colors.black,
+                                                  ),
+                                                  label: const Text(
+                                                    "Gallery",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        letterSpacing: 1.2,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        color: Colors.black),
+                                                  )));
                                     },
                                     contentPadding: const EdgeInsets.all(0),
                                     visualDensity: const VisualDensity(
@@ -482,8 +533,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                                         imageBuilder: (context,
                                                                 imageProvider) =>
                                                             Container(
-                                                          color:
-                                                              Colors.transparent,
+                                                          color: Colors
+                                                              .transparent,
                                                           width: 100,
                                                           height: 100,
                                                           child: Container(
@@ -559,7 +610,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                       controller: notesController,
                                       keyboardType: TextInputType.multiline,
                                       maxLines: null, // Set this
-          
+
                                       style: const TextStyle(
                                           color: Colors.black,
                                           letterSpacing: 1.2,
@@ -579,26 +630,30 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                             fontSize: 12,
                                             fontWeight: FontWeight.w300),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
                                         ),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
                                         ),
                                         errorText: null,
                                         errorBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
@@ -657,25 +712,24 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     ),
                     onPressed: () {
                       if (amountController.text.isNotEmpty) {
-                        if ((widget.argus['transactionData']
-                                    as TransactionListResponseData)
-                                .transType ==
-                            'D') {
-                          BlocProvider.of<TransactionsBloc>(context).add(
-                              AddCashTransactionEvent(
-                                  samePageRedirection: false,
-                                  customerId: (widget.argus['customerData']
-                                          as SelectedCustomerResponseData)
-                                      .id!,
-                                  businessId: (widget.argus['selectedBusiness']
-                                          as BusinessListResponseData)
-                                      .id!,
-                                  userId: sph.getString("userid")!,
-                                  transactionType: 'C',
-                                  transactionAmount: amountController.text,
-                                  transactionNotes: notesController.text,
-                                  transactionImages: attachImage));
-                        } else {
+                        if (((((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .creditAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .creditAmount!)
+                                              : 0) >
+                                          (((widget.argus['customerData']
+                                                          as SelectedCustomerResponseData)
+                                                      .debitAmount !=
+                                                  null)
+                                              ? double.parse((widget
+                                                          .argus['customerData']
+                                                      as SelectedCustomerResponseData)
+                                                  .debitAmount!)
+                                              : 0))) {
                           BlocProvider.of<TransactionsBloc>(context).add(
                               AddCashTransactionEvent(
                                   samePageRedirection: false,
@@ -690,6 +744,21 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                   transactionAmount: amountController.text,
                                   transactionNotes: notesController.text,
                                   transactionImages: attachImage));
+                        } else {
+                          BlocProvider.of<TransactionsBloc>(context).add(
+                              AddCashTransactionEvent(
+                                  samePageRedirection: false,
+                                  customerId: (widget.argus['customerData']
+                                          as SelectedCustomerResponseData)
+                                      .id!,
+                                  businessId: (widget.argus['selectedBusiness']
+                                          as BusinessListResponseData)
+                                      .id!,
+                                  userId: sph.getString("userid")!,
+                                  transactionType: 'C',
+                                  transactionAmount: amountController.text,
+                                  transactionNotes: notesController.text,
+                                  transactionImages: attachImage));
                         }
                       } else {
                         EssentialWidgetsCollection.showErrorSnackbar(context,
@@ -699,7 +768,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     },
                     child: const Text("Save")),
               ),
-      
       ),
     );
   }

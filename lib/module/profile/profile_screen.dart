@@ -574,11 +574,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                             showDragHandle: true,
                             context: context,
                             builder: (BuildContext context) {
+                             
                               return SizedBox(
                                 width: screenSize.width,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     SizedBox(
                                       height: screenSize.height * 0.03,
@@ -608,7 +610,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ),
                                       ),
                                     ),
-                                    /*
+                                     /*
                                     const Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 20.0, vertical: 10.0),
@@ -949,7 +951,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   )),
           );
         }
-        return  Center(
+        return Center(
           child: Container(),
         );
       },
@@ -1482,7 +1484,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             size: 30,
                           ),
                           Text(
-                            'Remind',
+                            'Whatsapp',
                             style: TextStyle(color: Colors.black),
                           )
                         ],
@@ -1524,8 +1526,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
               Container(
                 margin: EdgeInsets.symmetric(
-                    horizontal: screenSize.width * 0.05,
-                    vertical: 10),
+                    horizontal: screenSize.width * 0.05, vertical: 10),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -1847,46 +1848,294 @@ class _ProfileScreenState extends State<ProfileScreen>
               if (mounted) setState(() {});
               refreshForTransController2.loadComplete();
             }),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(10),
-                    width: 100,
-                    height: 100,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage(
-                                "resources/images/empty-folder.png"))),
+            child: Column(
+              children: [
+                GridView.count(
+                  shrinkWrap: true,
+                  childAspectRatio: (1 / .7),
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 4, // Changed from 2 to 1
+                  crossAxisSpacing: 10, //screenSize.width * 0.004
+                  mainAxisSpacing: screenSize.height * 0.005,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        showModalBottomSheet<void>(
+                          backgroundColor: Colors.white,
+                          scrollControlDisabledMaxHeightRatio: 0.2,
+                          showDragHandle: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SizedBox(
+                              width: screenSize.width,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: screenSize.height * 0.03,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      EssentialWidgetsCollection.showErrorSnackbar(
+                                          context,
+                                          description:
+                                              "You are all settled with this khata");
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      child: Text(
+                                        'Settle',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      EssentialWidgetsCollection.showErrorSnackbar(
+                                          context,
+                                          description:
+                                              "You don't have due balance to writeoff.");
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      child: Text(
+                                        'Write Off',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.check_circle_outline,
+                              color: Colors.green,
+                              size: 35,
+                            ),
+                            Text(
+                              'Settle',
+                              style: TextStyle(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.telegram,
+                              color: Colors.brown,
+                              size: 30,
+                            ),
+                            Text(
+                              'Remind',
+                              style: TextStyle(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.whatsapp,
+                              color: Colors.green,
+                              size: 30,
+                            ),
+                            Text(
+                              'Whatsapp',
+                              style: TextStyle(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {},
+                      child: Container(
+                        decoration: BoxDecoration(
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                offset: Offset(0.0, 1.0),
+                                blurRadius: 6.0,
+                              ),
+                            ],
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0)),
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.solidMessage,
+                              color: Colors.blue,
+                              size: 30,
+                            ),
+                            Text(
+                              'Automatic',
+                              style: TextStyle(color: Colors.black),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Add more containers here if needed
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(
+                      horizontal: screenSize.width * 0.05, vertical: 10),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 203, 202, 202),
+                        offset: Offset(0.0, 1.0),
+                        blurRadius: 6.0,
+                      ),
+                    ],
                   ),
-                  const Text(
-                    "No Transactions to Show",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        letterSpacing: 1.2,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                  child: const ExpansionTile(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    title: Text(
+                      'Set Payment Reminder',
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    children: [
+                      ListTile(
+                        title: Text(
+                          'Payment of Due Cycle',
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        ),
+                        subtitle: Text(
+                          'Set a due date for this account',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 92, 92, 92),
+                              fontSize: 12),
+                        ),
+                        trailing: Text(
+                          'SET',
+                          style: TextStyle(color: Colors.green, fontSize: 15),
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          'Overdue Remider Cycle',
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        ),
+                        subtitle: Text(
+                          'How to frequently you want to remind the customer ',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 92, 92, 92),
+                              fontSize: 12),
+                        ),
+                      )
+                    ],
                   ),
-                  const Text(
-                    "Add your transactions to see overdue amount and send remainders",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 12),
+                ),
+                Flexible(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.all(10),
+                          width: 100,
+                          height: 100,
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: AssetImage(
+                                      "resources/images/empty-folder.png"))),
+                        ),
+                        const Text(
+                          "No Transactions to Show",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              letterSpacing: 1.2,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),
+                        ),
+                        const Text(
+                          "Add your transactions to see overdue amount and send remainders",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         }
         return Center(
-            child: Container(),
-          );
+          child: Container(),
+        );
       },
     );
   }

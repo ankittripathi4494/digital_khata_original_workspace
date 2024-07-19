@@ -1,70 +1,117 @@
 import 'package:duration_button/duration_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class EssentialWidgetsCollection {
   static showSuccessSnackbar(BuildContext context,
       {String? title, String? description}) {
-    return showToast(description,
-        context: context,
-        backgroundColor: Colors.green,
-        position: const StyledToastPosition(
-            align: Alignment.bottomCenter, offset: 30),
-        textStyle: const TextStyle(fontSize: 15.0, color: Colors.white),
-        animation: StyledToastAnimation.scale,
-        reverseAnimation: StyledToastAnimation.fade,
-        animDuration: const Duration(seconds: 1),
-        duration: const Duration(seconds: 4),
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.linear);
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+      padding: const EdgeInsets.all(0),
+      margin: EdgeInsets.symmetric(
+          vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
+      behavior: SnackBarBehavior.floating,
+      duration: Durations.long2,
+      content: TextButton.icon(
+        onPressed: null,
+        icon: Image.asset(
+          "resources/images/logo.png",
+          width: 20,
+          height: 20,
+        ),
+        label: Text(
+          description!,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    ));
   }
 
   static showErrorSnackbar(BuildContext context,
       {String? title, String? description}) {
-    return showToast(description,
-        context: context,
-        backgroundColor: Colors.red,
-        position: const StyledToastPosition(
-            align: Alignment.bottomCenter, offset: 30),
-        textStyle: const TextStyle(fontSize: 15.0, color: Colors.white),
-        animation: StyledToastAnimation.scale,
-        reverseAnimation: StyledToastAnimation.fade,
-        animDuration: const Duration(seconds: 1),
-        duration: const Duration(seconds: 4),
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.linear);
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+      padding: const EdgeInsets.all(0),
+      margin: EdgeInsets.symmetric(
+          vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
+      behavior: SnackBarBehavior.floating,
+      duration: Durations.long2,
+      content: TextButton.icon(
+        onPressed: null,
+        icon: Image.asset(
+          "resources/images/logo.png",
+          width: 20,
+          height: 20,
+        ),
+        label: Text(
+          description!,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    ));
   }
 
   static showSuggestionSnackbar(BuildContext context,
       {String? title, String? description}) {
-    return showToast(description,
-        context: context,
-        backgroundColor: Colors.blue,
-        position: const StyledToastPosition(
-            align: Alignment.bottomCenter, offset: 30),
-        textStyle: const TextStyle(fontSize: 15.0, color: Colors.white),
-        animation: StyledToastAnimation.scale,
-        reverseAnimation: StyledToastAnimation.fade,
-        animDuration: const Duration(seconds: 1),
-        duration: const Duration(seconds: 4),
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.linear);
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+      padding: const EdgeInsets.all(0),
+      margin: EdgeInsets.symmetric(
+          vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
+      behavior: SnackBarBehavior.floating,
+      duration: Durations.long2,
+      content: TextButton.icon(
+        onPressed: null,
+        icon: Image.asset(
+          "resources/images/logo.png",
+          width: 20,
+          height: 20,
+        ),
+        label: Text(
+          description!,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    ));
   }
 
   static showWarningSnackbar(BuildContext context,
       {String? title, String? description}) {
-    return showToast(description,
-        context: context,
-        backgroundColor: Colors.orange,
-        position: const StyledToastPosition(
-            align: Alignment.bottomCenter, offset: 30),
-        textStyle: const TextStyle(fontSize: 15.0, color: Colors.white),
-        animation: StyledToastAnimation.scale,
-        reverseAnimation: StyledToastAnimation.fade,
-        animDuration: const Duration(seconds: 1),
-        duration: const Duration(seconds: 4),
-        curve: Curves.elasticOut,
-        reverseCurve: Curves.linear);
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+      padding: const EdgeInsets.all(0),
+      margin: EdgeInsets.symmetric(
+          vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
+      behavior: SnackBarBehavior.floating,
+      duration: Durations.long2,
+      content: TextButton.icon(
+        onPressed: null,
+        icon: Image.asset(
+          "resources/images/logo.png",
+          width: 20,
+          height: 20,
+        ),
+        label: Text(
+          description!,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 15,
+          ),
+        ),
+      ),
+    ));
   }
 
   static showAlertDialogForLogout(
@@ -197,7 +244,6 @@ class EssentialWidgetsCollection {
   }) {
     return showDialog(
       context: context,
-  
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.transparent,
