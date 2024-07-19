@@ -58,7 +58,8 @@ class CustomerResponseData {
   dynamic updatedDate;
   String? address;
   dynamic customerFcm;
-  String? amount;
+  String? creditAmount;
+  String? debitAmount;
 
   CustomerResponseData(
       {this.id,
@@ -79,7 +80,8 @@ class CustomerResponseData {
       this.updatedDate,
       this.address,
       this.customerFcm,
-      this.amount});
+      this.creditAmount,
+      this.debitAmount});
 
   CustomerResponseData.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
@@ -130,8 +132,11 @@ class CustomerResponseData {
       address = json["address"];
     }
     customerFcm = json["customer_fcm"];
-    if (json["amount"] is String) {
-      amount = json["amount"];
+    if (json["credit_amount"] is String) {
+      creditAmount = json["credit_amount"];
+    }
+    if (json["debit_amount"] is String) {
+      debitAmount = json["debit_amount"];
     }
   }
 
@@ -155,7 +160,8 @@ class CustomerResponseData {
     _data["updated_date"] = updatedDate;
     _data["address"] = address;
     _data["customer_fcm"] = customerFcm;
-    _data["amount"] = amount;
+    _data["credit_amount"] = creditAmount;
+    _data["debit_amount"] = debitAmount;
     return _data;
   }
 }

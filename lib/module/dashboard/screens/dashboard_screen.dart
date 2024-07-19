@@ -77,7 +77,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       },
       child: DoubleBack(
-         message:"Press back again to close",
+        message: "Press back again to close",
         // canPop: false,
         // onPopInvoked: (didPop) {
         //   if (!didPop) {
@@ -205,7 +205,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                               ),
-        
+
                               actions: [
                                 const Divider(),
                                 Align(
@@ -382,7 +382,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
                     screenSize, context, currentPageIndexValue, (index) {
-                      print("Current Index :- $index");
+                  print("Current Index :- $index");
                   setState(() {
                     currentPageIndexValue = index;
                   });
@@ -391,13 +391,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       context,
                       '/dashboard',
                     );
-                  } 
+                  }
                   // else if (currentPageIndexValue == 1) {
                   //   Navigator.pushNamed(
                   //     context,
                   //     '/invoice',
                   //   );
-                  // } 
+                  // }
                   else if (currentPageIndexValue == 1) {
                     Navigator.pushNamed(
                       context,
@@ -464,7 +464,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                 ),
                               ),
-        
+
                               actions: [
                                 const Divider(),
                                 Align(
@@ -977,7 +977,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 255, 31, 1, 102),
                                             borderRadius:
                                                 BorderRadius.circular(30)),
-        
+
                                         // borderWidth: 2,
                                         // borderColor: Colors.black,
                                         labelStyle: const TextStyle(
@@ -1144,7 +1144,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ],
                                               ),
                                             ),
-        
+
                                             //tab 3: Overdue
                                             Container(
                                               color: Colors.grey[100],
@@ -1220,7 +1220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ],
                                               ),
                                             ),
-        
+
                                             //tab 4: UpComing
                                             Container(
                                               color: Colors.grey[100],
@@ -1296,7 +1296,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ],
                                               ),
                                             ),
-        
+
                                             //tab 5: Tag
                                             Container(
                                               color: Colors.grey[100],
@@ -1401,7 +1401,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 )
                                               ],
                                             ),
-        
+
                                             //tab 7: DND
                                             Container(
                                               color: Colors.grey[100],
@@ -1508,7 +1508,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
                     screenSize, context, currentPageIndexValue, (index) {
-                      print("Current Index :- $index");
+                  print("Current Index :- $index");
                   setState(() {
                     currentPageIndexValue = index;
                   });
@@ -1517,13 +1517,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       context,
                       '/dashboard',
                     );
-                  } 
+                  }
                   // else if (currentPageIndexValue == 1) {
                   //   Navigator.pushNamed(
                   //     context,
                   //     '/invoice',
                   //   );
-                  // } 
+                  // }
                   else if (currentPageIndexValue == 1) {
                     Navigator.pushNamed(
                       context,
@@ -1563,7 +1563,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               width: 1,
                               height: 1,
                             ),
-        
+
                             actions: [
                               const Divider(),
                               Align(
@@ -2059,7 +2059,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               255, 31, 1, 102),
                                           borderRadius:
                                               BorderRadius.circular(30)),
-        
+
                                       // borderWidth: 2,
                                       // borderColor: Colors.black,
                                       labelStyle: const TextStyle(
@@ -2217,7 +2217,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ],
                                             ),
                                           ),
-        
+
                                           //tab 3: Overdue
                                           Container(
                                             color: Colors.grey[100],
@@ -2284,7 +2284,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ],
                                             ),
                                           ),
-        
+
                                           //tab 4: UpComing
                                           Container(
                                             color: Colors.grey[100],
@@ -2351,7 +2351,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               ],
                                             ),
                                           ),
-        
+
                                           //tab 5: Tag
                                           Container(
                                             color: Colors.grey[100],
@@ -2447,7 +2447,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               )
                                             ],
                                           ),
-        
+
                                           //tab 7: DND
                                           Container(
                                             color: Colors.grey[100],
@@ -2545,7 +2545,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
                   screenSize, context, currentPageIndexValue, (index) {
-                    print("Current Index :- $index");
+                print("Current Index :- $index");
                 setState(() {
                   currentPageIndexValue = index;
                 });
@@ -2554,13 +2554,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     context,
                     '/dashboard',
                   );
-                } 
+                }
                 // else if (currentPageIndexValue == 1) {
                 //   Navigator.pushNamed(
                 //     context,
                 //     '/invoice',
                 //   );
-                // } 
+                // }
                 else if (currentPageIndexValue == 1) {
                   Navigator.pushNamed(
                     context,
@@ -2597,15 +2597,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       double advancedReceivedTemp = 0;
                       double duePendingTemp = 0;
                       for (CustomerResponseData c in state.successData!) {
-                        if (((c.amount != null) &&
-                            (int.parse(c.amount!).sign == 1))) {
-                          advancedReceivedTemp =
-                              advancedReceivedTemp + int.parse(c.amount!);
-                        } else if (((c.amount != null) &&
-                            (int.parse(c.amount!).sign == -1))) {
-                          duePendingTemp =
-                              duePendingTemp + int.parse(c.amount!);
-                        }
+                        advancedReceivedTemp = advancedReceivedTemp +
+                            ((c.creditAmount != null)
+                                ? double.parse(c.creditAmount!)
+                                : 0);
+                        duePendingTemp = duePendingTemp +
+                            ((c.debitAmount != null)
+                                ? double.parse(c.debitAmount!)
+                                : 0);
                       }
                       setState(() {
                         advancedReceived = advancedReceivedTemp;
@@ -3728,38 +3727,76 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     subtitle: Text(cd.mobile ?? ''),
                     trailing: Column(
                       children: [
-                        (cd.amount != null)
-                            ? (((double.parse(cd.amount!) > 0))
-                                ? Text(
-                                    '\u{20B9} ${cd.amount ?? 0}',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.w700),
-                                  )
+                        ((cd.creditAmount != null) && (cd.debitAmount != null))
+                            ? (((double.parse(cd.creditAmount!) >=
+                                    (double.parse(cd.debitAmount!))))
+                                ? (((double.parse(cd.creditAmount!) ==
+                                        (double.parse(cd.debitAmount!))))
+                                    ? Text(
+                                        '\u{20B9} ${0}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.w700),
+                                      )
+                                    : Text(
+                                        '\u{20B9} ${double.parse(cd.creditAmount!) - double.parse(cd.debitAmount!)}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.w700),
+                                      ))
                                 : Text(
-                                    '\u{20B9} ${cd.amount ?? 0}',
+                                    '\u{20B9} ${double.parse(cd.debitAmount!) - double.parse(cd.creditAmount!)}',
                                     style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.red,
                                         fontWeight: FontWeight.w700),
                                   ))
-                            : Text(
-                                '\u{20B9} ${cd.amount ?? 0}',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                        (cd.amount != null)
-                            ? ((double.parse(cd.amount!) > 0)
+                            : (((cd.creditAmount == null) &&
+                                    (cd.debitAmount == null))
                                 ? Text(
-                                    'CREDIT',
+                                    '\u{20B9} ${0}',
                                     style: TextStyle(
                                         fontSize: 15,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w600),
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.w700),
                                   )
+                                : ((cd.creditAmount != null) &&
+                                        (cd.debitAmount == null))
+                                    ? Text(
+                                        '\u{20B9} ${double.parse(cd.creditAmount!)}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.w700),
+                                      )
+                                    : Text(
+                                        '\u{20B9} ${double.parse(cd.debitAmount!)}',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w700),
+                                      )),
+                        ((cd.creditAmount != null) && (cd.debitAmount != null))
+                            ? (((double.parse(cd.creditAmount!) >=
+                                    (double.parse(cd.debitAmount!))))
+                                ? (((double.parse(cd.creditAmount!) ==
+                                        (double.parse(cd.debitAmount!))))
+                                    ? Text(
+                                        'CREDIT',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    : Text(
+                                        'CREDIT',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600),
+                                      ))
                                 : Text(
                                     'DUE',
                                     style: TextStyle(
@@ -3767,13 +3804,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w600),
                                   ))
-                            : Text(
-                                'CREDIT',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600),
-                              )
+                            : (((cd.creditAmount == null) &&
+                                    (cd.debitAmount == null))
+                                ? Text(
+                                    'CREDIT',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600),
+                                  )
+                                : ((cd.creditAmount != null) &&
+                                        (cd.debitAmount == null))
+                                    ? Text(
+                                        'CREDIT',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600),
+                                      )
+                                    : Text(
+                                        'DUE',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w600),
+                                      )),
                       ],
                     ),
                   ),

@@ -165,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                   style: const TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 subtitle: Text(
-                  '\u{20B9} ${state.selectedCustomerDetailedData.amount ?? 0}',
+                  '\u{20B9} ${((state.selectedCustomerDetailedData.creditAmount != null) ? double.parse(state.selectedCustomerDetailedData.creditAmount!) : 0) - ((state.selectedCustomerDetailedData.debitAmount != null) ? double.parse(state.selectedCustomerDetailedData.debitAmount!) : 0)}',
                   style: const TextStyle(color: Colors.white, fontSize: 15),
                 ),
               ),
@@ -259,12 +259,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                             controller: tabController,
 
                             labelSpacing: 0.0,
-                            height: screenSize.height * 0.08,
+                            height: 50,
                             buttonMargin: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 10.0),
+                                horizontal: 5.0, vertical: 5.0),
                             radius: 0,
                             contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 10.0),
+                                horizontal: 25, vertical: 5.0),
                             // Customize the appearance and behavior of the tab bar
                             decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 31, 1, 102),
@@ -887,7 +887,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           CrossAxisAlignment.center,
                                       children: [
                                         Material(
-                                          elevation: 10,
+                                          elevation: 0,
                                           color: Colors.transparent,
                                           child: TextButton(
                                               style: TextButton.styleFrom(
@@ -917,7 +917,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               )),
                                         ),
                                         Material(
-                                          elevation: 10,
+                                          elevation: 0,
                                           color: Colors.transparent,
                                           child: TextButton(
                                               style: TextButton.styleFrom(
@@ -949,8 +949,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   )),
           );
         }
-        return const Center(
-          child: AnimatedImageLoader(),
+        return  Center(
+          child: Container(),
         );
       },
     );
@@ -1185,7 +1185,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                     ),
                   );
-                
                 },
               ));
         }
@@ -1278,7 +1277,6 @@ class _ProfileScreenState extends State<ProfileScreen>
             child: AnimatedImageLoader(),
           ),
         );
-      
       },
     );
   }
@@ -1449,7 +1447,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.remember_me,
+                            FontAwesomeIcons.telegram,
                             color: Colors.brown,
                             size: 30,
                           ),
@@ -1479,7 +1477,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
-                            CupertinoIcons.phone_circle_fill,
+                            FontAwesomeIcons.whatsapp,
                             color: Colors.green,
                             size: 30,
                           ),
@@ -1509,7 +1507,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
-                            CupertinoIcons.chat_bubble_fill,
+                            FontAwesomeIcons.solidMessage,
                             color: Colors.blue,
                             size: 30,
                           ),
@@ -1527,7 +1525,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.05,
-                    vertical: screenSize.height * 0.03),
+                    vertical: 10),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   boxShadow: [
@@ -1719,14 +1717,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                             },
                             leading: CircleAvatar(
                               radius: 25,
-                              backgroundColor: Colors.grey,
+                              backgroundColor: Colors.grey.shade100,
                               child: Center(
                                 child: Icon(
                                   (transactionData.transType != 'D')
                                       ? FontAwesomeIcons.download
                                       : FontAwesomeIcons.upload,
                                   color: (transactionData.transType != 'D')
-                                      ? Colors.white
+                                      ? Colors.green
                                       : Colors.red,
                                   size: 20,
                                 ),
@@ -1819,7 +1817,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
               ),
               const SizedBox(
-                height: 30,
+                height: 10,
               ),
             ],
           );
@@ -1886,33 +1884,9 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
           );
         }
-        return SmartRefresher(
-          enablePullDown: true,
-          enablePullUp: false,
-          header: const WaterDropHeader(
-            waterDropColor: Color.fromARGB(255, 31, 1, 102),
-            idleIcon: AnimatedImagePlaceholderLoader(),
-          ),
-          controller: refreshForTransController3,
-          onRefresh: (() async {
-            // monitor network fetch
-            await Future.delayed(const Duration(milliseconds: 1000));
-            // if failed,use refreshFailed()
-
-            Navigator.pushReplacementNamed(context, '/customer-screen-details',
-                arguments: widget.argus);
-          }),
-          onLoading: (() async {
-            await Future.delayed(const Duration(milliseconds: 1000));
-            // if failed,use loadFailed(),if no data return,use LoadNodata()
-
-            if (mounted) setState(() {});
-            refreshForTransController3.loadComplete();
-          }),
-          child: const Center(
-            child: AnimatedImageLoader(),
-          ),
-        );
+        return Center(
+            child: Container(),
+          );
       },
     );
   }

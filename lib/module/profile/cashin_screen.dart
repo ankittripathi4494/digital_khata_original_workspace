@@ -82,7 +82,7 @@ class _CashInScreenState extends State<CashInScreen> {
               style: const TextStyle(color: Colors.white, fontSize: 18),
             ),
             subtitle: Text(
-              '\u{20B9} ${(widget.argus['customerData'] as SelectedCustomerResponseData).amount ?? 0}',
+              '\u{20B9} ${(((widget.argus['customerData'] as SelectedCustomerResponseData).creditAmount != null) ? double.parse((widget.argus['customerData'] as SelectedCustomerResponseData).creditAmount!) : 0) - (((widget.argus['customerData'] as SelectedCustomerResponseData).debitAmount != null) ? double.parse((widget.argus['customerData'] as SelectedCustomerResponseData).debitAmount!) : 0)}',
               style: const TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
