@@ -1,8 +1,18 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
+import 'package:animated_loading_indicators/animated_loading_indicators.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+
+enum LoaderType { general, placeholder, refresher, splash }
 
 class AnimatedImageLoader extends StatefulWidget {
-  const AnimatedImageLoader({super.key});
-
+  Indicator? customeIndicatorType;
+  LoaderType? customLoaderType;
+  AnimatedImageLoader(
+      {super.key, Indicator? indicatorType, LoaderType? loaderType}) {
+    customeIndicatorType = indicatorType;
+    customLoaderType = loaderType;
+  }
   @override
   State<AnimatedImageLoader> createState() => _AnimatedImageLoaderState();
 }
@@ -12,46 +22,127 @@ class AnimatedImageLoader extends StatefulWidget {
 class _AnimatedImageLoaderState extends State<AnimatedImageLoader> {
   @override
   Widget build(BuildContext context) {
+    if (widget.customLoaderType == LoaderType.placeholder) {
+      return placeholderLoaderType(
+          indicatorType: widget.customeIndicatorType,
+          loaderType: widget.customLoaderType);
+    } else if (widget.customLoaderType == LoaderType.splash) {
+      return splashLoaderType(
+          indicatorType: widget.customeIndicatorType,
+          loaderType: widget.customLoaderType);
+    } else if (widget.customLoaderType == LoaderType.refresher) {
+      return refershLoaderType(
+          indicatorType: widget.customeIndicatorType,
+          loaderType: widget.customLoaderType);
+    } 
+     else {
+      return generalLoaderType(
+          indicatorType: widget.customeIndicatorType,
+          loaderType: widget.customLoaderType);
+    }
+  }
+
+  generalLoaderType({Indicator? indicatorType, LoaderType? loaderType}) {
     return Container(
       height: 50,
       width: 50,
       padding: const EdgeInsets.all(8),
-      // child: const Material(
-      //   child: TextLoaderIndicator(
-      //     size: 25,
-      //   ),
-      // ),
-      child: const CircularProgressIndicator(
-        backgroundColor: Colors.black,
-        color: Colors.blue,
-      ),
-      // child: const CircularProgressIndicator(
-      //   // backgroundColor: Colors.blueGrey,
-      //   color: Colors.deepPurple,
-      // ),
-      // child: const LoadingIndicator(
-      //     indicatorType: Indicator.ballClipRotatePulse,
+      child: (indicatorType == null)
+          ? const CircularProgressIndicator(
+              backgroundColor: Colors.black,
+              color: Colors.blue,
+            )
+          : LoadingIndicator(
+              indicatorType: indicatorType,
+              colors: const [
+                Colors.deepPurple,
+                Colors.deepPurple,
+                Colors.deepPurple,
+                Colors.deepPurple,
+                Colors.deepPurple
+              ],
+              strokeWidth: 2,
+              backgroundColor: null,
+              pathBackgroundColor: null),
+    );
+  }
 
-      //     /// Required, The loading type of the widget
-      //     colors: [
-      //       Colors.deepPurple,
-      //       Colors.deepPurple,
-      //       Colors.deepPurple,
-      //       Colors.deepPurple,
-      //       Colors.deepPurple
-      //     ],
+  placeholderLoaderType({Indicator? indicatorType, LoaderType? loaderType}) {
+    return Container(
+      width: 35,
+      height: 35,
+      padding: const EdgeInsets.all(8),
+      child: (indicatorType == null)
+          ? const ClockLoader(
+              size: 35,
+              frameColor: Colors.deepOrange,
+              minuteColor: Colors.blue,
+              hourColor: Colors.green,
+            )
+          : LoadingIndicator(
+              indicatorType: indicatorType,
+              colors: const [
+                Colors.deepPurple,
+                Colors.deepPurple,
+                Colors.deepPurple,
+                Colors.deepPurple,
+                Colors.deepPurple
+              ],
+              strokeWidth: 2,
+              backgroundColor: null,
+              pathBackgroundColor: null),
+    );
+  }
 
-      //     /// Optional, The color collections
-      //     strokeWidth: 2,
+  refershLoaderType({Indicator? indicatorType, LoaderType? loaderType}) {
+    return Container(
+      width: 35,
+      height: 35,
+      padding: const EdgeInsets.all(8),
+      child: (indicatorType == null)
+          ? const ClockLoader(
+              size: 35,
+              frameColor: Colors.deepOrange,
+              minuteColor: Colors.blue,
+              hourColor: Colors.green,
+            )
+          : LoadingIndicator(
+              indicatorType: indicatorType,
+              colors: const [
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white
+              ],
+              strokeWidth: 2,
+              backgroundColor: null,
+              pathBackgroundColor: null),
+    );
+  }
 
-      //     /// Optional, The stroke of the line, only applicable to widget which contains line
-      //     // backgroundColor: Colors.black,
-
-      //     /// Optional, Background of the widget
-      //     pathBackgroundColor: Colors.black
-
-      //     /// Optional, the stroke backgroundColor
-      //     ),
+  splashLoaderType({Indicator? indicatorType, LoaderType? loaderType}) {
+    return Container(
+      height: 80,
+      width: 80,
+      padding: const EdgeInsets.all(8),
+      child: (indicatorType == null)
+          ? const CircularProgressIndicator(
+              backgroundColor: Colors.black,
+              color: Colors.blue,
+            )
+          : LoadingIndicator(
+              indicatorType: indicatorType,
+              colors: const [
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white
+              ],
+              strokeWidth: 2,
+              backgroundColor: null,
+              pathBackgroundColor: null),
     );
   }
 }

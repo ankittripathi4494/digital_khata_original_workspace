@@ -606,7 +606,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                                   height: screenSize.height * 0.06,
                                 ),
                                 (state is AddNewBusinessLoadingState)
-                                    ? const Center(
+                                    ?  Center(
                                         child: AnimatedImageLoader(),
                                       )
                                     : ((state is AddNewBusinessValidState)

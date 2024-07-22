@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
@@ -11,6 +10,7 @@ import 'package:dkapp/module/plan/plan_bloc/plan_state.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PlanScreen extends StatefulWidget {
@@ -59,9 +59,12 @@ class _PlanScreenState extends State<PlanScreen> {
               return SmartRefresher(
                 enablePullDown: true,
                 enablePullUp: false,
-                header: const WaterDropHeader(
-                  waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                  idleIcon: AnimatedImagePlaceholderLoader(),
+                header:  WaterDropHeader(
+                  waterDropColor: const Color.fromARGB(255, 31, 1, 102),
+                  idleIcon: AnimatedImageLoader(
+                      indicatorType: Indicator.ballClipRotate,
+                      loaderType: LoaderType.refresher,
+                    ),
                 ),
                 controller: refreshController3,
                 onRefresh: (() async {
@@ -128,9 +131,12 @@ class _PlanScreenState extends State<PlanScreen> {
               return SmartRefresher(
                 enablePullDown: true,
                 enablePullUp: false,
-                header: const WaterDropHeader(
-                  waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                  idleIcon: AnimatedImagePlaceholderLoader(),
+                header:  WaterDropHeader(
+                  waterDropColor: const Color.fromARGB(255, 31, 1, 102),
+                  idleIcon: AnimatedImageLoader(
+                      indicatorType: Indicator.ballClipRotate,
+                      loaderType: LoaderType.refresher,
+                    ),
                 ),
                 controller: refreshController2,
                 onRefresh: (() async {
@@ -188,9 +194,12 @@ class _PlanScreenState extends State<PlanScreen> {
             return SmartRefresher(
               enablePullDown: true,
               enablePullUp: false,
-              header: const WaterDropHeader(
-                waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                idleIcon: AnimatedImagePlaceholderLoader(),
+              header:  WaterDropHeader(
+                waterDropColor: const Color.fromARGB(255, 31, 1, 102),
+                idleIcon: AnimatedImageLoader(
+                      indicatorType: Indicator.ballClipRotate,
+                      loaderType: LoaderType.refresher,
+                    ),
               ),
               controller: refreshController3,
               onRefresh: (() async {
@@ -208,7 +217,7 @@ class _PlanScreenState extends State<PlanScreen> {
                 if (mounted) setState(() {});
                 refreshController3.loadComplete();
               }),
-              child: const Center(
+              child:  Center(
                 child: AnimatedImageLoader(),
               ),
             );

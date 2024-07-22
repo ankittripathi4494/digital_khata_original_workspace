@@ -3,7 +3,7 @@
 import 'dart:async';
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
@@ -19,6 +19,7 @@ import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:simple_chips_input/select_chips_input.dart';
 import 'package:talker/talker.dart';
@@ -3073,8 +3074,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                   widgetContainerDecoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16.0),
-                                    color:
-                                        const Color.fromARGB(255, 249, 248, 248),
+                                    color: const Color.fromARGB(
+                                        255, 249, 248, 248),
                                   ),
                                   unselectedChipDecoration: BoxDecoration(
                                     // color: Colors.green,
@@ -3131,8 +3132,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                   widgetContainerDecoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(30.0),
-                                    color:
-                                        const Color.fromARGB(255, 249, 248, 248),
+                                    color: const Color.fromARGB(
+                                        255, 249, 248, 248),
                                   ),
                                   unselectedChipDecoration: BoxDecoration(
                                     // color: Colors.green,
@@ -3224,8 +3225,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   },
                                   widgetContainerDecoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16.0),
-                                    color:
-                                        const Color.fromARGB(255, 249, 248, 248),
+                                    color: const Color.fromARGB(
+                                        255, 249, 248, 248),
                                   ),
                                   unselectedChipDecoration: BoxDecoration(
                                     // color: Colors.green,
@@ -3266,7 +3267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           decoration: BoxDecoration(
                               color: const Color.fromARGB(255, 31, 1, 102),
                               borderRadius: BorderRadius.circular(30)),
-            
+
                           // borderWidth: 2,
                           // borderColor: Colors.black,
                           labelStyle: const TextStyle(
@@ -3308,21 +3309,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             children: [
                               //tab 1: All
                               _allDataTab(screenSize, [], null),
-            
+
                               //tab 2: Today
                               _todayDataTab(screenSize, []),
-            
+
                               //tab 3: Overdue
                               _overdueDataTab(screenSize, []),
-            
+
                               //tab 4: UpComing
                               _upcomingDataTab(screenSize, []),
-            
+
                               //tab 5: Tag
                               _tagDataTab(screenSize, []),
                               //tab 6: Groups
                               _groupDataTab(screenSize, []),
-            
+
                               //tab 7: DND
                               _dndDataTab(screenSize, []),
                             ],
@@ -3662,9 +3663,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: SmartRefresher(
           enablePullDown: true,
           enablePullUp: false,
-          header: const WaterDropHeader(
+          header: WaterDropHeader(
             waterDropColor: Color.fromARGB(255, 31, 1, 102),
-            idleIcon: AnimatedImagePlaceholderLoader(),
+            idleIcon: AnimatedImageLoader(
+              indicatorType: Indicator.ballClipRotate,
+              loaderType: LoaderType.refresher,
+            ),
           ),
           controller: refreshController,
           onRefresh: (() async {
@@ -3684,7 +3688,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             refreshController.loadComplete();
           }),
           child: ListView.builder(
-            
             itemCount: customerData.length,
             itemBuilder: (context, index) {
               CustomerResponseData cd = customerData[index];

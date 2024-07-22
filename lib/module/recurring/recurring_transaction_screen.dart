@@ -1592,7 +1592,7 @@ class PreviewScreen extends StatelessWidget {
                   );
                 }
                 if (state is AddNewRecurringTransactionLoadingState) {
-                  return const AnimatedImageLoader();
+                  return  AnimatedImageLoader();
                 } 
                 return Container();
               },

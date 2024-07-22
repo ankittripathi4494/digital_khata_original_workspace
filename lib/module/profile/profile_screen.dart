@@ -10,11 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart' as i;
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:talker/talker.dart';
-
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
@@ -574,7 +573,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                             showDragHandle: true,
                             context: context,
                             builder: (BuildContext context) {
-                             
                               return SizedBox(
                                 width: screenSize.width,
                                 child: Column(
@@ -610,7 +608,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ),
                                       ),
                                     ),
-                                     /*
+                                    /*
                                     const Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: 20.0, vertical: 10.0),
@@ -973,9 +971,12 @@ class _ProfileScreenState extends State<ProfileScreen>
           return SmartRefresher(
               enablePullDown: true,
               enablePullUp: false,
-              header: const WaterDropHeader(
+              header: WaterDropHeader(
                 waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                idleIcon: AnimatedImagePlaceholderLoader(),
+                idleIcon: AnimatedImageLoader(
+                      indicatorType: Indicator.ballClipRotate,
+                      loaderType: LoaderType.refresher,
+                    ),
               ),
               controller: refreshForRecurTransController,
               onRefresh: (() async {
@@ -1062,7 +1063,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 image: imageProvider)),
                                       ),
                                       placeholder: (context, url) =>
-                                          const AnimatedImagePlaceholderLoader(),
+                                          AnimatedImageLoader(
+                                        indicatorType: null,
+                                        loaderType: LoaderType.placeholder,
+                                      ),
                                       errorWidget: (context, url, error) =>
                                           const CircleAvatar(
                                         radius: 25,
@@ -1084,7 +1088,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                               ),
                               placeholder: (context, url) =>
-                                  const AnimatedImagePlaceholderLoader(),
+                                  AnimatedImageLoader(
+                                indicatorType: null,
+                                loaderType: LoaderType.placeholder,
+                              ),
                               errorWidget: (context, url, error) =>
                                   const CircleAvatar(
                                 radius: 25,
@@ -1194,9 +1201,12 @@ class _ProfileScreenState extends State<ProfileScreen>
           return SmartRefresher(
             enablePullDown: true,
             enablePullUp: false,
-            header: const WaterDropHeader(
+            header: WaterDropHeader(
               waterDropColor: Color.fromARGB(255, 31, 1, 102),
-              idleIcon: AnimatedImagePlaceholderLoader(),
+              idleIcon: AnimatedImageLoader(
+                indicatorType: Indicator.ballClipRotate,
+                loaderType: LoaderType.refresher,
+              ),
             ),
             controller: refreshForRecurTransController2,
             onRefresh: (() async {
@@ -1255,9 +1265,12 @@ class _ProfileScreenState extends State<ProfileScreen>
         return SmartRefresher(
           enablePullDown: true,
           enablePullUp: false,
-          header: const WaterDropHeader(
+          header: WaterDropHeader(
             waterDropColor: Color.fromARGB(255, 31, 1, 102),
-            idleIcon: AnimatedImagePlaceholderLoader(),
+            idleIcon: AnimatedImageLoader(
+              indicatorType: Indicator.ballClipRotate,
+              loaderType: LoaderType.refresher,
+            ),
           ),
           controller: refreshForRecurTransController3,
           onRefresh: (() async {
@@ -1275,7 +1288,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             if (mounted) setState(() {});
             refreshForRecurTransController3.loadComplete();
           }),
-          child: const Center(
+          child: Center(
             child: AnimatedImageLoader(),
           ),
         );
@@ -1582,9 +1595,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 child: SmartRefresher(
                   enablePullDown: true,
                   enablePullUp: false,
-                  header: const WaterDropHeader(
+                  header: WaterDropHeader(
                     waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                    idleIcon: AnimatedImagePlaceholderLoader(),
+                    idleIcon: AnimatedImageLoader(
+                      indicatorType: Indicator.ballClipRotate,
+                      loaderType: LoaderType.refresher,
+                    ),
                   ),
                   controller: refreshForTransController,
                   onRefresh: (() async {
@@ -1827,9 +1843,12 @@ class _ProfileScreenState extends State<ProfileScreen>
           return SmartRefresher(
             enablePullDown: true,
             enablePullUp: false,
-            header: const WaterDropHeader(
+            header: WaterDropHeader(
               waterDropColor: Color.fromARGB(255, 31, 1, 102),
-              idleIcon: AnimatedImagePlaceholderLoader(),
+              idleIcon: AnimatedImageLoader(
+                indicatorType: Indicator.ballClipRotate,
+                loaderType: LoaderType.refresher,
+              ),
             ),
             controller: refreshForTransController2,
             onRefresh: (() async {

@@ -142,7 +142,7 @@ class _MyAppState extends State<MyApp> {
               ),
             );
           }
-          return const Center(child: AnimatedImageLoader());
+          return  Center(child: AnimatedImageLoader());
         });
   }
 }

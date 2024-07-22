@@ -3,7 +3,7 @@
 import 'dart:async' as t1;
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
@@ -160,7 +160,10 @@ class _SettlementScreenState extends State<SettlementScreen> {
                               )
                             : Container(),
                         (state is AddNewCashTransactionLoadingState)
-                            ? const AnimatedImagePlaceholderLoader()
+                            ? AnimatedImageLoader(
+                                indicatorType: null,
+                                loaderType: LoaderType.placeholder,
+                              )
                             : Container(),
                         Container(
                           margin: EdgeInsets.symmetric(
@@ -221,23 +224,21 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                     enabled: false,
                                     style: TextStyle(
                                         color: ((((widget.argus['customerData']
-                                                          as SelectedCustomerResponseData)
-                                                      .creditAmount !=
-                                                  null)
-                                              ? double.parse((widget
-                                                          .argus['customerData']
-                                                      as SelectedCustomerResponseData)
-                                                  .creditAmount!)
-                                              : 0) >
-                                          (((widget.argus['customerData']
-                                                          as SelectedCustomerResponseData)
-                                                      .debitAmount !=
-                                                  null)
-                                              ? double.parse((widget
-                                                          .argus['customerData']
-                                                      as SelectedCustomerResponseData)
-                                                  .debitAmount!)
-                                              : 0))
+                                                                as SelectedCustomerResponseData)
+                                                            .creditAmount !=
+                                                        null)
+                                                    ? double.parse((widget
+                                                                .argus['customerData']
+                                                            as SelectedCustomerResponseData)
+                                                        .creditAmount!)
+                                                    : 0) >
+                                                (((widget.argus['customerData']
+                                                                as SelectedCustomerResponseData)
+                                                            .debitAmount !=
+                                                        null)
+                                                    ? double.parse(
+                                                        (widget.argus['customerData'] as SelectedCustomerResponseData).debitAmount!)
+                                                    : 0))
                                             ? Colors.red
                                             : Colors.green,
                                         letterSpacing: 1.2,
@@ -253,23 +254,23 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                         size: 20,
                                       ),
                                       prefixIconColor: ((((widget.argus['customerData']
-                                                          as SelectedCustomerResponseData)
-                                                      .creditAmount !=
-                                                  null)
-                                              ? double.parse((widget
-                                                          .argus['customerData']
-                                                      as SelectedCustomerResponseData)
-                                                  .creditAmount!)
-                                              : 0) >
-                                          (((widget.argus['customerData']
-                                                          as SelectedCustomerResponseData)
-                                                      .debitAmount !=
-                                                  null)
-                                              ? double.parse((widget
-                                                          .argus['customerData']
-                                                      as SelectedCustomerResponseData)
-                                                  .debitAmount!)
-                                              : 0))
+                                                              as SelectedCustomerResponseData)
+                                                          .creditAmount !=
+                                                      null)
+                                                  ? double.parse(
+                                                      (widget.argus['customerData']
+                                                              as SelectedCustomerResponseData)
+                                                          .creditAmount!)
+                                                  : 0) >
+                                              (((widget.argus['customerData']
+                                                              as SelectedCustomerResponseData)
+                                                          .debitAmount !=
+                                                      null)
+                                                  ? double.parse(
+                                                      (widget.argus['customerData']
+                                                              as SelectedCustomerResponseData)
+                                                          .debitAmount!)
+                                                  : 0))
                                           ? Colors.red
                                           : Colors.green,
                                       hintText: "0",
@@ -553,7 +554,12 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                                               Colors.grey[300],
                                                           radius: 45,
                                                           child:
-                                                              const AnimatedImagePlaceholderLoader(),
+                                                              AnimatedImageLoader(
+                                                            indicatorType: null,
+                                                            loaderType:
+                                                                LoaderType
+                                                                    .placeholder,
+                                                          ),
                                                         ),
                                                         errorWidget: (context,
                                                                 url, error) =>
@@ -713,23 +719,21 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     onPressed: () {
                       if (amountController.text.isNotEmpty) {
                         if (((((widget.argus['customerData']
-                                                          as SelectedCustomerResponseData)
-                                                      .creditAmount !=
-                                                  null)
-                                              ? double.parse((widget
-                                                          .argus['customerData']
-                                                      as SelectedCustomerResponseData)
-                                                  .creditAmount!)
-                                              : 0) >
-                                          (((widget.argus['customerData']
-                                                          as SelectedCustomerResponseData)
-                                                      .debitAmount !=
-                                                  null)
-                                              ? double.parse((widget
-                                                          .argus['customerData']
-                                                      as SelectedCustomerResponseData)
-                                                  .debitAmount!)
-                                              : 0))) {
+                                            as SelectedCustomerResponseData)
+                                        .creditAmount !=
+                                    null)
+                                ? double.parse((widget.argus['customerData']
+                                        as SelectedCustomerResponseData)
+                                    .creditAmount!)
+                                : 0) >
+                            (((widget.argus['customerData']
+                                            as SelectedCustomerResponseData)
+                                        .debitAmount !=
+                                    null)
+                                ? double.parse((widget.argus['customerData']
+                                        as SelectedCustomerResponseData)
+                                    .debitAmount!)
+                                : 0))) {
                           BlocProvider.of<TransactionsBloc>(context).add(
                               AddCashTransactionEvent(
                                   samePageRedirection: false,

@@ -263,9 +263,9 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
                     );
                   }
                   if (state is BusinessTypeListLoadingState) {
-                    return const Center(child: AnimatedImageLoader());
+                    return  Center(child: AnimatedImageLoader());
                   }
-                  return const Center(
+                  return  Center(
                     child: AnimatedImageLoader(),
                   );
                 },

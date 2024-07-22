@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
@@ -12,6 +11,7 @@ import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class RecurringTransactionDetailsScreen extends StatefulWidget {
@@ -317,103 +317,107 @@ class _RecurringTransactionDetailsScreenState
                     itemCount: state.successData!.emiList!.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
-                        LoanRecurringEmiDetailResponseEmiList recurEmiData =
-                      state.successData!.emiList![index];
-                       return Container(
-                    margin: const EdgeInsets.symmetric(
-                              vertical: 3, horizontal: 5),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.0),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color.fromARGB(255, 203, 202, 202),
-                          offset: Offset(0.0, 1.0),
-                          blurRadius: 6.0,
-                        ),
-                      ],
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 0),
-                      
-                     
-                      title: Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            RichText(
-                                text: TextSpan(
-                                    text:  DateFormat('dd-MM-yyyy').format(
-                                      DateFormat("dd-MM-yyyy hh:mm:ss").parse(
-                                         recurEmiData.emiDate.toString())),
-                                    
-                                    style: const TextStyle(
-                                        letterSpacing: 1.2,
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w500))),
-                            RichText(
-                                text: TextSpan(
-                                    text: "Month : \t",
-                                    children: [
-                                      TextSpan(
-                                          text: "${recurEmiData.emiMonth}",
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400))
-                                    ],
-                                    style: const TextStyle(
-                                        letterSpacing: 1.2,
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700)))
-                          ],
-                        ),
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 50,
-                              padding: const EdgeInsets.all(0),
-                              child: Text((int.parse(recurEmiData.status!)<=0)?"Unpaid":"Paid",
-                                  overflow: TextOverflow.ellipsis,
-                                  softWrap: true,
-                                  style:  TextStyle(
-                                      color:(int.parse(recurEmiData.status!)<=0)? Colors.red:Colors.green,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold)),
+                      LoanRecurringEmiDetailResponseEmiList recurEmiData =
+                          state.successData!.emiList![index];
+                      return Container(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 3, horizontal: 5),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 203, 202, 202),
+                              offset: Offset(0.0, 1.0),
+                              blurRadius: 6.0,
                             ),
-                            RichText(
-                                text: TextSpan(
-                                    text: "Amount : \t",
-                                    children: [
-                                      TextSpan(
-                                          text: "${recurEmiData.emiAmount}",
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400))
-                                    ],
-                                    style: const TextStyle(
-                                        letterSpacing: 1.2,
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w700))),
                           ],
                         ),
-                      ),
-                    ),
-                  );
-                
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 0),
+                          title: Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                RichText(
+                                    text: TextSpan(
+                                        text: DateFormat('dd-MM-yyyy').format(
+                                            DateFormat("dd-MM-yyyy hh:mm:ss")
+                                                .parse(recurEmiData.emiDate
+                                                    .toString())),
+                                        style: const TextStyle(
+                                            letterSpacing: 1.2,
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w500))),
+                                RichText(
+                                    text: TextSpan(
+                                        text: "Month : \t",
+                                        children: [
+                                          TextSpan(
+                                              text: "${recurEmiData.emiMonth}",
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400))
+                                        ],
+                                        style: const TextStyle(
+                                            letterSpacing: 1.2,
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700)))
+                              ],
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 50,
+                                  padding: const EdgeInsets.all(0),
+                                  child: Text(
+                                      (int.parse(recurEmiData.status!) <= 0)
+                                          ? "Unpaid"
+                                          : "Paid",
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                          color: (int.parse(
+                                                      recurEmiData.status!) <=
+                                                  0)
+                                              ? Colors.red
+                                              : Colors.green,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                                RichText(
+                                    text: TextSpan(
+                                        text: "Amount : \t",
+                                        children: [
+                                          TextSpan(
+                                              text: "${recurEmiData.emiAmount}",
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400))
+                                        ],
+                                        style: const TextStyle(
+                                            letterSpacing: 1.2,
+                                            color: Colors.black,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w700))),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
                     },
                   ))
                 ],
@@ -424,9 +428,12 @@ class _RecurringTransactionDetailsScreenState
             return SmartRefresher(
               enablePullDown: true,
               enablePullUp: false,
-              header: const WaterDropHeader(
-                waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                idleIcon: AnimatedImagePlaceholderLoader(),
+              header: WaterDropHeader(
+                waterDropColor: const Color.fromARGB(255, 31, 1, 102),
+                idleIcon: AnimatedImageLoader(
+                      indicatorType: Indicator.ballClipRotate,
+                      loaderType: LoaderType.refresher,
+                    ),
               ),
               controller: refreshForRecurTransController2,
               onRefresh: (() async {
@@ -485,9 +492,12 @@ class _RecurringTransactionDetailsScreenState
           return SmartRefresher(
             enablePullDown: true,
             enablePullUp: false,
-            header: const WaterDropHeader(
-              waterDropColor: Color.fromARGB(255, 31, 1, 102),
-              idleIcon: AnimatedImagePlaceholderLoader(),
+            header: WaterDropHeader(
+              waterDropColor: const Color.fromARGB(255, 31, 1, 102),
+              idleIcon: AnimatedImageLoader(
+                indicatorType: Indicator.ballClipRotate,
+                loaderType: LoaderType.refresher,
+              ),
             ),
             controller: refreshForRecurTransController3,
             onRefresh: (() async {
@@ -506,7 +516,7 @@ class _RecurringTransactionDetailsScreenState
               if (mounted) setState(() {});
               refreshForRecurTransController3.loadComplete();
             }),
-            child: const Center(
+            child: Center(
               child: AnimatedImageLoader(),
             ),
           );

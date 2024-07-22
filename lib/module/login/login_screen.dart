@@ -267,7 +267,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   (state is LoginPhoneNumberLoadingState)
-                                      ? const AnimatedImageLoader()
+                                      ?  AnimatedImageLoader()
                                       : InkWell(
                                           onTap: (state
                                                   is LoginPhoneNumberValidState)
@@ -443,7 +443,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   (state is LoginEmailIDLoadingState)
-                                      ? const AnimatedImageLoader()
+                                      ?  AnimatedImageLoader()
                                       : InkWell(
                                           onTap: (state is LoginEmailIDValidState)
                                               ? () {

@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
@@ -278,7 +277,7 @@ class _UpdateBusinessProfileScreenState
         ],
       ),
       body: Container(
-         decoration: BoxDecoration(color: Colors.grey[100]),
+        decoration: BoxDecoration(color: Colors.grey[100]),
         child: BlocBuilder<BusinessBloc, BusinessState>(
           builder: (context, state) {
             if (state is UpdateBusinessSuccessState) {
@@ -289,7 +288,7 @@ class _UpdateBusinessProfileScreenState
                 task: () {
                   EssentialWidgetsCollection.showSuccessSnackbar(context,
                       title: null, description: state.successMessage);
-        
+
                   Navigator.pop(context);
                   Navigator.pushNamed(context, '/business');
                 },
@@ -310,7 +309,7 @@ class _UpdateBusinessProfileScreenState
               );
             }
             if (state is UpdateBusinessLoadingState) {
-              return const Center(
+              return Center(
                 child: AnimatedImageLoader(),
               );
             }
@@ -333,7 +332,7 @@ class _UpdateBusinessProfileScreenState
                                         (widget.argus['businessProfileData']
                                                 as BusinessListResponseData)
                                             .id!));
-        
+
                             Navigator.pop(context);
                             Navigator.pushReplacementNamed(
                               context,
@@ -373,7 +372,8 @@ class _UpdateBusinessProfileScreenState
                                     radius: 80,
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(80),
+                                          borderRadius:
+                                              BorderRadius.circular(80),
                                           image: DecorationImage(
                                               fit: BoxFit.cover,
                                               image: imageProvider)),
@@ -382,7 +382,10 @@ class _UpdateBusinessProfileScreenState
                                   placeholder: (context, url) => CircleAvatar(
                                     backgroundColor: Colors.grey[300],
                                     radius: 45,
-                                    child: const AnimatedImagePlaceholderLoader(),
+                                    child: AnimatedImageLoader(
+                                      indicatorType: null,
+                                      loaderType: LoaderType.placeholder,
+                                    ),
                                   ),
                                   errorWidget: (context, url, error) =>
                                       CircleAvatar(
@@ -449,7 +452,8 @@ class _UpdateBusinessProfileScreenState
                                                 await _picker.pickImage(
                                                     maxHeight: 480,
                                                     maxWidth: 640,
-                                                    source: ImageSource.gallery);
+                                                    source:
+                                                        ImageSource.gallery);
                                             Talker().info(
                                                 "Captured Image From gallery :- ${retailerImage!.path}");
                                             setState(() {
@@ -509,7 +513,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'Business Name',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -548,7 +553,8 @@ class _UpdateBusinessProfileScreenState
                                 borderSide: const BorderSide(color: Colors.red),
                                 borderRadius: BorderRadius.circular(8.0)),
                             enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(8.0)),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -569,7 +575,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'Mobile number',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -599,7 +606,8 @@ class _UpdateBusinessProfileScreenState
                                       ? state.businessContactNumberError
                                       : null,
                               errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                   borderRadius: BorderRadius.circular(8.0)),
                               hintText: '+919867544367',
                               hintStyle: const TextStyle(color: Colors.grey),
@@ -632,7 +640,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'Business Address',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -657,13 +666,15 @@ class _UpdateBusinessProfileScreenState
                             // hintText: 'India (IN)',
                             // hintStyle: const TextStyle(color: Colors.black),
                             enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(8.0)),
                             // focusedBorder: OutlineInputBorder(
                             //     borderSide: const BorderSide(color: Colors.grey),
                             //     borderRadius: BorderRadius.circular(8.0)),
                             disabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(8.0)),
                           ),
                           items: countryList
@@ -703,7 +714,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'What your business do?',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -731,7 +743,8 @@ class _UpdateBusinessProfileScreenState
                                       ? state.businessTypeError
                                       : null,
                               errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                   borderRadius: BorderRadius.circular(8.0)),
                               // hintText: 'Education and Training',
                               // hintStyle: const TextStyle(color: Colors.black),
@@ -761,7 +774,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'Business Address',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -789,7 +803,8 @@ class _UpdateBusinessProfileScreenState
                                       ? state.businessAddressError
                                       : null,
                               errorBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(color: Colors.red),
+                                  borderSide:
+                                      const BorderSide(color: Colors.red),
                                   borderRadius: BorderRadius.circular(8.0)),
                               // hintText: 'Address',
                               // hintStyle: const TextStyle(color: Colors.grey),
@@ -820,7 +835,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'Business Email Address',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -860,7 +876,8 @@ class _UpdateBusinessProfileScreenState
                                 borderSide: const BorderSide(color: Colors.red),
                                 borderRadius: BorderRadius.circular(8.0)),
                             enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(8.0)),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -892,7 +909,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'Website',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -929,9 +947,10 @@ class _UpdateBusinessProfileScreenState
                                 (state is UpdateBusinessTextChangedErrorState)
                                     ? state.businessWebsiteError
                                     : null,
-        
+
                             enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(8.0)),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -956,7 +975,8 @@ class _UpdateBusinessProfileScreenState
                             child: const Text(
                               'Business Tax Number',
                               textAlign: TextAlign.start,
-                              style: TextStyle(color: Colors.black, fontSize: 18),
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
                           ),
                         ),
@@ -992,7 +1012,8 @@ class _UpdateBusinessProfileScreenState
                                     ? state.businessTaxNumberError
                                     : null,
                             enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(color: Colors.grey),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
                                 borderRadius: BorderRadius.circular(8.0)),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: const BorderSide(
@@ -1008,7 +1029,7 @@ class _UpdateBusinessProfileScreenState
                           height: screenSize.height * 0.06,
                         ),
                         (state is UpdateBusinessLoadingState)
-                            ? const Center(
+                            ? Center(
                                 child: AnimatedImageLoader(),
                               )
                             : ((state is UpdateBusinessValidState)
@@ -1016,8 +1037,10 @@ class _UpdateBusinessProfileScreenState
                                     onTap: () async {
                                       BlocProvider.of<BusinessBloc>(context)
                                           .add(UpdateBusinessEvent(
-                                        businessName: businessNameController.text,
-                                        businessType: businessTypeController.text,
+                                        businessName:
+                                            businessNameController.text,
+                                        businessType:
+                                            businessTypeController.text,
                                         businessAddress:
                                             businessAddressController.text,
                                         businessEmail:
@@ -1033,7 +1056,8 @@ class _UpdateBusinessProfileScreenState
                                                         as BusinessListResponseData)
                                                     .id !=
                                                 null)
-                                            ? (widget.argus['businessProfileData']
+                                            ? (widget.argus[
+                                                        'businessProfileData']
                                                     as BusinessListResponseData)
                                                 .id!
                                             : '',
@@ -1043,9 +1067,10 @@ class _UpdateBusinessProfileScreenState
                                         businessImage: (retailerImage != null)
                                             ? retailerImage
                                             : null,
-                                        businessImageName: (retailerImage != null)
-                                            ? retailerImage!.path
-                                            : '',
+                                        businessImageName:
+                                            (retailerImage != null)
+                                                ? retailerImage!.path
+                                                : '',
                                       ));
                                     },
                                     child: Container(

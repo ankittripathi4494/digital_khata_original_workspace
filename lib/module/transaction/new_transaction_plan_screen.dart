@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:async' as t1;
 import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
@@ -227,7 +227,10 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                           )
                         : Container(),
                     (state is AddNewPlanLoadingState)
-                        ? const AnimatedImagePlaceholderLoader()
+                        ? AnimatedImageLoader(
+                            indicatorType: null,
+                            loaderType: LoaderType.placeholder,
+                          )
                         : Container(),
                     const Text(
                       'Title',
@@ -745,7 +748,6 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                               ),
                             ),
                           ),
-                    
                     SizedBox(
                       height: screenSize.height * 0.03,
                     ),

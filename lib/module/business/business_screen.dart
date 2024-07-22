@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
@@ -164,8 +163,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   placeholder: (context, url) => CircleAvatar(
                                     backgroundColor: Colors.grey[300],
                                     radius: 45,
-                                    child:
-                                        const AnimatedImagePlaceholderLoader(),
+                                   child: AnimatedImageLoader(
+                                          indicatorType: null,
+                                          loaderType: LoaderType.placeholder,
+                                        ),
                                   ),
                                   errorWidget: (context, url, error) => Stack(
                                     children: [
@@ -1210,7 +1211,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 );
               }
               if (state is FetchSelectedBusinessLoadingState) {
-                return const Center(
+                return Center(
                   child: AnimatedImageLoader(),
                 );
               }

@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/module/account/account_bloc/account_bloc.dart';
 import 'package:dkapp/module/account/account_bloc/account_event.dart';
@@ -195,13 +195,11 @@ class _AccountScreeenState extends State<AccountScreeen> {
           title: const Text(
             'My Account',
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w400,
-                fontSize: 25),
+                color: Colors.white, fontWeight: FontWeight.w400, fontSize: 25),
           ),
         ),
         body: Container(
-           decoration: BoxDecoration(color: Colors.grey[100]),
+          decoration: BoxDecoration(color: Colors.grey[100]),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Container(
@@ -254,8 +252,10 @@ class _AccountScreeenState extends State<AccountScreeen> {
                                           CircleAvatar(
                                         backgroundColor: Colors.grey[300],
                                         radius: 30,
-                                        child:
-                                            const AnimatedImagePlaceholderLoader(),
+                                        child: AnimatedImageLoader(
+                                          indicatorType: null,
+                                          loaderType: LoaderType.placeholder,
+                                        ),
                                       ),
                                       errorWidget: (context, url, error) =>
                                           CircleAvatar(
@@ -399,7 +399,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
                   InkWell(
                     onTap: () async {
                       var callUrl = "https://financepe.in/";
-          
+
                       var url = Uri.parse(callUrl);
                       if (await canLaunchUrl(url)) {
                         await launchUrl(url);
@@ -685,7 +685,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
                         InkWell(
                           onTap: () async {
                             var callUrl = "tel:+91 7054344815";
-          
+
                             var url = Uri.parse(callUrl);
                             if (await canLaunchUrl(url)) {
                               await launchUrl(url);
@@ -792,7 +792,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
         ),
         bottomNavigationBar: BottomNavBarWidget.bottomNavBar(
             screenSize, context, currentPageIndexValue, (index) {
-              print("Current Index :- $index");
+          print("Current Index :- $index");
           setState(() {
             currentPageIndexValue = index;
           });
@@ -801,13 +801,13 @@ class _AccountScreeenState extends State<AccountScreeen> {
               context,
               '/dashboard',
             );
-          } 
+          }
           // else if (currentPageIndexValue == 1) {
           //   Navigator.pushNamed(
           //     context,
           //     '/invoice',
           //   );
-          // } 
+          // }
           else if (currentPageIndexValue == 1) {
             Navigator.pushNamed(
               context,

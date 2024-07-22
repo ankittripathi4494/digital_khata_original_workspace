@@ -1,10 +1,12 @@
-// ignore_for_file: unrelated_type_equality_checks, use_build_context_synchronously, avoid_print, must_be_immutable
+// ignore_for_file: unrelated_type_equality_checks, use_build_context_synchronously, avoid_print, must_be_immutable, unused_import
 
 import 'dart:async';
 
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:talker/talker.dart';
 
 import '../../global_blocs/internet/internet_cubit.dart';
@@ -61,10 +63,10 @@ class _SplashScreenState extends State<SplashScreen> {
       bloc: InternetCubit(),
       listener: (context, state) {
         if (state == InternetState.internetAvailable) {
-          Timer(Durations.medium2, () => redirectPage());
+          Timer(Durations.long4, () => redirectPage());
         }
         if (state == InternetState.internetLost) {
-          Timer(Durations.short2, () {
+          Timer(Durations.long4, () {
             Navigator.pushReplacementNamed(
               context,
               '/no-internet',
@@ -78,8 +80,6 @@ class _SplashScreenState extends State<SplashScreen> {
         body: Container(
           decoration: const BoxDecoration(),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 height: screenSize.height * 0.15,
@@ -108,13 +108,22 @@ class _SplashScreenState extends State<SplashScreen> {
             ],
           ),
         ),
-        floatingActionButton: SizedBox(
-          height: screenSize.height * 0.05,
-          child: const Center(
-              child: Text(
-            'Made with ❤️ in India',
-            style: TextStyle(color: Colors.white),
-          )),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedImageLoader(indicatorType: Indicator.ballClipRotateMultiple,loaderType: LoaderType.splash,),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              height: screenSize.height * 0.05,
+              child: const Center(
+                  child: Text(
+                'Made with ❤️ in India',
+                style: TextStyle(color: Colors.white),
+              )),
+            ),
+          ],
         ),
       ),
     );

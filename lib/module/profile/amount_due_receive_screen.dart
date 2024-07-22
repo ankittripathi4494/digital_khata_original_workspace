@@ -3,7 +3,7 @@
 import 'dart:async' as t1;
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
@@ -143,7 +143,10 @@ class _AmountDueReceiveScreenState extends State<AmountDueReceiveScreen> {
                               )
                             : Container(),
                         (state is UpdateCashTransactionLoadingState)
-                            ? const AnimatedImagePlaceholderLoader()
+                            ? AnimatedImageLoader(
+                                indicatorType: null,
+                                loaderType: LoaderType.placeholder,
+                              )
                             : Container(),
                         Container(
                           margin: EdgeInsets.symmetric(
@@ -495,7 +498,12 @@ class _AmountDueReceiveScreenState extends State<AmountDueReceiveScreen> {
                                                               Colors.grey[300],
                                                           radius: 45,
                                                           child:
-                                                              const AnimatedImagePlaceholderLoader(),
+                                                              AnimatedImageLoader(
+                                                            indicatorType: null,
+                                                            loaderType:
+                                                                LoaderType
+                                                                    .placeholder,
+                                                          ),
                                                         ),
                                                         errorWidget: (context,
                                                                 url, error) =>

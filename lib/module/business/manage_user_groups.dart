@@ -5,7 +5,6 @@ import 'dart:convert';
 
 import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
@@ -19,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ManageUseGroups extends StatefulWidget {
@@ -87,9 +87,12 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                 return SmartRefresher(
                   enablePullDown: true,
                   enablePullUp: false,
-                  header: const WaterDropHeader(
-                    waterDropColor: Color.fromARGB(255, 31, 1, 102),
-                    idleIcon: AnimatedImagePlaceholderLoader(),
+                  header: WaterDropHeader(
+                    waterDropColor: const Color.fromARGB(255, 31, 1, 102),
+                    idleIcon: AnimatedImageLoader(
+                      indicatorType: Indicator.ballClipRotate,
+                      loaderType: LoaderType.refresher,
+                    ),
                   ),
                   controller: refreshController,
                   onRefresh: (() async {
@@ -177,14 +180,13 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                             },
                           ),
                         ),
-                      
                       );
                     },
                   ),
                 );
               }
               if (state is UserGroupListLoadingState) {
-                return const Center(
+                return Center(
                   child: AnimatedImageLoader(),
                 );
               }
@@ -193,7 +195,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                   child: Text("No User Group Found"),
                 );
               }
-              return const Center(
+              return Center(
                 child: AnimatedImageLoader(),
               );
             },
@@ -576,7 +578,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                                             barrierDismissible:
                                                                 false,
                                                             builder: (context) {
-                                                              return const AlertDialog(
+                                                              return AlertDialog(
                                                                 backgroundColor:
                                                                     Colors
                                                                         .white,
@@ -1046,7 +1048,7 @@ class _ManageUseGroupsState extends State<ManageUseGroups> {
                                                             barrierDismissible:
                                                                 false,
                                                             builder: (context) {
-                                                              return const AlertDialog(
+                                                              return AlertDialog(
                                                                 backgroundColor:
                                                                     Colors
                                                                         .white,

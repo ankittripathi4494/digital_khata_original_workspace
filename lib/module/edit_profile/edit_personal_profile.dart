@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable, use_build_context_synchronously, avoid_print
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/account/model/account_response_model.dart';
 import 'package:dkapp/module/edit_profile/model/country_response_model.dart';
@@ -134,7 +134,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
         ),
       ),
       body: Container(
-         decoration: BoxDecoration(color: Colors.grey[100]),
+        decoration: BoxDecoration(color: Colors.grey[100]),
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -175,7 +175,8 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                         Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
-                                          retailerImageFile = retailerImage!.path;
+                                          retailerImageFile =
+                                              retailerImage!.path;
                                         });
                                       },
                                       icon: const Icon(
@@ -206,9 +207,13 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                               placeholder: (context, url) => CircleAvatar(
                                 backgroundColor: Colors.grey[300],
                                 radius: 80,
-                                child: const AnimatedImagePlaceholderLoader(),
+                                child: AnimatedImageLoader(
+                                  indicatorType: null,
+                                  loaderType: LoaderType.placeholder,
+                                ),
                               ),
-                              errorWidget: (context, url, error) => CircleAvatar(
+                              errorWidget: (context, url, error) =>
+                                  CircleAvatar(
                                 backgroundColor: Colors.grey[300],
                                 radius: 80,
                                 child: Image.asset(
@@ -234,7 +239,8 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                         Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
-                                          retailerImageFile = retailerImage!.path;
+                                          retailerImageFile =
+                                              retailerImage!.path;
                                         });
                                       },
                                       icon: const Icon(
@@ -276,7 +282,8 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                         Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
-                                          retailerImageFile = retailerImage!.path;
+                                          retailerImageFile =
+                                              retailerImage!.path;
                                         });
                                       },
                                       icon: const Icon(
@@ -314,7 +321,8 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                         Talker().info(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
-                                          retailerImageFile = retailerImage!.path;
+                                          retailerImageFile =
+                                              retailerImage!.path;
                                         });
                                       },
                                       icon: const Icon(
@@ -416,7 +424,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                       },
                       keyboardType: TextInputType.number,
                       cursorColor: Colors.black,
-        
+
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
                             onPressed: () {},
@@ -606,7 +614,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                         } else {
                           updatePersonalProfile();
                         }
-        
+
                         // updatePersonalProfileImage();
                       },
                       child: Container(

@@ -2,7 +2,7 @@
 
 import 'dart:async' as t1;
 import 'dart:io';
-import 'package:dkapp/global_widget/animated_loading_placeholder_widget.dart';
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/profile/model/transaction_list_response_model.dart';
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
@@ -120,7 +120,7 @@ class _CashInScreenState extends State<CashInScreen> {
           ],
         ),
         body: Container(
-           decoration: BoxDecoration(color: Colors.grey[100]),
+          decoration: BoxDecoration(color: Colors.grey[100]),
           child: BlocBuilder<TransactionsBloc, TransactionsState>(
             builder: (context, state) {
               return Container(
@@ -142,20 +142,20 @@ class _CashInScreenState extends State<CashInScreen> {
                                       attachImage = null;
                                       notesController.clear();
                                     });
-                                    
+
                                     Navigator.pushReplacementNamed(
                                         context, '/cash-in-screen',
                                         arguments: widget.argus);
                                   } else {
-                                
                                     Navigator.pop(context);
                                     Navigator.pushReplacementNamed(
                                         context, '/customer-screen-details',
                                         arguments: widget.argus);
                                   }
-                                  EssentialWidgetsCollection.showSuccessSnackbar(
-                                      context,
-                                      description: "Transaction Successfull");
+                                  EssentialWidgetsCollection
+                                      .showSuccessSnackbar(context,
+                                          description:
+                                              "Transaction Successfull");
                                 },
                               )
                             : Container(),
@@ -174,7 +174,10 @@ class _CashInScreenState extends State<CashInScreen> {
                               )
                             : Container(),
                         (state is AddNewCashTransactionLoadingState)
-                            ? const AnimatedImagePlaceholderLoader()
+                            ? AnimatedImageLoader(
+                                indicatorType: null,
+                                loaderType: LoaderType.placeholder,
+                              )
                             : Container(),
                         Container(
                           margin: EdgeInsets.symmetric(
@@ -304,7 +307,8 @@ class _CashInScreenState extends State<CashInScreen> {
                                         },
                                         label: Text(
                                             i.DateFormat('MM-dd-y hh:mm a')
-                                                .format(((selectedDate != null) &&
+                                                .format(((selectedDate !=
+                                                            null) &&
                                                         (selectedTime != null))
                                                     ? _combineDateTime(
                                                         selectedDate!,
@@ -356,88 +360,92 @@ class _CashInScreenState extends State<CashInScreen> {
                                 children: [
                                   ListTile(
                                     onTap: () {
-                                      EssentialWidgetsCollection.showAlertDialog(
-                                          context,
-                                          icon: const Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                "Choose Option",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    letterSpacing: 1.2,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.black),
+                                      EssentialWidgetsCollection
+                                          .showAlertDialog(context,
+                                              icon: const Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    "Choose Option",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        letterSpacing: 1.2,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.black),
+                                                  ),
+                                                  Divider(
+                                                      color: Colors.green,
+                                                      thickness: 2)
+                                                ],
                                               ),
-                                              Divider(
-                                                  color: Colors.green,
-                                                  thickness: 2)
-                                            ],
-                                          ),
-                                          title: TextButton.icon(
-                                            onPressed: () async {
-                                              _picker
-                                                  .pickImage(
-                                                      maxHeight: 480,
-                                                      maxWidth: 640,
-                                                      source: ImageSource.camera)
-                                                  .then((c) {
-                                                setState(() {
-                                                  attachImage = c;
-                                                });
-                                                Talker().info(
-                                                    "Captured Image From Camera :- ${attachImage!.path}");
-                                                Navigator.pop(context);
-                                              });
-                                            },
-                                            label: const Text(
-                                              "Camera",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  letterSpacing: 1.2,
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.black),
-                                            ),
-                                            icon: const Icon(
-                                              Icons.camera,
-                                              size: 25,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          content: TextButton.icon(
-                                              onPressed: () {
-                                                _picker
-                                                    .pickImage(
-                                                        maxHeight: 480,
-                                                        maxWidth: 640,
-                                                        source:
-                                                            ImageSource.gallery)
-                                                    .then((c) {
-                                                  setState(() {
-                                                    attachImage = c;
+                                              title: TextButton.icon(
+                                                onPressed: () async {
+                                                  _picker
+                                                      .pickImage(
+                                                          maxHeight: 480,
+                                                          maxWidth: 640,
+                                                          source: ImageSource
+                                                              .camera)
+                                                      .then((c) {
+                                                    setState(() {
+                                                      attachImage = c;
+                                                    });
+                                                    Talker().info(
+                                                        "Captured Image From Camera :- ${attachImage!.path}");
+                                                    Navigator.pop(context);
                                                   });
-                                                  Talker().info(
-                                                      "Captured Image From gallery :- ${attachImage!.path}");
-                                                  Navigator.pop(context);
-                                                });
-                                              },
-                                              icon: const Icon(
-                                                Icons.image_search,
-                                                size: 25,
-                                                color: Colors.black,
+                                                },
+                                                label: const Text(
+                                                  "Camera",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      letterSpacing: 1.2,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: Colors.black),
+                                                ),
+                                                icon: const Icon(
+                                                  Icons.camera,
+                                                  size: 25,
+                                                  color: Colors.black,
+                                                ),
                                               ),
-                                              label: const Text(
-                                                "Gallery",
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    letterSpacing: 1.2,
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.black),
-                                              )));
+                                              content: TextButton.icon(
+                                                  onPressed: () {
+                                                    _picker
+                                                        .pickImage(
+                                                            maxHeight: 480,
+                                                            maxWidth: 640,
+                                                            source: ImageSource
+                                                                .gallery)
+                                                        .then((c) {
+                                                      setState(() {
+                                                        attachImage = c;
+                                                      });
+                                                      Talker().info(
+                                                          "Captured Image From gallery :- ${attachImage!.path}");
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.image_search,
+                                                    size: 25,
+                                                    color: Colors.black,
+                                                  ),
+                                                  label: const Text(
+                                                    "Gallery",
+                                                    style: TextStyle(
+                                                        fontSize: 16,
+                                                        letterSpacing: 1.2,
+                                                        fontWeight:
+                                                            FontWeight.w300,
+                                                        color: Colors.black),
+                                                  )));
                                     },
                                     contentPadding: const EdgeInsets.all(0),
                                     visualDensity: const VisualDensity(
@@ -494,7 +502,7 @@ class _CashInScreenState extends State<CashInScreen> {
                                       controller: notesController,
                                       keyboardType: TextInputType.multiline,
                                       maxLines: null, // Set this
-          
+
                                       style: const TextStyle(
                                           color: Colors.black,
                                           letterSpacing: 1.2,
@@ -514,26 +522,30 @@ class _CashInScreenState extends State<CashInScreen> {
                                             fontSize: 12,
                                             fontWeight: FontWeight.w300),
                                         enabledBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
                                         ),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
                                         ),
                                         errorText: null,
                                         errorBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           borderSide: const BorderSide(
                                               color: Colors.transparent,
                                               width: 2),
@@ -568,27 +580,32 @@ class _CashInScreenState extends State<CashInScreen> {
                                     width: screenSize.width,
                                     child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
-                                          shape: const ContinuousRectangleBorder(),
+                                            shape:
+                                                const ContinuousRectangleBorder(),
                                             elevation: 10,
                                             foregroundColor: Colors.blue,
                                             side: const BorderSide(
                                               color: Colors.blue,
                                             )),
                                         onPressed: () {
-                                          if (amountController.text.isNotEmpty) {
-                                            BlocProvider.of<TransactionsBloc>(context)
+                                          if (amountController
+                                              .text.isNotEmpty) {
+                                            BlocProvider.of<
+                                                    TransactionsBloc>(context)
                                                 .add(AddCashTransactionEvent(
                                                     samePageRedirection: true,
-                                                    customerId: (widget.argus[
-                                                                'customerData']
-                                                            as SelectedCustomerResponseData)
-                                                        .id!,
+                                                    customerId:
+                                                        (widget
+                                                                        .argus[
+                                                                    'customerData']
+                                                                as SelectedCustomerResponseData)
+                                                            .id!,
                                                     businessId: (widget.argus[
                                                                 'selectedBusiness']
                                                             as BusinessListResponseData)
                                                         .id!,
-                                                    userId:
-                                                        sph.getString("userid")!,
+                                                    userId: sph
+                                                        .getString("userid")!,
                                                     transactionType: 'C',
                                                     transactionAmount:
                                                         amountController.text,
@@ -631,7 +648,7 @@ class _CashInScreenState extends State<CashInScreen> {
                 width: screenSize.width,
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                     shape: const ContinuousRectangleBorder(),
+                      shape: const ContinuousRectangleBorder(),
                       elevation: 10,
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
