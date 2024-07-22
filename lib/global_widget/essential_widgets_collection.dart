@@ -6,7 +6,7 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+      backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
@@ -34,7 +34,7 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+     backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
@@ -62,7 +62,7 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+     backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
@@ -90,7 +90,7 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      backgroundColor: Color.fromARGB(255, 231, 199, 210),
+     backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
