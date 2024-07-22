@@ -14,6 +14,7 @@ import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -28,9 +29,14 @@ class AccountScreeen extends StatefulWidget {
 class _AccountScreeenState extends State<AccountScreeen> {
   // int currentIndex = 0;
   late int currentPageIndexValue = 2;
-  Future<bool> showAboutPopup(context) async {
+  String? appName;
+  String? packageName;
+  String? appVersion;
+  String? buildNumber;
+
+  showAboutPopup(context) async {
     // exit from app
-    return await showDialog(
+    return showDialog(
         // barrierColor: Colors.white,
         context: context,
         builder: (BuildContext context) {
@@ -47,18 +53,18 @@ class _AccountScreeenState extends State<AccountScreeen> {
                 right: 110.0, left: 110.0, top: 10.0), // Adjust width here
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(0.0)),
-            title: const Text(
-              'Digital Khata',
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+            title: Text(
+              appName!,
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.w500),
             ),
             contentPadding: const EdgeInsets.only(
               bottom: 10.0,
               left: 160.0,
             ),
-            content: const Text(
-              'Version 1.67.0',
-              style: TextStyle(
+            content: Text(
+              'Version $appVersion.$buildNumber',
+              style: const TextStyle(
                 color: Colors.grey,
               ),
             ),
@@ -160,8 +166,20 @@ class _AccountScreeenState extends State<AccountScreeen> {
 
   @override
   void initState() {
+    _initPackageInfo();
     callUserFetchDetails();
     super.initState();
+  }
+
+  _initPackageInfo() async {
+    PackageInfo.fromPlatform().then((c) {
+      setState(() {
+        appName = c.appName;
+        packageName = c.packageName;
+        appVersion = c.version;
+        buildNumber = c.buildNumber;
+      });
+    });
   }
 
   callUserFetchDetails() {
@@ -433,9 +451,9 @@ class _AccountScreeenState extends State<AccountScreeen> {
                           size: 25,
                           color: Color.fromARGB(255, 31, 1, 102),
                         ),
-                        title: const Text(
-                          'Whats new in 1.67.0',
-                          style: TextStyle(
+                        title: Text(
+                          'Whats new in $appVersion.$buildNumber',
+                          style: const TextStyle(
                               color: Colors.black, fontWeight: FontWeight.w500),
                         ),
                       ),
@@ -582,7 +600,7 @@ class _AccountScreeenState extends State<AccountScreeen> {
                         ),
                         InkWell(
                           onTap: () {
-                            showAboutPopup(context);
+                            (appName != null) ? showAboutPopup(context) : null;
                           },
                           child: ListTile(
                             minLeadingWidth: screenSize.width * 0.1,
@@ -592,9 +610,9 @@ class _AccountScreeenState extends State<AccountScreeen> {
                               size: 27,
                               color: Colors.orange,
                             ),
-                            title: const Text(
-                              'Digital Khata',
-                              style: TextStyle(
+                            title: Text(
+                              appName ?? '',
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500),
                             ),

@@ -2941,8 +2941,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               physics: const NeverScrollableScrollPhysics(),
                               children: [
                                 //tab 1: All
-                                _allDataTab(screenSize, state.successData,
-                                    selectedBusiness),
+                                _allDataTab(
+                                    screenSize: screenSize,
+                                    customerData: state.successData,
+                                    selectedBusiness: selectedBusiness,
+                                    loading: null),
 
                                 //tab 2: Today
                                 _todayDataTab(screenSize, state.successData),
@@ -2960,6 +2963,752 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                                 //tab 7: DND
                                 _dndDataTab(screenSize, state.successData),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  // SizedBox(
+                  //   height: screenSize.height * 0.02,
+                  // ),
+                ],
+              ),
+            ),
+          );
+        }
+        if (state is CustomerListLoadingState) {
+          return Container(
+            decoration: BoxDecoration(color: Colors.grey[100]),
+            height: screenSize.height / 1.2,
+            child: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Text(
+                      'UPCOMING DUE ACCOUNTS - 0',
+                      style: TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
+                    title: IconButton(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            backgroundColor: Colors.white,
+                            scrollControlDisabledMaxHeightRatio: 0.3,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.sort,
+                                      size: 30,
+                                      weight: 50,
+                                      color: Color.fromARGB(255, 50, 49, 49),
+                                    ),
+                                    title: const Text(
+                                      'Sort By',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 50, 49, 49),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    trailing: TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        'clear',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[300],
+                                  ),
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.09,
+                                        vertical: screenSize.height * 0.001),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16.0),
+                                    chipsText: const ['AMOUNT', 'NAME'],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    prefixIcons: const [
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                    selectedPrefixIcon: const Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.arrow_drop_up_outlined,
+                                        size: 25.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                      horizontal: screenSize.width * 0.1,
+                                    ),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 12.0),
+                                    chipsText: const ['RECENT', 'DUE DATE'],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    prefixIcons: const [
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                    selectedPrefixIcon: const Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.arrow_drop_up_outlined,
+                                        size: 25.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.sort,
+                          color: Color.fromARGB(255, 50, 49, 49),
+                        )),
+                    trailing: IconButton(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            backgroundColor: Colors.white,
+                            scrollControlDisabledMaxHeightRatio: 0.3,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.sort,
+                                      size: 30,
+                                      weight: 50,
+                                      color: Color.fromARGB(255, 50, 49, 49),
+                                    ),
+                                    title: const Text(
+                                      'Filter',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 50, 49, 49),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    trailing: TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        'clear',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[300],
+                                  ),
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.09,
+                                        vertical: screenSize.height * 0.01),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16.0),
+                                    chipsText: const [
+                                      'Hide Zero Balance Accounts',
+                                      'Hide DND'
+                                    ],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(
+                          CupertinoIcons.text_alignright,
+                          color: Color.fromARGB(255, 50, 49, 49),
+                        )),
+                  ),
+                  SizedBox(
+                    height: screenSize.height / 2.5,
+                    width: screenSize.width,
+                    child: DefaultTabController(
+                      length: 7,
+                      child: Column(
+                        children: <Widget>[
+                          ButtonsTabBar(
+                            labelSpacing: 8.0,
+                            buttonMargin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 5.0),
+                            radius: 50,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 10.0),
+                            // Customize the appearance and behavior of the tab bar
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 31, 1, 102),
+                                borderRadius: BorderRadius.circular(30)),
+
+                            // borderWidth: 2,
+                            // borderColor: Colors.black,
+                            labelStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            unselectedLabelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            // Add your tabs here
+                            tabs: const [
+                              Tab(
+                                text: 'All',
+                              ),
+                              Tab(
+                                text: 'Today',
+                              ),
+                              Tab(
+                                text: 'Overdue',
+                              ),
+                              Tab(
+                                text: 'Upcoming',
+                              ),
+                              Tab(
+                                text: 'Tag',
+                              ),
+                              Tab(
+                                text: 'Groups',
+                              ),
+                              Tab(
+                                text: 'DND',
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                //tab 1: All
+                                _allDataTab(
+                                    screenSize: screenSize,
+                                    customerData: [],
+                                    selectedBusiness: null,
+                                    loading: true),
+
+                                //tab 2: Today
+                                _todayDataTab(screenSize, []),
+
+                                //tab 3: Overdue
+                                _overdueDataTab(screenSize, []),
+
+                                //tab 4: UpComing
+                                _upcomingDataTab(screenSize, []),
+
+                                //tab 5: Tag
+                                _tagDataTab(screenSize, []),
+                                //tab 6: Groups
+                                _groupDataTab(screenSize, []),
+
+                                //tab 7: DND
+                                _dndDataTab(screenSize, []),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  // SizedBox(
+                  //   height: screenSize.height * 0.02,
+                  // ),
+                ],
+              ),
+            ),
+          );
+        }
+        if (state is CustomerListFailedState) {
+          return Container(
+            decoration: BoxDecoration(color: Colors.grey[100]),
+            height: screenSize.height / 1.2,
+            child: SingleChildScrollView(
+              physics: NeverScrollableScrollPhysics(),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Text(
+                      'UPCOMING DUE ACCOUNTS - 0',
+                      style: TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
+                    title: IconButton(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            backgroundColor: Colors.white,
+                            scrollControlDisabledMaxHeightRatio: 0.3,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.sort,
+                                      size: 30,
+                                      weight: 50,
+                                      color: Color.fromARGB(255, 50, 49, 49),
+                                    ),
+                                    title: const Text(
+                                      'Sort By',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 50, 49, 49),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    trailing: TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        'clear',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[300],
+                                  ),
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.09,
+                                        vertical: screenSize.height * 0.001),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16.0),
+                                    chipsText: const ['AMOUNT', 'NAME'],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    prefixIcons: const [
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                    selectedPrefixIcon: const Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.arrow_drop_up_outlined,
+                                        size: 25.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                      horizontal: screenSize.width * 0.1,
+                                    ),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 12.0),
+                                    chipsText: const ['RECENT', 'DUE DATE'],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    prefixIcons: const [
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                      Icon(
+                                        Icons.arrow_drop_down,
+                                        size: 25.0,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                    selectedPrefixIcon: const Padding(
+                                      padding: EdgeInsets.only(right: 5.0),
+                                      child: Icon(
+                                        Icons.arrow_drop_up_outlined,
+                                        size: 25.0,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.sort,
+                          color: Color.fromARGB(255, 50, 49, 49),
+                        )),
+                    trailing: IconButton(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            backgroundColor: Colors.white,
+                            scrollControlDisabledMaxHeightRatio: 0.3,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ListTile(
+                                    leading: const Icon(
+                                      Icons.sort,
+                                      size: 30,
+                                      weight: 50,
+                                      color: Color.fromARGB(255, 50, 49, 49),
+                                    ),
+                                    title: const Text(
+                                      'Filter',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromARGB(255, 50, 49, 49),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    trailing: TextButton.icon(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      icon: const Icon(
+                                        Icons.close,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                      label: const Text(
+                                        'clear',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 15),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: Colors.grey[300],
+                                  ),
+                                  SelectChipsInput(
+                                    marginBetweenChips: EdgeInsets.symmetric(
+                                        horizontal: screenSize.width * 0.09,
+                                        vertical: screenSize.height * 0.01),
+                                    paddingInsideChipContainer:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12.0, horizontal: 16.0),
+                                    chipsText: const [
+                                      'Hide Zero Balance Accounts',
+                                      'Hide DND'
+                                    ],
+                                    separatorCharacter: ";",
+                                    selectedChipTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                    unselectedChipTextStyle: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                    ),
+                                    onTap: (p0, p1) {
+                                      setState(() {
+                                        outputSelectChipsInput = p0;
+                                      });
+                                    },
+                                    widgetContainerDecoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.0),
+                                      color: const Color.fromARGB(
+                                          255, 249, 248, 248),
+                                    ),
+                                    unselectedChipDecoration: BoxDecoration(
+                                      // color: Colors.green,
+                                      border: Border.all(
+                                          color: Colors.green, width: 1.8),
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    selectedChipDecoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        icon: const Icon(
+                          CupertinoIcons.text_alignright,
+                          color: Color.fromARGB(255, 50, 49, 49),
+                        )),
+                  ),
+                  SizedBox(
+                    height: screenSize.height / 2.5,
+                    width: screenSize.width,
+                    child: DefaultTabController(
+                      length: 7,
+                      child: Column(
+                        children: <Widget>[
+                          ButtonsTabBar(
+                            labelSpacing: 8.0,
+                            buttonMargin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 5.0),
+                            radius: 50,
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 10.0),
+                            // Customize the appearance and behavior of the tab bar
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 31, 1, 102),
+                                borderRadius: BorderRadius.circular(30)),
+
+                            // borderWidth: 2,
+                            // borderColor: Colors.black,
+                            labelStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            unselectedLabelStyle: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            // Add your tabs here
+                            tabs: const [
+                              Tab(
+                                text: 'All',
+                              ),
+                              Tab(
+                                text: 'Today',
+                              ),
+                              Tab(
+                                text: 'Overdue',
+                              ),
+                              Tab(
+                                text: 'Upcoming',
+                              ),
+                              Tab(
+                                text: 'Tag',
+                              ),
+                              Tab(
+                                text: 'Groups',
+                              ),
+                              Tab(
+                                text: 'DND',
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                //tab 1: All
+                                _allDataTab(
+                                    screenSize: screenSize,
+                                    customerData: [],
+                                    selectedBusiness: null,
+                                    loading: false),
+
+                                //tab 2: Today
+                                _todayDataTab(screenSize, []),
+
+                                //tab 3: Overdue
+                                _overdueDataTab(screenSize, []),
+
+                                //tab 4: UpComing
+                                _upcomingDataTab(screenSize, []),
+
+                                //tab 5: Tag
+                                _tagDataTab(screenSize, []),
+                                //tab 6: Groups
+                                _groupDataTab(screenSize, []),
+
+                                //tab 7: DND
+                                _dndDataTab(screenSize, []),
                               ],
                             ),
                           ),
@@ -3308,7 +4057,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             children: [
                               //tab 1: All
-                              _allDataTab(screenSize, [], null),
+                              _allDataTab(
+                                  screenSize: screenSize,
+                                  customerData: [],
+                                  selectedBusiness: null,
+                                  loading: true),
 
                               //tab 2: Today
                               _todayDataTab(screenSize, []),
@@ -3655,236 +4408,241 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
-  _allDataTab(Size screenSize, List<CustomerResponseData>? customerData,
-      BusinessListResponseData? selectedBusiness) {
-    if (customerData!.isNotEmpty) {
+  _allDataTab(
+      {Size? screenSize,
+      List<CustomerResponseData>? customerData,
+      BusinessListResponseData? selectedBusiness,
+      bool? loading}) {
+    if ((loading == true)) {
       return Container(
         color: Colors.grey[100],
-        child: SmartRefresher(
-          enablePullDown: true,
-          enablePullUp: false,
-          header: WaterDropHeader(
-            waterDropColor: Color.fromARGB(255, 31, 1, 102),
-            idleIcon: AnimatedImageLoader(
-              indicatorType: Indicator.ballClipRotate,
-              loaderType: LoaderType.refresher,
-            ),
-          ),
-          controller: refreshController,
-          onRefresh: (() async {
-            // monitor network fetch
-            await Future.delayed(const Duration(milliseconds: 1000));
-            // if failed,use refreshFailed()
-
-            BlocProvider.of<CustomerBloc>(context).add(CustomerListFetchEvent(
-                userId: sph.getString("userid")!,
-                businessId: selectedBusiness?.id ?? ''));
-          }),
-          onLoading: (() async {
-            await Future.delayed(const Duration(milliseconds: 1000));
-            // if failed,use loadFailed(),if no data return,use LoadNodata()
-
-            if (mounted) setState(() {});
-            refreshController.loadComplete();
-          }),
-          child: ListView.builder(
-            itemCount: customerData.length,
-            itemBuilder: (context, index) {
-              CustomerResponseData cd = customerData[index];
-              // Talker().info(customerData[index].toJson());
-              return Container(
-                margin: EdgeInsets.symmetric(
-                    vertical: screenSize.height * 0.008,
-                    horizontal: screenSize.width * 0.05),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 203, 202, 202),
-                      offset: Offset(0.0, 1.0),
-                      blurRadius: 6.0,
-                    ),
-                  ],
-                ),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/customer-screen-details',
-                        arguments: {
-                          'customerData': cd,
-                          'selectedBusiness': selectedBusiness
-                        });
-                  },
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.grey[300],
-                      child: const Icon(
-                        Icons.person_2_sharp,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    title: Text(
-                      cd.fullname ?? '',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromARGB(255, 31, 1, 102),
-                      ),
-                    ),
-                    subtitle: Text(cd.mobile ?? ''),
-                    trailing: Column(
-                      children: [
-                        ((cd.creditAmount != null) && (cd.debitAmount != null))
-                            ? (((double.parse(cd.creditAmount!) >=
-                                    (double.parse(cd.debitAmount!))))
-                                ? (((double.parse(cd.creditAmount!) ==
-                                        (double.parse(cd.debitAmount!))))
-                                    ? Text(
-                                        '\u{20B9} ${0}',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.w700),
-                                      )
-                                    : Text(
-                                        '\u{20B9} ${double.parse(cd.creditAmount!) - double.parse(cd.debitAmount!)}',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.w700),
-                                      ))
-                                : Text(
-                                    '\u{20B9} ${double.parse(cd.debitAmount!) - double.parse(cd.creditAmount!)}',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w700),
-                                  ))
-                            : (((cd.creditAmount == null) &&
-                                    (cd.debitAmount == null))
-                                ? Text(
-                                    '\u{20B9} ${0}',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.w700),
-                                  )
-                                : ((cd.creditAmount != null) &&
-                                        (cd.debitAmount == null))
-                                    ? Text(
-                                        '\u{20B9} ${double.parse(cd.creditAmount!)}',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.green,
-                                            fontWeight: FontWeight.w700),
-                                      )
-                                    : Text(
-                                        '\u{20B9} ${double.parse(cd.debitAmount!)}',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.w700),
-                                      )),
-                        ((cd.creditAmount != null) && (cd.debitAmount != null))
-                            ? (((double.parse(cd.creditAmount!) >=
-                                    (double.parse(cd.debitAmount!))))
-                                ? (((double.parse(cd.creditAmount!) ==
-                                        (double.parse(cd.debitAmount!))))
-                                    ? Text(
-                                        'CREDIT',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    : Text(
-                                        'CREDIT',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600),
-                                      ))
-                                : Text(
-                                    'DUE',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w600),
-                                  ))
-                            : (((cd.creditAmount == null) &&
-                                    (cd.debitAmount == null))
-                                ? Text(
-                                    'CREDIT',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w600),
-                                  )
-                                : ((cd.creditAmount != null) &&
-                                        (cd.debitAmount == null))
-                                    ? Text(
-                                        'CREDIT',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600),
-                                      )
-                                    : Text(
-                                        'DUE',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600),
-                                      )),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
+        height: 200,
+        width: 100,
+        child: Center(
+            child: AnimatedImageLoader(
+          loaderType: LoaderType.general,
+        )),
       );
     } else {
-      return Container(
-        color: Colors.grey[100],
-        // height: 200,
-        // width: 100,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // const CircleAvatar(
-            //   radius: 30,
-            //   backgroundColor: Color.fromARGB(255, 230, 223, 246),
-            //   child: Icon(
-            //     CupertinoIcons.question,
-            //     size: 50,
-            //     color: Color.fromARGB(255, 31, 1, 102),
-            //   ),
-            // ),
-            // SizedBox(
-            //   height: screenSize.height * 0.01,
-            // ),
-            const Text(
-              'No accounts',
-              style: TextStyle(
-                  color: Color.fromARGB(255, 31, 1, 102),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500),
-            ),
-            SizedBox(
-              height: screenSize.height * 0.01,
-            ),
-            const Text(
-              'Add your client/parties to start collecting payments',
-              style: TextStyle(
-                color: Color.fromARGB(255, 31, 1, 102),
-                fontSize: 12,
+      if ((customerData!.isNotEmpty) && (loading == null)) {
+        return Container(
+          color: Colors.grey[100],
+          child: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: false,
+            header: WaterDropHeader(
+              waterDropColor: Color.fromARGB(255, 31, 1, 102),
+              idleIcon: AnimatedImageLoader(
+                indicatorType: Indicator.ballClipRotate,
+                loaderType: LoaderType.refresher,
               ),
-            )
-          ],
-        ),
-      );
+            ),
+            controller: refreshController,
+            onRefresh: (() async {
+              // monitor network fetch
+              await Future.delayed(const Duration(milliseconds: 1000));
+              // if failed,use refreshFailed()
+
+              BlocProvider.of<CustomerBloc>(context).add(CustomerListFetchEvent(
+                  userId: sph.getString("userid")!,
+                  businessId: selectedBusiness?.id ?? ''));
+            }),
+            onLoading: (() async {
+              await Future.delayed(const Duration(milliseconds: 1000));
+              // if failed,use loadFailed(),if no data return,use LoadNodata()
+
+              if (mounted) setState(() {});
+              refreshController.loadComplete();
+            }),
+            child: ListView.builder(
+              itemCount: customerData.length,
+              itemBuilder: (context, index) {
+                CustomerResponseData cd = customerData[index];
+                // Talker().info(customerData[index].toJson());
+                return Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: screenSize!.height * 0.008,
+                      horizontal: screenSize.width * 0.05),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(255, 203, 202, 202),
+                        offset: Offset(0.0, 1.0),
+                        blurRadius: 6.0,
+                      ),
+                    ],
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/customer-screen-details',
+                          arguments: {
+                            'customerData': cd,
+                            'selectedBusiness': selectedBusiness
+                          });
+                    },
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.grey[300],
+                        child: const Icon(
+                          Icons.person_2_sharp,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      title: Text(
+                        cd.fullname ?? '',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 31, 1, 102),
+                        ),
+                      ),
+                      subtitle: Text(cd.mobile ?? ''),
+                      trailing: Column(
+                        children: [
+                          ((cd.creditAmount != null) &&
+                                  (cd.debitAmount != null))
+                              ? (((double.parse(cd.creditAmount!) >=
+                                      (double.parse(cd.debitAmount!))))
+                                  ? (((double.parse(cd.creditAmount!) ==
+                                          (double.parse(cd.debitAmount!))))
+                                      ? Text(
+                                          '\u{20B9} ${0}',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w700),
+                                        )
+                                      : Text(
+                                          '\u{20B9} ${double.parse(cd.creditAmount!) - double.parse(cd.debitAmount!)}',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w700),
+                                        ))
+                                  : Text(
+                                      '\u{20B9} ${double.parse(cd.debitAmount!) - double.parse(cd.creditAmount!)}',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w700),
+                                    ))
+                              : (((cd.creditAmount == null) &&
+                                      (cd.debitAmount == null))
+                                  ? Text(
+                                      '\u{20B9} ${0}',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w700),
+                                    )
+                                  : ((cd.creditAmount != null) &&
+                                          (cd.debitAmount == null))
+                                      ? Text(
+                                          '\u{20B9} ${double.parse(cd.creditAmount!)}',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.green,
+                                              fontWeight: FontWeight.w700),
+                                        )
+                                      : Text(
+                                          '\u{20B9} ${double.parse(cd.debitAmount!)}',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w700),
+                                        )),
+                          ((cd.creditAmount != null) &&
+                                  (cd.debitAmount != null))
+                              ? (((double.parse(cd.creditAmount!) >=
+                                      (double.parse(cd.debitAmount!))))
+                                  ? (((double.parse(cd.creditAmount!) ==
+                                          (double.parse(cd.debitAmount!))))
+                                      ? Text(
+                                          'CREDIT',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : Text(
+                                          'CREDIT',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600),
+                                        ))
+                                  : Text(
+                                      'DUE',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600),
+                                    ))
+                              : (((cd.creditAmount == null) &&
+                                      (cd.debitAmount == null))
+                                  ? Text(
+                                      'CREDIT',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  : ((cd.creditAmount != null) &&
+                                          (cd.debitAmount == null))
+                                      ? Text(
+                                          'CREDIT',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600),
+                                        )
+                                      : Text(
+                                          'DUE',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600),
+                                        )),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      } else {
+        return Container(
+          color: Colors.grey[100],
+          // height: 200,
+          // width: 100,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'No accounts',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 31, 1, 102),
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500),
+              ),
+              SizedBox(
+                height: screenSize!.height * 0.01,
+              ),
+              const Text(
+                'Add your client/parties to start collecting payments',
+                style: TextStyle(
+                  color: Color.fromARGB(255, 31, 1, 102),
+                  fontSize: 12,
+                ),
+              )
+            ],
+          ),
+        );
+      }
     }
   }
 

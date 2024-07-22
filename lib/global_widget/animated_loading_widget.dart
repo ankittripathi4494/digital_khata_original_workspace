@@ -34,8 +34,7 @@ class _AnimatedImageLoaderState extends State<AnimatedImageLoader> {
       return refershLoaderType(
           indicatorType: widget.customeIndicatorType,
           loaderType: widget.customLoaderType);
-    } 
-     else {
+    } else {
       return generalLoaderType(
           indicatorType: widget.customeIndicatorType,
           loaderType: widget.customLoaderType);
