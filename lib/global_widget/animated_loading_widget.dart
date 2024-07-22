@@ -140,7 +140,7 @@ class _AnimatedImageLoaderState extends State<AnimatedImageLoader> {
                 Colors.white,
                 Colors.white
               ],
-              strokeWidth: 2,
+              strokeWidth: 3,
               backgroundColor: null,
               pathBackgroundColor: null),
     );
