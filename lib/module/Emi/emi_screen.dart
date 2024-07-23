@@ -1,5 +1,7 @@
 // ignore_for_file: unused_field, unused_local_variable, unnecessary_to_list_in_spreads, must_be_immutable
 
+import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -184,7 +186,7 @@ class _EmiScreenState extends State<EmiScreen> {
               children: [
                 ListTile(
                     title: const Text(
-                      'EMI COde',
+                      'EMI Code',
                       style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -303,59 +305,80 @@ class _EmiScreenState extends State<EmiScreen> {
                   child: const Divider(),
                 ),
 
+                (!widget.argus.containsKey('fromCustomerScreen'))
+                    ? Column(
+                        children: [
+                          SizedBox(
+                            height: screenSize.height * 0.02,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(context, '/select-customer');
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: screenSize.width * 0.015),
+                              child: TextFormField(
+                                enabled: false,
+                                enableInteractiveSelection: false,
+                                style: const TextStyle(
+                                  color: Color.fromARGB(255, 31, 1, 102),
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: 'Select Customer',
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black),
+                                  prefixIcon: const Icon(
+                                    Icons.person_2_outlined,
+                                    size: 30,
+                                    color: Colors.black,
+                                  ),
+                                  suffixIcon: const Icon(
+                                    Icons.arrow_forward_ios_outlined,
+                                    color: Colors.black,
+                                    size: 18,
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                      )),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      borderSide:
+                                          const BorderSide(color: Colors.grey)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
+
                 SizedBox(
                   height: screenSize.height * 0.02,
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, '/select-customer');
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: screenSize.width * 0.015),
-                    child: TextFormField(
-                      enabled: false,
-                      enableInteractiveSelection: false,
-                      style: const TextStyle(
-                        color: Color.fromARGB(255, 31, 1, 102),
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Select Customer',
-                        hintStyle: const TextStyle(color: Colors.black),
-                        prefixIcon: const Icon(
-                          Icons.person_2_outlined,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                        suffixIcon: const Icon(
-                          Icons.arrow_forward_ios_outlined,
-                          color: Colors.black,
-                          size: 18,
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(color: Colors.grey)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(color: Colors.grey)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Color.fromARGB(255, 31, 1, 102),
-                            )),
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(color: Colors.grey)),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: screenSize.height * 0.02,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pushNamed(context, '/emi-plan');
+                    Navigator.pushNamed(context, '/emi-plan', arguments: {
+                      'customerData': (widget.argus['customerData']
+                          as SelectedCustomerResponseData),
+                      'selectedBusiness': (widget.argus['selectedBusiness']
+                          as BusinessListResponseData),
+                      "updatePlan": true,
+                      'fromCustomerScreen':
+                          (widget.argus.containsKey('fromCustomerScreen'))
+                              ? true
+                              : false
+                    });
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(

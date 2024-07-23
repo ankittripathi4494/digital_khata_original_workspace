@@ -1,8 +1,20 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: deprecated_member_use, must_be_immutable, use_build_context_synchronously, prefer_const_constructors, avoid_print
 
 import 'dart:async';
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:double_back_to_close/double_back_to_close.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:loading_indicator/loading_indicator.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:simple_chips_input/select_chips_input.dart';
+import 'package:talker/talker.dart';
+
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
@@ -15,14 +27,6 @@ import 'package:dkapp/module/customers/customer_bloc/customer_event.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_state.dart';
 import 'package:dkapp/module/customers/model/customer_response_model.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
-import 'package:double_back_to_close/double_back_to_close.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:loading_indicator/loading_indicator.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:simple_chips_input/select_chips_input.dart';
-import 'package:talker/talker.dart';
 
 import '../../../global_blocs/internet/internet_cubit.dart';
 import '../../../global_blocs/internet/internet_state.dart';
@@ -4483,11 +4487,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           });
                     },
                     child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.grey[300],
-                        child: const Icon(
-                          Icons.person_2_sharp,
-                          color: Colors.grey,
+                      leading: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return CustomAlertDialog(
+                                customerResponseData: cd,
+                              );
+                            },
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: Colors.grey[300],
+                          child: const Icon(
+                            Icons.person_2_sharp,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                       title: Text(
@@ -4718,5 +4734,271 @@ class SearchBarDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     return Container();
+  }
+}
+
+class CustomAlertDialog extends StatelessWidget {
+  CustomerResponseData? customerResponseData;
+  CustomAlertDialog({
+    super.key,
+    this.customerResponseData,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      insetPadding: EdgeInsets.all(5),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        margin: EdgeInsets.all(10),
+        child: Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.topCenter,
+          children: <Widget>[
+            SizedBox(
+              height: 400,
+             
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  SizedBox(height: 50.0),
+                  Text(
+                    customerResponseData!.fullname ?? '',
+                    style: TextStyle(
+                        fontSize: 24.0, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    customerResponseData!.mobile ?? '',
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20.0),
+                  Column(
+                    children: [
+                      ((customerResponseData!.creditAmount != null) &&
+                              (customerResponseData!.debitAmount != null))
+                          ? (((double.parse(
+                                      customerResponseData!.creditAmount!) >=
+                                  (double.parse(
+                                      customerResponseData!.debitAmount!))))
+                              ? (((double.parse(customerResponseData!
+                                          .creditAmount!) ==
+                                      (double.parse(customerResponseData!
+                                          .debitAmount!))))
+                                  ? Text(
+                                      '\u{20B9} ${0}',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w700),
+                                    )
+                                  : Text(
+                                      '\u{20B9} ${double.parse(customerResponseData!.creditAmount!) - double.parse(customerResponseData!.debitAmount!)}',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w700),
+                                    ))
+                              : Text(
+                                  '\u{20B9} ${double.parse(customerResponseData!.debitAmount!) - double.parse(customerResponseData!.creditAmount!)}',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.w700),
+                                ))
+                          : (((customerResponseData!.creditAmount == null) &&
+                                  (customerResponseData!.debitAmount == null))
+                              ? Text(
+                                  '\u{20B9} ${0}',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.w700),
+                                )
+                              : ((customerResponseData!.creditAmount !=
+                                          null) &&
+                                      (customerResponseData!.debitAmount ==
+                                          null))
+                                  ? Text(
+                                      '\u{20B9} ${double.parse(customerResponseData!.creditAmount!)}',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.w700),
+                                    )
+                                  : Text(
+                                      '\u{20B9} ${double.parse(customerResponseData!.debitAmount!)}',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w700),
+                                    )),
+                      ((customerResponseData!.creditAmount != null) &&
+                              (customerResponseData!.debitAmount != null))
+                          ? (((double.parse(
+                                      customerResponseData!.creditAmount!) >=
+                                  (double.parse(
+                                      customerResponseData!.debitAmount!))))
+                              ? (((double.parse(customerResponseData!
+                                          .creditAmount!) ==
+                                      (double.parse(customerResponseData!
+                                          .debitAmount!))))
+                                  ? Text(
+                                      'CREDIT',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  : Text(
+                                      'CREDIT',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600),
+                                    ))
+                              : Text(
+                                  'DUE',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600),
+                                ))
+                          : (((customerResponseData!.creditAmount == null) &&
+                                  (customerResponseData!.debitAmount == null))
+                              ? Text(
+                                  'CREDIT',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              : ((customerResponseData!.creditAmount !=
+                                          null) &&
+                                      (customerResponseData!.debitAmount ==
+                                          null))
+                                  ? Text(
+                                      'CREDIT',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600),
+                                    )
+                                  : Text(
+                                      'DUE',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600),
+                                    )),
+                    ],
+                  ),
+                  SizedBox(height: 20.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.transparent),
+                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              foregroundColor: Colors.black,
+                              textStyle: TextStyle(fontSize: 12)),
+                          onPressed: () {},
+                          child: Text("Edit Label")),
+                      OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.transparent),
+                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              foregroundColor: Colors.black,
+                              textStyle: TextStyle(fontSize: 12)),
+                          onPressed: () {},
+                          child: Text("Add Notes")),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      
+                      width: double.maxFinite,
+                      height: 100,
+                      child: GridView(
+                        gridDelegate:
+                            SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          childAspectRatio: 1.0,
+                        ),
+                        children: [
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(FontAwesomeIcons.bellSlash)),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(FontAwesomeIcons.telegram)),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(FontAwesomeIcons.whatsapp)),
+                          IconButton(
+                              onPressed: () {},
+                              icon: Icon(FontAwesomeIcons.circleInfo)),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Positioned(
+              top: -50,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Last Action Date\n${DateFormat("dd-MM-yyyy").format((customerResponseData!.updatedDate != null) ? DateTime.parse(customerResponseData!.updatedDate) : DateTime.now())}',
+                          style: TextStyle(
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 80),
+                      CircleAvatar(
+                        backgroundColor: Colors.grey[300],
+                        radius: 50,
+                        child: const Icon(
+                          Icons.person_2_sharp,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      SizedBox(width: 80),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          'Edit',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

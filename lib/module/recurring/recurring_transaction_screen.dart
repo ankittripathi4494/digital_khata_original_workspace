@@ -626,6 +626,7 @@ class _RecurringTransactionScreenState
                         ),
                       ),
                     ),
+              
               SizedBox(
                 height: screenSize.height * 0.02,
               ),

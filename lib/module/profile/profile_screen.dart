@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: must_be_immutable, use_build_context_synchronously, avoid_print, prefer_const_constructors
 
-import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -247,32 +246,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                       width: screenSize.width,
                       child: Column(
                         children: <Widget>[
-                          ButtonsTabBar(
-                            // onTap: (index) {
-                            //   Talker().info(tabController.index);
-                            //   Talker().info(index);
-                            //   if (tabController.index == index) {
-                            //     Talker().info('Same Tab Clicked');
-                            //   }
-                            // },
+                          TabBar(
+                            isScrollable: true,
+
                             controller: tabController,
 
-                            labelSpacing: 0.0,
-                            height: 50,
-                            buttonMargin: const EdgeInsets.symmetric(
-                                horizontal: 5.0, vertical: 5.0),
-                            radius: 0,
-                            contentPadding: const EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                                 horizontal: 25, vertical: 5.0),
                             // Customize the appearance and behavior of the tab bar
-                            decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 31, 1, 102),
+                            indicator: BoxDecoration(
+                                color: Colors.transparent,
+                                border: Border(
+                                    top: BorderSide.none,
+                                    left: BorderSide.none,
+                                    right: BorderSide.none,
+                                    bottom: BorderSide(
+                                        width: 2,
+                                        color: const Color.fromARGB(
+                                            255, 31, 1, 102))),
                                 borderRadius: BorderRadius.circular(0)),
 
-                            // borderWidth: 2,
-                            // borderColor: Colors.black,
                             labelStyle: const TextStyle(
-                              color: Colors.white,
+                              color: Color.fromARGB(255, 31, 1, 102),
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
                             ),
@@ -628,13 +623,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                     ),
                                     */
-                                    const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      child: Text(
-                                        'EMI',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 20),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        Navigator.pushNamed(context, '/emi',
+                                            arguments: {
+                                              'customerData': state
+                                                  .selectedCustomerDetailedData,
+                                              'selectedBusiness': (widget
+                                                      .argus['selectedBusiness']
+                                                  as BusinessListResponseData),
+                                              'fromCustomerScreen': true
+                                            });
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        child: Text(
+                                          'EMI',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -974,9 +984,9 @@ class _ProfileScreenState extends State<ProfileScreen>
               header: WaterDropHeader(
                 waterDropColor: Color.fromARGB(255, 31, 1, 102),
                 idleIcon: AnimatedImageLoader(
-                      indicatorType: Indicator.ballClipRotate,
-                      loaderType: LoaderType.refresher,
-                    ),
+                  indicatorType: Indicator.ballClipRotate,
+                  loaderType: LoaderType.refresher,
+                ),
               ),
               controller: refreshForRecurTransController,
               onRefresh: (() async {
@@ -1262,35 +1272,8 @@ class _ProfileScreenState extends State<ProfileScreen>
           );
         }
 
-        return SmartRefresher(
-          enablePullDown: true,
-          enablePullUp: false,
-          header: WaterDropHeader(
-            waterDropColor: Color.fromARGB(255, 31, 1, 102),
-            idleIcon: AnimatedImageLoader(
-              indicatorType: Indicator.ballClipRotate,
-              loaderType: LoaderType.refresher,
-            ),
-          ),
-          controller: refreshForRecurTransController3,
-          onRefresh: (() async {
-            // monitor network fetch
-            await Future.delayed(const Duration(milliseconds: 1000));
-            // if failed,use refreshFailed()
-
-            Navigator.pushReplacementNamed(context, '/customer-screen-details',
-                arguments: widget.argus);
-          }),
-          onLoading: (() async {
-            await Future.delayed(const Duration(milliseconds: 1000));
-            // if failed,use loadFailed(),if no data return,use LoadNodata()
-
-            if (mounted) setState(() {});
-            refreshForRecurTransController3.loadComplete();
-          }),
-          child: Center(
-            child: AnimatedImageLoader(),
-          ),
+        return Center(
+          child: AnimatedImageLoader(),
         );
       },
     );
@@ -2153,7 +2136,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           );
         }
         return Center(
-          child: Container(),
+          child: AnimatedImageLoader(),
         );
       },
     );

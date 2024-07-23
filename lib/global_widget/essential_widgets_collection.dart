@@ -6,7 +6,8 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-      backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
+      backgroundColor:
+          const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
@@ -34,7 +35,8 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-     backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
+      backgroundColor:
+          const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
@@ -62,7 +64,8 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-     backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
+      backgroundColor:
+          const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
@@ -90,7 +93,8 @@ class EssentialWidgetsCollection {
       {String? title, String? description}) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-     backgroundColor: const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
+      backgroundColor:
+          const Color.fromARGB(255, 183, 166, 172).withOpacity(0.6),
       padding: const EdgeInsets.all(0),
       margin: EdgeInsets.symmetric(
           vertical: 10, horizontal: MediaQuery.of(context).size.width * 0.2),
@@ -222,6 +226,9 @@ class EssentialWidgetsCollection {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          shadowColor: Colors.white,
           titlePadding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
@@ -231,6 +238,44 @@ class EssentialWidgetsCollection {
           icon: (icon != null) ? icon : null,
           title: (title != null) ? title : null,
           content: (content != null) ? content : null,
+        );
+      },
+    );
+  }
+
+  static showCustomAlertDialog(BuildContext context,
+      {Widget? icon,
+      Widget? title,
+      Widget? content,
+      ShapeBorder? customShape,
+      EdgeInsetsGeometry? customIconPadding,
+      EdgeInsetsGeometry? customTitlePadding,
+      EdgeInsetsGeometry? customContentPadding,
+      EdgeInsetsGeometry? customActionPadding,
+      List<Widget>? customActions,
+      MainAxisAlignment? customActionAlignment,
+      bool? isDissmissable,
+      Color? customBackgroundColor,
+      Color? customSurfaceTintColor,
+      Color? customShadowColor}) {
+    return showDialog(
+      context: context,
+      barrierDismissible: (isDissmissable != null) ? isDissmissable : true,
+      builder: (context) {
+        return AlertDialog(
+          shape: customShape,
+          backgroundColor: customBackgroundColor,
+          surfaceTintColor: customSurfaceTintColor,
+          shadowColor: customShadowColor,
+          titlePadding: customTitlePadding,
+          contentPadding: customContentPadding,
+          iconPadding: customIconPadding,
+          actionsPadding: customActionPadding,
+          actionsAlignment: customActionAlignment,
+          icon: (icon != null) ? icon : null,
+          title: (title != null) ? title : null,
+          content: (content != null) ? content : null,
+          actions: (customActions != null) ? customActions : null,
         );
       },
     );
