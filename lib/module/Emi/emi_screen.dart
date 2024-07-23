@@ -562,7 +562,21 @@ class _EmiScreenState extends State<EmiScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/product');
+                                  Navigator.pushNamed(context, '/product',
+                                      arguments: {
+                                        'customerData': (widget
+                                                .argus['customerData']
+                                            as SelectedCustomerResponseData),
+                                        'selectedBusiness':
+                                            (widget.argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                        "updatePlan": true,
+                                        'fromCustomerScreen': (widget.argus
+                                                .containsKey(
+                                                    'fromCustomerScreen'))
+                                            ? true
+                                            : false
+                                      });
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(
@@ -576,7 +590,21 @@ class _EmiScreenState extends State<EmiScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/service');
+                                  Navigator.pushNamed(context, '/service',
+                                      arguments: {
+                                        'customerData': (widget
+                                                .argus['customerData']
+                                            as SelectedCustomerResponseData),
+                                        'selectedBusiness':
+                                            (widget.argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                        "updatePlan": true,
+                                        'fromCustomerScreen': (widget.argus
+                                                .containsKey(
+                                                    'fromCustomerScreen'))
+                                            ? true
+                                            : false
+                                      });
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(
@@ -590,8 +618,21 @@ class _EmiScreenState extends State<EmiScreen> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  Navigator.pushNamed(
-                                      context, '/custom-amount');
+                                  Navigator.pushNamed(context, '/custom-amount',
+                                      arguments: {
+                                        'customerData': (widget
+                                                .argus['customerData']
+                                            as SelectedCustomerResponseData),
+                                        'selectedBusiness':
+                                            (widget.argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                        "updatePlan": true,
+                                        'fromCustomerScreen': (widget.argus
+                                                .containsKey(
+                                                    'fromCustomerScreen'))
+                                            ? true
+                                            : false
+                                      });
                                 },
                                 child: const Padding(
                                   padding: EdgeInsets.symmetric(

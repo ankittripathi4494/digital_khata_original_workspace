@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable, unused_import
 
+import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -100,13 +102,25 @@ class _ServiceScreenState extends State<ServiceScreen> {
             ),
           ),
         ),
-      ), 
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
           backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/create-service',arguments: {
+                      'customerData': (widget.argus['customerData']
+                          as SelectedCustomerResponseData),
+                      'selectedBusiness': (widget.argus['selectedBusiness']
+                          as BusinessListResponseData),
+                      "updatePlan": true,
+                      'fromCustomerScreen':
+                          (widget.argus.containsKey('fromCustomerScreen'))
+                              ? true
+                              : false
+                    });
+          },
           child: const Icon(
             Icons.add,
             color: Colors.white,

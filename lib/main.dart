@@ -2,6 +2,7 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'module/plan/plan_bloc/plan_bloc.dart';
+import 'module/product/product_bloc/product_bloc.dart';
 import 'module/profile/transactions/transactions_bloc.dart';
 import 'module/recurring/recurring_bloc/recurring_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +22,7 @@ import 'module/business/user_group_bloc/user_group_bloc.dart';
 import 'module/business_type/business_type_bloc/business_type_bloc.dart';
 import 'module/customers/customer_bloc/customer_bloc.dart';
 import 'module/login/login_bloc/login_bloc.dart';
+import 'module/service/service_bloc/service_bloc.dart';
 import 'route_access_file.dart';
 import 'utils/firebase_messaging_helper.dart';
 import 'utils/notification_controller.dart';
@@ -116,8 +118,14 @@ class _MyAppState extends State<MyApp> {
                 BlocProvider<PlanBloc>(
                   create: (BuildContext context) => PlanBloc(),
                 ),
-                 BlocProvider<RecurringBloc>(
-                  create: (BuildContext context) => RecurringBloc(), 
+                BlocProvider<RecurringBloc>(
+                  create: (BuildContext context) => RecurringBloc(),
+                ),
+                BlocProvider<ProductBloc>(
+                  create: (BuildContext context) => ProductBloc(),
+                ),
+                BlocProvider<ServiceBloc>(
+                  create: (BuildContext context) => ServiceBloc(),
                 ),
               ],
               child: BlocBuilder<LocaleCubit, LocaleState>(
@@ -142,7 +150,7 @@ class _MyAppState extends State<MyApp> {
               ),
             );
           }
-          return  Center(child: AnimatedImageLoader());
+          return Center(child: AnimatedImageLoader());
         });
   }
 }

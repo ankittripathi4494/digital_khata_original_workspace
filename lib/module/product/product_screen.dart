@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
 import 'package:flutter/material.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -15,6 +17,7 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
+       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blue,
         leading: IconButton(
@@ -102,7 +105,19 @@ class _ProductScreenState extends State<ProductScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
           backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/create-product',arguments: {
+                      'customerData': (widget.argus['customerData']
+                          as SelectedCustomerResponseData),
+                      'selectedBusiness': (widget.argus['selectedBusiness']
+                          as BusinessListResponseData),
+                      "updatePlan": true,
+                      'fromCustomerScreen':
+                          (widget.argus.containsKey('fromCustomerScreen'))
+                              ? true
+                              : false
+                    });
+          },
           child: const Icon(
             Icons.add,
             color: Colors.white,

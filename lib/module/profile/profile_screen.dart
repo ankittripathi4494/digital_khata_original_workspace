@@ -1148,6 +1148,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         color: Colors.black,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500))),
+                            
                             RichText(
                                 text: TextSpan(
                                     text: "Emis : \t",

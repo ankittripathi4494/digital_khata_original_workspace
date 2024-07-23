@@ -40,4 +40,6 @@ class APIPathList {
   static const String createRecurringTransaction = "${subfolder}create_RecurringTransaction";
     static const String getLoanRecurringEMIList = "${subfolder}getLoanRecurringEMIList";
     static const String getRecurringEMIDetails = "${subfolder}getRecurringEMIDetails";
+    static const String getCategogyList = "${subfolder}getCategogyList";
+    static const String createCategory = "${subfolder}createCategory";
 }

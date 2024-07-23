@@ -1,3 +1,9 @@
+import 'package:dkapp/module/product/add_product_category_screen.dart';
+import 'package:dkapp/module/product/create_product_screen.dart';
+import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
+import 'package:dkapp/module/product/product_category_screen.dart';
+import 'package:dkapp/module/service/create_service_screen.dart';
+import 'package:dkapp/module/service/service_bloc/service_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
@@ -776,6 +782,98 @@ class RouteAccessGenerator {
           type: PageTransitionType.fade,
           child: MyPurchasesScreen(
             argus: const {},
+          ),
+        );
+      case '/create-product':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: CreateProductScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: CreateProductScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/product-category':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: ProductCategoryScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: ProductCategoryScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/add-product-category':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: AddProductCategoryScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: AddProductCategoryScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/create-service':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ServiceBloc(),
+              child: CreateServiceScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ServiceBloc(),
+            child: CreateServiceScreen(
+              argus: const {},
+            ),
           ),
         );
       case '/help-and-support':
