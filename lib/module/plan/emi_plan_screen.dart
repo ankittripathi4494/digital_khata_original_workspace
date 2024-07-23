@@ -19,16 +19,8 @@ class _EmiPlanScreenState extends State<EmiPlanScreen> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue,
-          leading: IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacementNamed(
-                    context, '/recurring-transaction');
-              },
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              )),
+          iconTheme: const IconThemeData(color: Colors.white),
+          
           title: const Text(
             'EMI Plans',
             style: TextStyle(color: Colors.white),
@@ -49,7 +41,7 @@ class _EmiPlanScreenState extends State<EmiPlanScreen> {
               ]),
           child: InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/recurring-transaction');
+              
             },
             child: const ListTile(
               title: Text('CustomerNaame'),

@@ -97,6 +97,17 @@ class _ProductScreenState extends State<ProductScreen> {
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+          backgroundColor: const Color.fromARGB(255, 31, 1, 102),
+          onPressed: () {},
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 28,
+          )),
     );
   }
 }
