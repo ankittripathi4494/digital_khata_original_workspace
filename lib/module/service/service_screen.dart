@@ -100,7 +100,7 @@ class _ServiceScreenState extends State<ServiceScreen> {
             ),
           ),
         ),
-      ),
+      ), 
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
           shape:
