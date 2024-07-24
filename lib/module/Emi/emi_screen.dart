@@ -562,6 +562,7 @@ class _EmiScreenState extends State<EmiScreen> {
                               ),
                               InkWell(
                                 onTap: () {
+                                  Navigator.pop(context);
                                   Navigator.pushNamed(context, '/product',
                                       arguments: {
                                         'customerData': (widget
@@ -590,6 +591,7 @@ class _EmiScreenState extends State<EmiScreen> {
                               ),
                               InkWell(
                                 onTap: () {
+                                  Navigator.pop(context);
                                   Navigator.pushNamed(context, '/service',
                                       arguments: {
                                         'customerData': (widget

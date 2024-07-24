@@ -165,4 +165,5 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
           failedMessage: 'Failed to get platform version.'));
     }
   }
+
 }

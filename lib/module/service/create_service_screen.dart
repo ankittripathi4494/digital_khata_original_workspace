@@ -3,6 +3,7 @@
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
 import 'package:dkapp/module/product/model/product_category_list_response_model.dart';
+import 'package:dkapp/module/product/model/product_unit_list_response_model.dart';
 import 'package:flutter/material.dart';
 
 class CreateServiceScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   bool? isChecked = true;
   String currenttext = '';
   ProductCategoryListResponseData? productCategoryListResponseData;
+  ProductUnitListResponseData? productUnitListResponseData;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -208,32 +210,6 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                   color: Colors.black, fontSize: 15),
                             ),
                             const Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    const Divider(),
-                    ListTile(
-                      onTap: () {},
-                      leading: const Text(
-                        'Price Unit',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                      ),
-                      trailing: SizedBox(
-                        width: screenSize.width * 0.2,
-                        child: const Row(
-                          children: [
-                            Text(
-                              'Per Item',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Icon(
                               Icons.arrow_forward_ios,
                               color: Colors.black,
                             )

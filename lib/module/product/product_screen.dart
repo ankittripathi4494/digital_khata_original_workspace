@@ -106,6 +106,7 @@ class _ProductScreenState extends State<ProductScreen> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
           backgroundColor: const Color.fromARGB(255, 31, 1, 102),
           onPressed: () {
+            
             Navigator.pushNamed(context, '/create-product',arguments: {
                       'customerData': (widget.argus['customerData']
                           as SelectedCustomerResponseData),

@@ -42,4 +42,7 @@ class APIPathList {
     static const String getRecurringEMIDetails = "${subfolder}getRecurringEMIDetails";
     static const String getCategogyList = "${subfolder}getCategogyList";
     static const String createCategory = "${subfolder}createCategory";
+    static const String getUnitList = "${subfolder}getUnitList";
+    static const String getMasterUnitList = "${subfolder}getMasterUnit";
+     static const String createUnit = "${subfolder}createUnit";
 }

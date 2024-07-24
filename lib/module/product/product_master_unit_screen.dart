@@ -3,7 +3,7 @@
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
-import 'package:dkapp/module/product/model/product_category_list_response_model.dart';
+import 'package:dkapp/module/product/model/product_master_unit_list_response_model.dart';
 import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
 import 'package:dkapp/module/product/product_bloc/product_event.dart';
 import 'package:dkapp/module/product/product_bloc/product_state.dart';
@@ -11,15 +11,16 @@ import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProductCategoryScreen extends StatefulWidget {
+class ProductMasterUnitScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
-  ProductCategoryScreen({super.key, required this.argus});
+  ProductMasterUnitScreen({super.key, required this.argus});
 
   @override
-  State<ProductCategoryScreen> createState() => _ProductCategoryScreenState();
+  State<ProductMasterUnitScreen> createState() =>
+      _ProductMasterUnitScreenState();
 }
 
-class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
+class _ProductMasterUnitScreenState extends State<ProductMasterUnitScreen> {
   SharedPreferencesHelper sph = SharedPreferencesHelper();
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
         backgroundColor: Colors.blue,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
-          'Categories',
+          'Select Unit',
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.w500, fontSize: 23),
         ),
@@ -40,21 +41,14 @@ class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
         child: BlocBuilder<ProductBloc, ProductState>(
           bloc: ProductBloc()
             ..add(
-              ProductCategoryListFetchEvent(
-                  customerId: (widget.argus['customerData']
-                          as SelectedCustomerResponseData)
-                      .id!,
-                  userId: sph.getString("userid")!,
-                  businessId: (widget.argus['selectedBusiness']
-                          as BusinessListResponseData)
-                      .id!),
+              ProductMasterUnitListFetchEvent(),
             ),
           builder: (context, state) {
-            if (state is ProductCategoryListLoadedState) {
+            if (state is ProductMasterUnitListLoadedState) {
               return ListView.builder(
                 itemCount: state.successData!.length,
                 itemBuilder: (context, index) {
-                  ProductCategoryListResponseData productCategoryData =
+                  ProductMasterUnitListResponseData productMasterUnitData =
                       state.successData![index];
                   return Container(
                     margin: EdgeInsets.symmetric(
@@ -73,19 +67,26 @@ class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
                     ),
                     child: ListTile(
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 0),
+                          horizontal: 20, vertical: 0),
                       onTap: () {
-                        Navigator.pop(context, productCategoryData);
+                        Navigator.pushNamed(
+                            context, '/product-master-precision-screen',
+                            arguments: {
+                              'customerData': (widget.argus['customerData']
+                                  as SelectedCustomerResponseData),
+                              'selectedBusiness':
+                                  (widget.argus['selectedBusiness']
+                                      as BusinessListResponseData),
+                              "updatePlan": true,
+                              'fromCustomerScreen': (widget.argus
+                                      .containsKey('fromCustomerScreen'))
+                                  ? true
+                                  : false,
+                              "selectUnit":productMasterUnitData
+                            });
                       },
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.grey[300],
-                        child: const Icon(
-                          Icons.person_2_sharp,
-                          color: Colors.grey,
-                        ),
-                      ),
                       title: Text(
-                        productCategoryData.categoryName ?? '',
+                        productMasterUnitData.title ?? '',
                         style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           color: Color.fromARGB(255, 31, 1, 102),
@@ -96,12 +97,12 @@ class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
                 },
               );
             }
-            if (state is ProductCategoryListLoadingState) {
+            if (state is ProductMasterUnitListLoadingState) {
               return Center(
                 child: AnimatedImageLoader(),
               );
             }
-            if (state is ProductCategoryListFailedState) {
+            if (state is ProductMasterUnitListFailedState) {
               return Center(
                 child: Container(
                   decoration: BoxDecoration(
@@ -132,29 +133,6 @@ class _ProductCategoryScreenState extends State<ProductCategoryScreen> {
           },
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-          backgroundColor: const Color.fromARGB(255, 31, 1, 102),
-          onPressed: () {
-            Navigator.pushNamed(context, '/add-product-category', arguments: {
-              'customerData': (widget.argus['customerData']
-                  as SelectedCustomerResponseData),
-              'selectedBusiness': (widget.argus['selectedBusiness']
-                  as BusinessListResponseData),
-              "updatePlan": true,
-              'fromCustomerScreen':
-                  (widget.argus.containsKey('fromCustomerScreen'))
-                      ? true
-                      : false
-            });
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 28,
-          )),
     );
   }
 }

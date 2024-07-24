@@ -2,6 +2,9 @@ import 'package:dkapp/module/product/add_product_category_screen.dart';
 import 'package:dkapp/module/product/create_product_screen.dart';
 import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
 import 'package:dkapp/module/product/product_category_screen.dart';
+import 'package:dkapp/module/product/product_master_unit_precision_screen.dart';
+import 'package:dkapp/module/product/product_master_unit_screen.dart';
+import 'package:dkapp/module/product/product_unit_screen.dart';
 import 'package:dkapp/module/service/create_service_screen.dart';
 import 'package:dkapp/module/service/service_bloc/service_bloc.dart';
 import 'package:flutter/material.dart';
@@ -853,6 +856,76 @@ class RouteAccessGenerator {
             ),
           ),
         );
+      case '/product-unit-list':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: ProductUnitScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: ProductUnitScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/product-master-unit-list':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: ProductMasterUnitScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: ProductMasterUnitScreen(
+              argus: const {},
+            ),
+          ),
+        );
+ case '/product-master-precision-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: ProductMasterUnitPrecisionScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: ProductMasterUnitPrecisionScreen(
+              argus: const {},
+            ),
+          ),
+        );
+
       case '/create-service':
         if (arguments is Map<String, dynamic>) {
           return PageTransition(

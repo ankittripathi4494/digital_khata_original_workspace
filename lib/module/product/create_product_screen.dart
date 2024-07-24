@@ -2,6 +2,7 @@
 
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
+import 'package:dkapp/module/product/model/product_unit_list_response_model.dart';
 import 'package:flutter/material.dart';
 
 import 'model/product_category_list_response_model.dart';
@@ -19,6 +20,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   bool? isChecked = true;
   String currenttext = '';
   ProductCategoryListResponseData? productCategoryListResponseData;
+  ProductUnitListResponseData? productUnitListResponseData;
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -218,23 +220,71 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                     ),
                     const Divider(),
                     ListTile(
-                      onTap: () {},
+                      onTap: () {
+                        if (productUnitListResponseData != null) {
+                          Navigator.pushNamed(context, '/product-unit-list',
+                              arguments: {
+                                'customerData': (widget.argus['customerData']
+                                    as SelectedCustomerResponseData),
+                                'selectedBusiness':
+                                    (widget.argus['selectedBusiness']
+                                        as BusinessListResponseData),
+                                "updatePlan": true,
+                                'fromCustomerScreen': (widget.argus
+                                        .containsKey('fromCustomerScreen'))
+                                    ? true
+                                    : false,
+                                "unit": productUnitListResponseData
+                              }).then((c) {
+                            if (c != null) {
+                              setState(() {
+                                productUnitListResponseData =
+                                    (c as ProductUnitListResponseData);
+                              });
+                            }
+                          });
+                        } else {
+                          Navigator.pushNamed(context, '/product-unit-list',
+                              arguments: {
+                                'customerData': (widget.argus['customerData']
+                                    as SelectedCustomerResponseData),
+                                'selectedBusiness':
+                                    (widget.argus['selectedBusiness']
+                                        as BusinessListResponseData),
+                                "updatePlan": true,
+                                'fromCustomerScreen': (widget.argus
+                                        .containsKey('fromCustomerScreen'))
+                                    ? true
+                                    : false
+                              }).then((c) {
+                            if (c != null) {
+                              setState(() {
+                                productUnitListResponseData =
+                                    (c as ProductUnitListResponseData);
+                              });
+                            }
+                          });
+                        }
+                      },
                       leading: const Text(
                         'Price Unit',
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       trailing: SizedBox(
-                        width: screenSize.width * 0.2,
-                        child: const Row(
+                        width: screenSize.width * 0.32,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              'Per Item',
-                              style: TextStyle(
+                              (productUnitListResponseData != null)
+                                  ? productUnitListResponseData!.unitName!
+                                  : 'Per Item',
+                              style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold),
                             ),
-                            Icon(
+                            const Icon(
                               Icons.arrow_forward_ios,
                               color: Colors.black,
                             )
@@ -517,8 +567,11 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                     SizedBox(
                                       height: screenSize.height * 0.03,
                                     ),
-                                    const InkWell(
-                                      child: Padding(
+                                     InkWell(
+                                      onTap: () {
+                                        Navigator.pushNamed(context, '/discount');
+                                      },
+                                      child: const Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 20.0, vertical: 10.0),
                                         child: Text(
@@ -529,13 +582,18 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                         ),
                                       ),
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      child: Text(
-                                        'Tax',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 20),
+                                    InkWell(
+                                       onTap: () {
+                                        Navigator.pushNamed(context, '/tax');
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        child: Text(
+                                          'Tax',
+                                          style: TextStyle(
+                                              color: Colors.black, fontSize: 20),
+                                        ),
                                       ),
                                     ),
                                   ],
