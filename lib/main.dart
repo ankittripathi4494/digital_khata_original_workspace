@@ -1,6 +1,8 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:dkapp/module/discount/discount_bloc/discount_bloc.dart';
+import 'package:dkapp/module/tax/tax_bloc/tax_bloc.dart';
 import 'module/plan/plan_bloc/plan_bloc.dart';
 import 'module/product/product_bloc/product_bloc.dart';
 import 'module/profile/transactions/transactions_bloc.dart';
@@ -126,6 +128,12 @@ class _MyAppState extends State<MyApp> {
                 ),
                 BlocProvider<ServiceBloc>(
                   create: (BuildContext context) => ServiceBloc(),
+                ),
+                 BlocProvider<DiscountBloc>(
+                  create: (BuildContext context) => DiscountBloc(),
+                ),
+                 BlocProvider<TaxBloc>(
+                  create: (BuildContext context) => TaxBloc(),
                 ),
               ],
               child: BlocBuilder<LocaleCubit, LocaleState>(

@@ -567,9 +567,25 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                     SizedBox(
                                       height: screenSize.height * 0.03,
                                     ),
-                                     InkWell(
+                                    InkWell(
                                       onTap: () {
-                                        Navigator.pushNamed(context, '/discount');
+                                        Navigator.pop(context);
+                                        Navigator.pushNamed(
+                                            context, '/discount',
+                                            arguments: {
+                                              'customerData': (widget
+                                                      .argus['customerData']
+                                                  as SelectedCustomerResponseData),
+                                              'selectedBusiness': (widget
+                                                      .argus['selectedBusiness']
+                                                  as BusinessListResponseData),
+                                              "updatePlan": true,
+                                              'fromCustomerScreen':
+                                                  (widget.argus.containsKey(
+                                                          'fromCustomerScreen'))
+                                                      ? true
+                                                      : false
+                                            });
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.symmetric(
@@ -583,8 +599,23 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                       ),
                                     ),
                                     InkWell(
-                                       onTap: () {
-                                        Navigator.pushNamed(context, '/tax');
+                                      onTap: () {
+                                         Navigator.pop(context);
+                                        Navigator.pushNamed(context, '/tax',
+                                            arguments: {
+                                              'customerData': (widget
+                                                      .argus['customerData']
+                                                  as SelectedCustomerResponseData),
+                                              'selectedBusiness': (widget
+                                                      .argus['selectedBusiness']
+                                                  as BusinessListResponseData),
+                                              "updatePlan": true,
+                                              'fromCustomerScreen':
+                                                  (widget.argus.containsKey(
+                                                          'fromCustomerScreen'))
+                                                      ? true
+                                                      : false
+                                            });
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.symmetric(
@@ -592,10 +623,12 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                         child: Text(
                                           'Tax',
                                           style: TextStyle(
-                                              color: Colors.black, fontSize: 20),
+                                              color: Colors.black,
+                                              fontSize: 20),
                                         ),
                                       ),
                                     ),
+                                  
                                   ],
                                 ),
                               );

@@ -435,8 +435,27 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                     SizedBox(
                                       height: screenSize.height * 0.03,
                                     ),
-                                    const InkWell(
-                                      child: Padding(
+                                     InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                        Navigator.pushNamed(
+                                            context, '/discount',
+                                            arguments: {
+                                              'customerData': (widget
+                                                      .argus['customerData']
+                                                  as SelectedCustomerResponseData),
+                                              'selectedBusiness': (widget
+                                                      .argus['selectedBusiness']
+                                                  as BusinessListResponseData),
+                                              "updatePlan": true,
+                                              'fromCustomerScreen':
+                                                  (widget.argus.containsKey(
+                                                          'fromCustomerScreen'))
+                                                      ? true
+                                                      : false
+                                            });
+                                      },
+                                      child: const Padding(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 20.0, vertical: 10.0),
                                         child: Text(
@@ -447,15 +466,37 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                         ),
                                       ),
                                     ),
-                                    const Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      child: Text(
-                                        'Tax',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 20),
+                                    InkWell(
+                                      onTap: () {
+                                         Navigator.pop(context);
+                                        Navigator.pushNamed(context, '/tax',
+                                            arguments: {
+                                              'customerData': (widget
+                                                      .argus['customerData']
+                                                  as SelectedCustomerResponseData),
+                                              'selectedBusiness': (widget
+                                                      .argus['selectedBusiness']
+                                                  as BusinessListResponseData),
+                                              "updatePlan": true,
+                                              'fromCustomerScreen':
+                                                  (widget.argus.containsKey(
+                                                          'fromCustomerScreen'))
+                                                      ? true
+                                                      : false
+                                            });
+                                      },
+                                      child: const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        child: Text(
+                                          'Tax',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20),
+                                        ),
                                       ),
                                     ),
+                                  
                                   ],
                                 ),
                               );

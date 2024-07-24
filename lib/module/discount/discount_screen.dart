@@ -1,6 +1,18 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api, avoid_print
 
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
+import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
+import 'package:dkapp/module/discount/discount_bloc/discount_bloc.dart';
+import 'package:dkapp/module/discount/discount_bloc/discount_event.dart';
+import 'package:dkapp/module/discount/discount_bloc/discount_state.dart';
+import 'package:dkapp/module/discount/model/discount_list_response_model.dart';
+import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
 class DiscountScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -11,15 +23,27 @@ class DiscountScreen extends StatefulWidget {
 }
 
 class _DiscountScreenState extends State<DiscountScreen> {
-  String? percent;
-  String? rupees;
-  bool ispercent = true;
+  late SharedPreferencesHelper sph;
+  DiscountListResponseData? selectedDiscountListResponseData;
+  late DiscountBloc discountBloc;
+
   @override
   void initState() {
-    setState(() {
-      ispercent = true;
-    });
     super.initState();
+    sph = SharedPreferencesHelper();
+
+    discountBloc = DiscountBloc()
+      ..add(
+        DiscountListFetchEvent(
+          customerId:
+              (widget.argus['customerData'] as SelectedCustomerResponseData)
+                  .id!,
+          userId: sph.getString("userid")!,
+          businessId:
+              (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                  .id!,
+        ),
+      );
   }
 
   @override
@@ -28,15 +52,7 @@ class _DiscountScreenState extends State<DiscountScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/product-detail');
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Discount',
           style: TextStyle(
@@ -58,146 +74,114 @@ class _DiscountScreenState extends State<DiscountScreen> {
               ))
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(
-                vertical: screenSize.height * 0.01,
-                horizontal: screenSize.width * 0.03),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color.fromARGB(255, 203, 202, 202),
-                      blurRadius: 6.0,
-                      offset: Offset(0.0, 0.1))
-                ],
-                color: Colors.white),
-            child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: screenSize.width * 0.02),
-              child: InkWell(
-                onTap: () {
-                  Navigator.pushNamed(context, '/service-details', arguments: {
-                    "percent": '',
-                    "ruppees": 'true',
-                    "tax": '',
-                  });
-                },
-                child: ListTile(
-                  minLeadingWidth: screenSize.width * 0.01,
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: screenSize.height * 0.01),
-                  leading: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.red[100],
-                        borderRadius: BorderRadius.circular(10.0)),
-                    child: const Padding(
-                      padding: EdgeInsets.all(18.0),
-                      child: Text(
-                        '\u{20B9}',
-                        style: TextStyle(color: Colors.black, fontSize: 18),
-                      ),
-                    ),
-                  ),
-                  title: const Text(
-                    'VsvsVv',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  trailing: const Text(
-                    '\u{20B9} ${75}',
-                    style: TextStyle(
-                        color: Color.fromARGB(255, 31, 1, 102), fontSize: 20),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, '/service-details', arguments: {
-                "percent": 'true',
-                "ruppees": '',
-                "tax": '',
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.symmetric(
-                  vertical: screenSize.height * 0.01,
-                  horizontal: screenSize.width * 0.03),
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Color.fromARGB(255, 203, 202, 202),
-                        blurRadius: 6.0,
-                        offset: Offset(0.0, 0.1))
-                  ],
-                  color: Colors.white),
-              child: Padding(
-                padding:
-                    EdgeInsets.symmetric(horizontal: screenSize.width * 0.02),
-                child: ListTile(
-                    minLeadingWidth: screenSize.width * 0.01,
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: screenSize.height * 0.01),
-                    leading: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.red[100],
-                          borderRadius: BorderRadius.circular(10.0)),
-                      child: const Padding(
-                        padding: EdgeInsets.all(18.0),
-                        child: Text(
-                          '%',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
+      body: Container(
+        margin: EdgeInsets.symmetric(horizontal: screenSize.width * 0.03),
+        child: BlocProvider(
+          create: (_) => discountBloc,
+          child: BlocBuilder<DiscountBloc, DiscountState>(
+            builder: (context, state) {
+              if (state is DiscountListLoadingState) {
+                return Center(child: AnimatedImageLoader());
+              } else if (state is DiscountListLoadedState) {
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: state.successData!.length,
+                  itemBuilder: (context, index) {
+                    final discountData = state.successData![index];
+                    return InkWell(
+                      onTap: () {
+                        // Navigator.pushNamed(context, '/service-details', arguments: {
+                        //   "percent": 'true',
+                        //   "ruppees": '',
+                        //   "tax": '',
+                        // });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: screenSize.height * 0.01,
+                            horizontal: screenSize.width * 0.03),
+                        decoration: const BoxDecoration(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0)),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Color.fromARGB(255, 203, 202, 202),
+                                  blurRadius: 6.0,
+                                  offset: Offset(0.0, 0.1))
+                            ],
+                            color: Colors.white),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.02),
+                          child: ListTile(
+                              minLeadingWidth: screenSize.width * 0.01,
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: screenSize.height * 0.01),
+                              leading: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.red[100],
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(18.0),
+                                  child: Icon((discountData.disType == 'A')
+                                      ? FontAwesomeIcons.indianRupeeSign
+                                      : FontAwesomeIcons.percent),
+                                ),
+                              ),
+                              title: Text(
+                                discountData.title!,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              trailing: Text(
+                                (discountData.disType == 'A')
+                                    ? '\u{20B9} ${discountData.amount!}'
+                                    : '${discountData.amount!} %',
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 31, 1, 102),
+                                    fontSize: 20),
+                              )),
                         ),
                       ),
+                    );
+                  },
+                );
+              } else if (state is DiscountListFailedState) {
+                return Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 210, 208, 208),
+                          width: 1.0),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(255, 203, 202, 202),
+                          blurRadius: 1.0,
+                          offset: Offset(0.0, 0.1),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    title:
-                        //  (widget.percent == 'true')
-                        //     ?
-                        const Text(
-                      'Cshik',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    margin: EdgeInsets.symmetric(
+                      horizontal: screenSize.width * 0.03,
+                      vertical: screenSize.height * 0.01,
                     ),
-                    // :
-                    //  const Text(
-                    //     'svvs',
-                    //     style: TextStyle(
-                    //       color: Colors.black,
-                    //       fontSize: 20,
-                    //       fontWeight: FontWeight.w400,
-                    //     ),
-                    //   ),
-                    trailing:
-                        // (widget.percent == 'true')
-                        //     ? const Text(
-                        //         '28.00%',
-                        //         style: TextStyle(
-                        //             color: Color.fromARGB(255, 31, 1, 102),
-                        //             fontSize: 20),
-                        //       )
-                        // :
-                        const Text(
-                      '\u{20B9} ${75.6}',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 31, 1, 102), fontSize: 20),
-                    )),
-              ),
-            ),
+                    child: Image.asset(
+                      "resources/images/empty-folder.png",
+                      height: screenSize.height * 0.1,
+                    ),
+                  ),
+                );
+              } else {
+                return Center(child: AnimatedImageLoader());
+              }
+            },
           ),
-        ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color.fromARGB(255, 31, 1, 102),
@@ -210,177 +194,10 @@ class _DiscountScreenState extends State<DiscountScreen> {
             showDragHandle: true,
             context: context,
             builder: (BuildContext context) {
-              return SizedBox(
-                width: screenSize.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Center(
-                      child: Text(
-                        'Add New Discount',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.05,
-                          vertical: screenSize.height * 0.03),
-                      child: const Text(
-                        'Discount Name',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    // SizedBox(
-                    //   height: screenSize.height * 0.03,
-                    // ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenSize.width * 0.05,
-                      ),
-                      child: TextFormField(
-                        // autofocus: true,
-                        enabled: true,
-                        enableInteractiveSelection: true,
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 31, 1, 102),
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Discount Name',
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 31, 1, 102),
-                              )),
-                          disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: screenSize.height * 0.03,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: screenSize.width * 0.05),
-                      child: const Text(
-                        'Discount Value',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenSize.width * 0.05,
-                      ),
-                      child: TextFormField(
-                        // autofocus: true,
-                        enabled: true,
-                        enableInteractiveSelection: true,
-                        style: const TextStyle(
-                          color: Color.fromARGB(255, 31, 1, 102),
-                        ),
-
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: screenSize.height * 0.01,
-                              horizontal: screenSize.width * 0.03),
-                          hintText: '%',
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          suffixIcon: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.025,
-                                      vertical: screenSize.height * 0.012),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.grey,
-                                  ),
-                                  // height: screenSize.height,
-                                  // width: screenSize.width,
-                                  child: const Icon(
-                                    Icons.currency_rupee_outlined,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.025,
-                                      vertical: screenSize.height * 0.012),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.blue,
-                                  ),
-                                  // height: screenSize.height,
-                                  // width: screenSize.width,
-                                  child: const Icon(
-                                    Icons.percent,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(
-                                color: Color.fromARGB(255, 31, 1, 102),
-                              )),
-                          disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: const BorderSide(color: Colors.grey)),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: screenSize.height * 0.05,
-                    ),
-                    Center(
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.4,
-                            vertical: screenSize.height * 0.016),
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 31, 1, 102),
-                            borderRadius: BorderRadius.circular(10.0)),
-                        child: const Text(
-                          'SAVE',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20),
-                        ),
-                      ),
-                    ),
-                  ],
+              return BlocProvider(
+                create: (context) => DiscountBloc(),
+                child: ModelSheetAddedForm(
+                  argus: widget.argus,
                 ),
               );
             },
@@ -469,5 +286,253 @@ class SearchBarDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     return Container();
+  }
+}
+
+class ModelSheetAddedForm extends StatefulWidget {
+  late Map<String, dynamic> argus;
+  ModelSheetAddedForm({super.key, required this.argus});
+
+  @override
+  _ModelSheetAddedFormState createState() => _ModelSheetAddedFormState();
+}
+
+class _ModelSheetAddedFormState extends State<ModelSheetAddedForm> {
+  SharedPreferencesHelper sph = SharedPreferencesHelper();
+  bool? isPercent;
+  int initIndex = 1;
+  TextEditingController discountNameController = TextEditingController();
+  TextEditingController discountAmountController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    return SizedBox(
+      width: screenSize.width,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BlocBuilder<DiscountBloc, DiscountState>(
+            builder: (context, state) {
+              if (state is AddNewDiscountSuccessState) {
+                return EssentialWidgetsCollection.autoScheduleTask(
+                  context,
+                  taskWaitDuration: Durations.medium4,
+                  task: () {
+                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(context, '/discount',
+                        arguments: {
+                          'customerData': (widget.argus['customerData']
+                              as SelectedCustomerResponseData),
+                          'selectedBusiness': (widget.argus['selectedBusiness']
+                              as BusinessListResponseData),
+                          "updatePlan": true,
+                          'fromCustomerScreen':
+                              (widget.argus.containsKey('fromCustomerScreen'))
+                                  ? true
+                                  : false
+                        });
+                    EssentialWidgetsCollection.showSuccessSnackbar(context,
+                        description: "Discount created Successfully");
+                  },
+                );
+              }
+              if (state is AddNewDiscountFailedState) {
+                return EssentialWidgetsCollection.autoScheduleTask(
+                  context,
+                  taskWaitDuration: Durations.medium4,
+                  task: () {
+                    Navigator.pop(context);
+                    EssentialWidgetsCollection.showErrorSnackbar(context,
+                        description: "Discount creation failed");
+                  },
+                );
+              }
+              if (state is AddNewDiscountLoadingState) {
+                return Center(
+                  child: AnimatedImageLoader(),
+                );
+              }
+              return Container();
+            },
+          ),
+          const Center(
+            child: Text(
+              'Add New Discount',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: screenSize.width * 0.05,
+                vertical: screenSize.height * 0.03),
+            child: const Text(
+              'Discount Name',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+          ),
+          // SizedBox(
+          //   height: screenSize.height * 0.03,
+          // ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.05,
+            ),
+            child: TextFormField(
+              controller: discountNameController,
+              // autofocus: true,
+              enabled: true,
+              enableInteractiveSelection: true,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 31, 1, 102),
+              ),
+              decoration: InputDecoration(
+                hintText: 'Discount Name',
+                hintStyle: const TextStyle(color: Colors.grey),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.grey)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.grey)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 31, 1, 102),
+                    )),
+                disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.grey)),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: screenSize.height * 0.03,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
+            child: const Text(
+              'Discount Value',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: screenSize.width * 0.05,
+            ),
+            child: TextFormField(
+              controller: discountAmountController,
+              // autofocus: true,
+              enabled: true,
+              enableInteractiveSelection: true,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 31, 1, 102),
+              ),
+
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.symmetric(
+                    vertical: screenSize.height * 0.01,
+                    horizontal: screenSize.width * 0.03),
+                prefixIcon: Icon((isPercent == true)
+                    ? FontAwesomeIcons.percent
+                    : FontAwesomeIcons.indianRupeeSign),
+                prefixIconColor: Colors.grey,
+                suffixIcon: ToggleSwitch(
+                  minWidth: 40.0,
+                  minHeight: 30.0,
+                  initialLabelIndex: initIndex,
+                  cornerRadius: 0.0,
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.grey,
+                  inactiveFgColor: Colors.white,
+                  activeBgColor: const [Colors.green],
+                  totalSwitches: 2,
+                  icons: const [
+                    FontAwesomeIcons.indianRupeeSign,
+                    FontAwesomeIcons.percent,
+                  ],
+                  iconSize: 30.0,
+                  borderWidth: 2.0,
+                  borderColor: const [Colors.transparent],
+                  onToggle: (index) {
+                    print('switched to: $index');
+                    if (index == 0) {
+                      setState(() {
+                        isPercent = false;
+                        initIndex = index!;
+                      });
+                    } else {
+                      setState(() {
+                        isPercent = true;
+                        initIndex = index!;
+                      });
+                    }
+                  },
+                ),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.grey)),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.grey)),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 31, 1, 102),
+                    )),
+                disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: const BorderSide(color: Colors.grey)),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: screenSize.height * 0.05,
+          ),
+          Center(
+            child: InkWell(
+              onTap: () {
+                BlocProvider.of<DiscountBloc>(context).add(AddDiscountEvent(
+                    customerId: (widget.argus['customerData']
+                            as SelectedCustomerResponseData)
+                        .id!,
+                    userId: sph.getString("userid")!,
+                    businessId: (widget.argus['selectedBusiness']
+                            as BusinessListResponseData)
+                        .id!,
+                    discountTitle: discountNameController.text,
+                    discountAmount: discountAmountController.text,
+                    discountType: (isPercent == true) ? 'P' : 'A'));
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: screenSize.width * 0.4,
+                    vertical: screenSize.height * 0.016),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 31, 1, 102),
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: const Text(
+                  'SAVE',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

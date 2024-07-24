@@ -45,4 +45,8 @@ class APIPathList {
     static const String getUnitList = "${subfolder}getUnitList";
     static const String getMasterUnitList = "${subfolder}getMasterUnit";
      static const String createUnit = "${subfolder}createUnit";
+     static const String getDiscountList = "${subfolder}getDiscountList";
+     static const String createDiscount = "${subfolder}createDiscount";
+     static const String getTaxList = "${subfolder}getTaxList";
+     static const String createTax = "${subfolder}createTax";
 }

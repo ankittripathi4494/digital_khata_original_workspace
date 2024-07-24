@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProductUnitScreen extends StatefulWidget {
   final Map<String, dynamic> argus;
-  ProductUnitScreen({super.key, required this.argus});
+  const ProductUnitScreen({super.key, required this.argus});
 
   @override
   State<ProductUnitScreen> createState() => _ProductUnitScreenState();

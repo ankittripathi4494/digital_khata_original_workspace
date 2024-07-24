@@ -1,3 +1,4 @@
+import 'package:dkapp/module/discount/discount_bloc/discount_bloc.dart';
 import 'package:dkapp/module/product/add_product_category_screen.dart';
 import 'package:dkapp/module/product/create_product_screen.dart';
 import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:dkapp/module/product/product_master_unit_screen.dart';
 import 'package:dkapp/module/product/product_unit_screen.dart';
 import 'package:dkapp/module/service/create_service_screen.dart';
 import 'package:dkapp/module/service/service_bloc/service_bloc.dart';
+import 'package:dkapp/module/tax/tax_bloc/tax_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
@@ -874,8 +876,8 @@ class RouteAccessGenerator {
           type: PageTransitionType.fade,
           child: BlocProvider(
             create: (context) => ProductBloc(),
-            child: ProductUnitScreen(
-              argus: const {},
+            child: const ProductUnitScreen(
+              argus: {},
             ),
           ),
         );
@@ -902,7 +904,7 @@ class RouteAccessGenerator {
             ),
           ),
         );
- case '/product-master-precision-screen':
+      case '/product-master-precision-screen':
         if (arguments is Map<String, dynamic>) {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
@@ -1433,16 +1435,22 @@ class RouteAccessGenerator {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
-            child: DiscountScreen(
-              argus: arguments,
+            child: BlocProvider(
+              create: (context) => DiscountBloc(),
+              child: DiscountScreen(
+                argus: arguments,
+              ),
             ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: DiscountScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => DiscountBloc(),
+            child: DiscountScreen(
+              argus: const {},
+            ),
           ),
         );
       case '/tax':
@@ -1450,16 +1458,22 @@ class RouteAccessGenerator {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
-            child: TaxScreen(
-              argus: arguments,
+            child: BlocProvider(
+              create: (context) => TaxBloc(),
+              child: TaxScreen(
+                argus: arguments,
+              ),
             ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: TaxScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => TaxBloc(),
+            child: TaxScreen(
+              argus: const {},
+            ),
           ),
         );
       case '/product':
