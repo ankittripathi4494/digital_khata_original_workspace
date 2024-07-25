@@ -435,7 +435,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                     SizedBox(
                                       height: screenSize.height * 0.03,
                                     ),
-                                     InkWell(
+                                    InkWell(
                                       onTap: () {
                                         Navigator.pop(context);
                                         Navigator.pushNamed(
@@ -468,7 +468,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                         Navigator.pop(context);
+                                        Navigator.pop(context);
                                         Navigator.pushNamed(context, '/tax',
                                             arguments: {
                                               'customerData': (widget
@@ -496,7 +496,6 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                         ),
                                       ),
                                     ),
-                                  
                                   ],
                                 ),
                               );
