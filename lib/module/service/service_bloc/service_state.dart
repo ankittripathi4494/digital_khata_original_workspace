@@ -1,5 +1,3 @@
-
-
 import 'package:dkapp/module/service/model/service_category_list_response_model.dart';
 
 class ServiceState {}
