@@ -5,12 +5,12 @@ import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/business_bloc/business_event.dart';
 import 'package:dkapp/module/business_type/model/business_type_list_response_model.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:talker/talker.dart';
 
 import '../business/business_bloc/business_bloc.dart';
 import '../business/business_bloc/business_state.dart';
@@ -161,7 +161,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                                                   maxHeight: 480,
                                                   maxWidth: 640,
                                                   source: ImageSource.gallery);
-                                          Talker().info(
+                                          LoggerUtil().infoData(
                                               "Captured Image From Camera :- ${retailerImage!.path}");
                                           setState(() {
                                             retailerImageFile =
@@ -703,7 +703,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
       '/add-business-address',
     ) as Map<String, dynamic>?;
 
-    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     String add = '';
@@ -734,7 +734,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
     }) as Map<String, dynamic>?;
 
     // Sending result back to FirstScreen
-    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     businessAddressController.clear();
@@ -767,9 +767,9 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
     ) as Map<String, dynamic>;
 
     // Sending result back to FirstScreen
-    Talker().info(
+    LoggerUtil().infoData(
         "Selected Business Types:- ${(rese!['selectedData'] as List<BusinessTypeListResponseData>).map((c) => c.toJson().toString())}");
-    Talker().info("Selected Choices:- ${rese['choices'].toString()}");
+    LoggerUtil().infoData("Selected Choices:- ${rese['choices'].toString()}");
 
     if (rese.containsKey("selectedData")) {
       for (var i = 0;
@@ -841,10 +841,10 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
 
     // Sending result back to FirstScreen
     (resa!["selectedData"] as List<BusinessTypeListResponseData>).map((c) {
-      Talker().info("Selected Business Types Update:- ${c.name}");
+      LoggerUtil().infoData("Selected Business Types Update:- ${c.name}");
     });
 
-    Talker().info(
+    LoggerUtil().infoData(
         "Selected Choices Update:- ${(resa['choices'] as List<String>).toList().toString()}");
 
     if (resa.containsKey("selectedData")) {

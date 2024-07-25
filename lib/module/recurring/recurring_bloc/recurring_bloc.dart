@@ -3,10 +3,11 @@ import 'package:dkapp/module/recurring/model/loan_recurring_emi_list_response_mo
 import 'package:dkapp/module/recurring/recurring_bloc/recurring_event.dart';
 import 'package:dkapp/module/recurring/recurring_bloc/recurring_state.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:talker/talker.dart';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
@@ -21,7 +22,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(
@@ -30,7 +31,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           LoanRecurringEmiListResponseModel jsonResponse =
               LoanRecurringEmiListResponseModel.fromJson(
@@ -38,7 +39,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(RecurringTransactionListLoadedState(
@@ -77,7 +78,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
         map['recurring_emi_ID'] = event.recurringEmiId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(
@@ -86,7 +87,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Recurring Response Data :- ${response.body}");
+        LoggerUtil().infoData("Recurring Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           LoanRecurringEmiDetailResponseModel jsonResponse =
               LoanRecurringEmiDetailResponseModel.fromJson(
@@ -94,7 +95,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(RecurringTransactionDetailLoadedState(
@@ -150,7 +151,7 @@ class RecurringBloc extends Bloc<RecurringEvent, RecurringState> {
 
       var responsePlanImage = await requestForImage.send();
       if (responsePlanImage.statusCode == 200) {
-        Talker().info("Image uplodade success with plan Creation");
+        LoggerUtil().infoData("Image uplodade success with plan Creation");
         // await updateCashTransaction(event, emit);
         emit(AddNewRecurringTransactionSuccessState(
           successMessage: responsePlanImage.reasonPhrase!,

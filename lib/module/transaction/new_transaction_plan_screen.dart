@@ -11,12 +11,13 @@ import 'package:dkapp/module/customers/model/selected_customer_response_model.da
 import 'package:dkapp/module/plan/plan_bloc/plan_bloc.dart';
 import 'package:dkapp/module/plan/plan_bloc/plan_event.dart';
 import 'package:dkapp/module/plan/plan_bloc/plan_state.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:talker/talker.dart';
+
 
 class NewTransactionPlanScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -189,7 +190,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                             context,
                             taskWaitDuration: Durations.medium3,
                             task: () {
-                              Talker().info(
+                              LoggerUtil().infoData(
                                   "Success Message:- ${state.successMessage}");
                               Navigator.pop(context);
                               Navigator.pushReplacementNamed(context, '/plan',
@@ -559,7 +560,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                               setState(() {
                                                 planImage = c;
                                               });
-                                              Talker().info(
+                                              LoggerUtil().infoData(
                                                   "Captured Image From Camera :- ${planImage!.path}");
                                               Navigator.pop(context);
                                             });
@@ -590,7 +591,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                                 setState(() {
                                                   planImage = c;
                                                 });
-                                                Talker().info(
+                                                LoggerUtil().infoData(
                                                     "Captured Image From gallery :- ${planImage!.path}");
                                                 Navigator.pop(context);
                                               });
@@ -666,7 +667,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                         setState(() {
                                           planImage = c;
                                         });
-                                        Talker().info(
+                                        LoggerUtil().infoData(
                                             "Captured Image From Camera :- ${planImage!.path}");
                                         Navigator.pop(context);
                                       });
@@ -696,7 +697,7 @@ class _NewTransactionPlanScreenState extends State<NewTransactionPlanScreen> {
                                           setState(() {
                                             planImage = c;
                                           });
-                                          Talker().info(
+                                          LoggerUtil().infoData(
                                               "Captured Image From gallery :- ${planImage!.path}");
                                           Navigator.pop(context);
                                         });

@@ -3,10 +3,11 @@ import 'package:dkapp/module/plan/model/plan_list_response_model.dart';
 import 'package:dkapp/module/plan/plan_bloc/plan_event.dart';
 import 'package:dkapp/module/plan/plan_bloc/plan_state.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:talker/talker.dart';
+
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
@@ -21,7 +22,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getPlanList),
@@ -29,14 +30,14 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           PlanListResponseModel jsonResponse =
               PlanListResponseModel.fromJson(convert.jsonDecode(response.body));
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(PlanListLoadedState(
@@ -73,7 +74,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
         map['loan_Plan_id'] = event.loanPlanId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getLoanPlanDetails),
@@ -81,7 +82,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           PlanDetailResponseModel jsonResponse =
               PlanDetailResponseModel.fromJson(
@@ -89,7 +90,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(PlanDetailLoadedState(
@@ -142,7 +143,7 @@ class PlanBloc extends Bloc<PlanEvent, PlanState> {
 
       var responsePlanImage = await requestForImage.send();
       if (responsePlanImage.statusCode == 200) {
-        Talker().info("Image uplodade success with plan Creation");
+        LoggerUtil().infoData("Image uplodade success with plan Creation");
         // await updateCashTransaction(event, emit);
         emit(AddNewPlanSuccessState(
           successMessage: responsePlanImage.reasonPhrase!,

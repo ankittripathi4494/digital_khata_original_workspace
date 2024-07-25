@@ -6,6 +6,7 @@ import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/login/model/login_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
 import 'package:dkapp/utils/exceptions.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:pinput/pinput.dart';
-import 'package:talker/talker.dart';
+
 import 'package:timer_count_down/timer_controller.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import 'dart:convert' as convert;
@@ -176,13 +177,13 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
                             ),
                             borderRadius: BorderRadius.circular(8.0)),
                         onCompleted: (pin) {
-                          Talker().info('onCompleted: $pin');
+                          LoggerUtil().infoData('onCompleted: $pin');
                           setState(() {
                             inputPinned = pin;
                           });
                         },
                         onChanged: (value) {
-                          Talker().info('onChanged: $value');
+                          LoggerUtil().infoData('onChanged: $value');
                         },
                       ),
                     ),
@@ -344,14 +345,14 @@ class _MobileOtpScreenState extends State<MobileOtpScreen> {
           headers: {
             "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
           });
-      Talker().info(response.body);
+      LoggerUtil().infoData(response.body);
       if (response.statusCode == 200) {
         MobileOtpResponseModel jsonResponse =
             MobileOtpResponseModel.fromJson(convert.jsonDecode(response.body));
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            Talker().info(jsonResponse.toString());
+            LoggerUtil().infoData(jsonResponse.toString());
           }
           Navigator.pushReplacementNamed(context, '/mobile-otp', arguments: {
             "loginResponseModel":

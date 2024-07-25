@@ -5,10 +5,10 @@ import 'package:dkapp/module/business_type/business_type_bloc/business_type_bloc
 import 'package:dkapp/module/business_type/business_type_bloc/business_type_event.dart';
 import 'package:dkapp/module/business_type/business_type_bloc/business_type_state.dart';
 import 'package:dkapp/module/business_type/model/business_type_list_response_model.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:talker/talker.dart';
 
 class BusinessTypeScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -40,7 +40,7 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
 // order
     if ((widget.argus.containsKey('selectedData')) &&
         (!widget.argus.containsKey('choices'))) {
-      Talker().info(widget.argus['selectedData']);
+      LoggerUtil().infoData(widget.argus['selectedData']);
       BlocProvider.of<BusinessTypeBloc>(context).add(
           BusinessTypeListSelectedFilterEvent(
               userId: prefs.getString("userid")!,
@@ -51,7 +51,7 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
               choiceAndType: ''));
     } else if ((!widget.argus.containsKey('selectedData')) &&
         (widget.argus.containsKey('choices'))) {
-      Talker().info(widget.argus['choices']);
+      LoggerUtil().infoData(widget.argus['choices']);
       BlocProvider.of<BusinessTypeBloc>(context).add(
           BusinessTypeListSelectedFilterEvent(
               userId: prefs.getString("userid")!,
@@ -61,7 +61,7 @@ class _BusinessTypeScreenState extends State<BusinessTypeScreen> {
               choiceAndType: ''));
     } else if ((widget.argus.containsKey('selectedData')) &&
         (widget.argus.containsKey('choices'))) {
-      Talker().info(widget.argus['choices']);
+      LoggerUtil().infoData(widget.argus['choices']);
 
       BlocProvider.of<BusinessTypeBloc>(context).add(
           BusinessTypeListSelectedFilterEvent(

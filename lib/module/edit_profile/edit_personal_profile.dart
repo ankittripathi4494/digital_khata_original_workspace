@@ -7,6 +7,7 @@ import 'package:dkapp/module/account/model/account_response_model.dart';
 import 'package:dkapp/module/edit_profile/model/country_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
 import 'package:dkapp/utils/image_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:talker/talker.dart';
+
 
 class EditPersonalProfileScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -62,7 +63,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
 
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            Talker().info(jsonResponse.toString());
+            LoggerUtil().infoData(jsonResponse.toString());
           }
 
           setState(() {
@@ -172,7 +173,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        Talker().info(
+                                        LoggerUtil().infoData(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile =
@@ -236,7 +237,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        Talker().info(
+                                        LoggerUtil().infoData(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile =
@@ -279,7 +280,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        Talker().info(
+                                        LoggerUtil().infoData(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile =
@@ -318,7 +319,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                             maxHeight: 480,
                                             maxWidth: 640,
                                             source: ImageSource.gallery);
-                                        Talker().info(
+                                        LoggerUtil().infoData(
                                             "Captured Image From Camera :- ${retailerImage!.path}");
                                         setState(() {
                                           retailerImageFile =
@@ -367,9 +368,9 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                       },
                       onChanged: (value) {
                         // if (_formKey.currentState!.validate()) {
-                        //   Talker().info("Validated");
+                        //   LoggerUtil().infoData("Validated");
                         // } else {
-                        //   Talker().info("Not Validated");
+                        //   LoggerUtil().infoData("Not Validated");
                         // }
                       },
                       keyboardType: TextInputType.name,
@@ -417,9 +418,9 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                       },
                       onChanged: (value) {
                         // if (_formKey.currentState!.validate()) {
-                        //   Talker().info("Validated");
+                        //   LoggerUtil().infoData("Validated");
                         // } else {
-                        //   Talker().info("Not Validated");
+                        //   LoggerUtil().infoData("Not Validated");
                         // }
                       },
                       keyboardType: TextInputType.number,
@@ -609,7 +610,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                     InkWell(
                       onTap: () {
                         if (retailerImage != null) {
-                          Talker().info("Update Data:- ${retailerImage!.path}");
+                          LoggerUtil().infoData("Update Data:- ${retailerImage!.path}");
                           updatePersonalProfileImage();
                         } else {
                           updatePersonalProfile();
@@ -658,7 +659,7 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
       request.files.add(await http.MultipartFile.fromPath(
           "profile_image", File(retailerImageFile!).path));
 
-      Talker().info(request.files.first.filename);
+      LoggerUtil().infoData(request.files.first.filename);
 
       var response = await request.send();
       if (response.statusCode == 200) {
@@ -687,21 +688,21 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
       map['email'] = emailController.text;
       map['country_id'] = selectedCountry?.id;
       map['dob'] = dobController.text;
-      Talker().info("Input Map :- $map");
+      LoggerUtil().infoData("Input Map :- $map");
       http.Response response = await http.post(
           Uri.http(APIPathList.mainDomain, APIPathList.updateUserProfile),
           body: map,
           headers: {
             "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
           });
-      Talker().info(response.body);
+      LoggerUtil().infoData(response.body);
       if (response.statusCode == 200) {
         AccountResponseModel jsonResponse =
             AccountResponseModel.fromJson(convert.jsonDecode(response.body));
 
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            Talker().info(jsonResponse.response.toString());
+            LoggerUtil().infoData(jsonResponse.response.toString());
           }
 
           Navigator.pushReplacementNamed(context, '/accounts');

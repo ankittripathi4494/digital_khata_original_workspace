@@ -1,3 +1,5 @@
+
+
 import 'package:talker/talker.dart';
 
 class LoggerUtil {
@@ -32,23 +34,23 @@ class LoggerUtil {
 
   // Method to get the database instance
 
-  debugData(String message, [Object? error, StackTrace? stackTrace]) {
+  debugData(dynamic message, [Object? error, StackTrace? stackTrace]) {
     talkerLogger.debug(message, error, stackTrace);
   }
 
-  errorData(String message, [Object? error, StackTrace? stackTrace]) {
+  errorData(dynamic message, [Object? error, StackTrace? stackTrace]) {
     talkerLogger.error(message, error, stackTrace);
   }
 
-  infoData(String message, [Object? error, StackTrace? stackTrace]) {
+  infoData(dynamic message, [Object? error, StackTrace? stackTrace]) {
     talkerLogger.info(message, error, stackTrace);
   }
 
-  criticalData(String message, [Object? error, StackTrace? stackTrace]) {
+  criticalData(dynamic message, [Object? error, StackTrace? stackTrace]) {
     talkerLogger.critical(message, error, stackTrace);
   }
 
-  warningData(String message, [Object? error, StackTrace? stackTrace]) {
+  warningData(dynamic message, [Object? error, StackTrace? stackTrace]) {
     talkerLogger.warning(message, error, stackTrace);
   }
 

@@ -3,6 +3,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ import 'package:intl/intl.dart' as i;
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:talker/talker.dart';
+
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
@@ -84,7 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     });
     tabController.addListener(() {
       if (kDebugMode) {
-        Talker().info('my index is${tabController.index}');
+        LoggerUtil().infoData('my index is${tabController.index}');
       }
     });
     fetchSelectedCustomerData();
@@ -192,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         _addtoContactForm(
                             context, state.selectedCustomerDetailedData);
                       case '2':
-                        Talker().info('Edit Form');
+                        LoggerUtil().infoData('Edit Form');
 
                         Navigator.pushNamed(context, '/edit-customer-screen',
                             arguments: {
@@ -204,18 +205,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                             });
                         break;
                       case '3':
-                        Talker().info('Enable DND');
+                        LoggerUtil().infoData('Enable DND');
                         break;
                       case '4':
-                        Talker().info('Delete Customer');
+                        LoggerUtil().infoData('Delete Customer');
                         _deleteCustomer(
                             context, state.selectedCustomerDetailedData);
                         break;
                       case '5':
-                        Talker().info('Show Remainders');
+                        LoggerUtil().infoData('Show Remainders');
                         break;
                       case '6':
-                        Talker().info('Reports');
+                        LoggerUtil().infoData('Reports');
                         break;
                     }
                   },
@@ -1614,7 +1615,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         key: UniqueKey(),
                         direction: DismissDirection.endToStart,
                         onDismissed: (DismissDirection direction) {
-                          Talker().info('Dismissed with direction $direction');
+                          LoggerUtil().infoData('Dismissed with direction $direction');
 
                           if (direction == DismissDirection.endToStart) {
                             if (transactionData.transType == 'D') {
@@ -2147,7 +2148,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       BuildContext context, SelectedCustomerResponseData customerData) async {
     // Add the contact
     try {
-      Talker().info("saving Conatct");
+      LoggerUtil().infoData("saving Conatct");
       PermissionStatus permission = await Permission.contacts.status;
 
       if (permission != PermissionStatus.granted) {
@@ -2258,7 +2259,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         );
       }
     } catch (e) {
-      Talker().info(e);
+      LoggerUtil().infoData(e);
     }
   }
 

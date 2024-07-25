@@ -4,13 +4,13 @@ import 'package:dkapp/module/business_type/business_type_bloc/business_type_even
 import 'package:dkapp/module/business_type/business_type_bloc/business_type_state.dart';
 import 'package:dkapp/module/business_type/model/business_type_list_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
-import 'package:talker/talker.dart';
 
 class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
   List<BusinessTypeListResponseData> businessTypeList = [];
@@ -25,7 +25,7 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
       try {
         map['token'] = 'bnbuujn';
         map['search'] = event.searchText;
-        Talker().info(map);
+        LoggerUtil().infoData(map.toString());
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getBusinessType),
@@ -33,7 +33,7 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           BusinessTypeListResponseModel jsonResponse =
               BusinessTypeListResponseModel.fromJson(
@@ -41,7 +41,7 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
             businessTypeList = jsonResponse.data!;
             emit(BusinessTypeListLoadedState(
@@ -72,7 +72,7 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
       try {
         map['token'] = 'bnbuujn';
         map['search'] = event.searchText;
-        Talker().info(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getBusinessType),
@@ -80,7 +80,7 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           BusinessTypeListResponseModel jsonResponse =
               BusinessTypeListResponseModel.fromJson(
@@ -88,12 +88,12 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
             businessTypeList = jsonResponse.data!;
 
             if (event.choiceAndType.isNotEmpty) {
-              Talker().info(
+              LoggerUtil().infoData(
                   "Choices and Types Combo:= ${event.choiceAndType.toString()}");
 
               List<String> splitListdata = event.choiceAndType.split(',');
@@ -101,26 +101,26 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
                   .map((c) => BusinessTypeListResponseData(
                       id: c.id, name: c.name, isChecked: true))
                   .toList();
-              Talker().info("List Data:- ${splitListdata.toString()}");
-              Talker().info("Type List :- ${typeListData.toString()}");
+              LoggerUtil().infoData("List Data:- ${splitListdata.toString()}");
+              LoggerUtil().infoData("Type List :- ${typeListData.toString()}");
               for (String spl in splitListdata) {
                 if ((typeListData
                         .map((d) => d.name!.toLowerCase().trim())
                         .toList())
                     .contains(spl.toLowerCase().trim())) {
-                  Talker().info("spl exist in type List");
+                  LoggerUtil().infoData("spl exist in type List");
                   for (BusinessTypeListResponseData tld in typeListData) {
                     if (tld.name!.toLowerCase().trim() ==
                         spl.toLowerCase().trim()) {
-                      Talker().info("added");
+                      LoggerUtil().infoData("added");
                       businessTypeListTemp.add(BusinessTypeListResponseData(
                           id: tld.id, name: tld.name, isChecked: true));
                     } else {
-                      Talker().info("skip");
+                      LoggerUtil().infoData("skip");
                     }
                   }
                 } else {
-                  Talker().info("spl exist in choice  List");
+                  LoggerUtil().infoData("spl exist in choice  List");
                   choicesListTemp.add(spl);
                 }
               }
@@ -129,10 +129,10 @@ class BusinessTypeBloc extends Bloc<BusinessTypeEvent, BusinessTypeState> {
                   choicesList: choicesListTemp));
             } else {
               for (var cl in event.choiceList) {
-                Talker().info("Choice:- $cl");
+                LoggerUtil().infoData("Choice:- $cl");
               }
               for (var sdl in event.selectedDataList) {
-                Talker().info("Selected Data List:- ${sdl.toJson().toString()}");
+                LoggerUtil().infoData("Selected Data List:- ${sdl.toJson().toString()}");
               }
               choicesListTemp.addAll(event.choiceList.toSet().toList());
               businessTypeListTemp.addAll(event.selectedDataList);

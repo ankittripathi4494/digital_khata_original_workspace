@@ -6,6 +6,7 @@ import 'package:dkapp/module/customers/customer_bloc/customer_bloc.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_event.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
 import 'package:dkapp/utils/exceptions.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:talker/talker.dart';
+
 
 class ProfileDetailScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -137,7 +138,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen>
                                                         maxWidth: 640,
                                                         source:
                                                             ImageSource.gallery);
-                                                Talker().info(
+                                                LoggerUtil().infoData(
                                                     "Captured Image From Camera :- ${retailerImage!.path}");
                                                 setState(() {
                                                   retailerImageFile =
@@ -178,7 +179,7 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen>
                                                         maxWidth: 640,
                                                         source:
                                                             ImageSource.gallery);
-                                                Talker().info(
+                                                LoggerUtil().infoData(
                                                     "Captured Image From Camera :- ${retailerImage!.path}");
                                                 setState(() {
                                                   retailerImageFile =

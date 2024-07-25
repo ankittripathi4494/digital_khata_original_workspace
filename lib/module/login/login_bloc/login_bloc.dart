@@ -3,12 +3,13 @@
 import 'package:dkapp/module/login/model/login_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
 import 'package:dkapp/utils/exceptions.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
-import 'package:talker/talker.dart';
+
 import 'dart:convert' as convert;
 import 'login_event.dart';
 import 'login_state.dart';
@@ -17,7 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   String platformVersion = "UnKnown";
   String? fcmToken;
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  Talker talker = Talker();
+  
   LoginBloc() : super(LoginInitialState()) {
     //! Phone Number Text Change Event
     on<LoginPhoneNumberTextChangedEvent>((event, emit) {
@@ -61,22 +62,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        talker.info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           LoginResponseModel jsonResponse =
               LoginResponseModel.fromJson(convert.jsonDecode(response.body));
-          talker.info(response.body);
+          LoggerUtil().infoData(response.body);
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              talker.info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
 
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.otp.toString().trim());
-              Talker().info(jsonResponse.data!.toString());
-              Talker().info(fcmToken);
+              LoggerUtil().infoData(jsonResponse.data!.otp.toString().trim());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
+              LoggerUtil().infoData(fcmToken);
             }
-            Talker().info(fcmToken!);
+            LoggerUtil().infoData(fcmToken!);
             emit(LoginPhoneNumberSuccessState(successData: jsonResponse));
           } else {
             emit(LoginPhoneNumberFailedState(
@@ -114,20 +115,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        talker.info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           LoginResponseModel jsonResponse =
               LoginResponseModel.fromJson(convert.jsonDecode(response.body));
-          talker.info(response.body);
+          LoggerUtil().infoData(response.body);
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
 
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.otp.toString());
-              Talker().info(jsonResponse.data.toString());
-              Talker().info(fcmToken);
+              LoggerUtil().infoData(jsonResponse.data!.otp.toString());
+              LoggerUtil().infoData(jsonResponse.data.toString());
+              LoggerUtil().infoData(fcmToken);
             }
             emit(LoginEmailIDSuccessState(successData: jsonResponse));
           } else {

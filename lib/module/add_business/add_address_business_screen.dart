@@ -1,7 +1,8 @@
 // ignore_for_file: must_be_immutable, unnecessary_null_comparison, avoid_Talker().info
 
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/material.dart';
-import 'package:talker/talker.dart';
+
 
 class AddBusinessAddressScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -30,8 +31,8 @@ class _AddBusinessAddressScreenState extends State<AddBusinessAddressScreen> {
 
   fetchLocation() async {
     if (widget.argus.containsKey('address')) {
-      Talker()
-          .info(Map<String, dynamic>.from(widget.argus['address']).toString());
+      LoggerUtil()
+          .infoData(Map<String, dynamic>.from(widget.argus['address']).toString());
       setState(() {
         businessAddress1Controller.text =
             Map<String, dynamic>.from(widget.argus['address'])['address1'] ??=

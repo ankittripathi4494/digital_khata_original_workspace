@@ -8,6 +8,7 @@ import 'package:dkapp/module/profile/model/transaction_list_response_model.dart'
 import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
 import 'package:dkapp/module/profile/transactions/transactions_event.dart';
 import 'package:dkapp/module/profile/transactions/transactions_state.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,7 @@ import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
-import 'package:talker/talker.dart';
+
 
 class CashInScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -134,7 +135,7 @@ class _CashInScreenState extends State<CashInScreen> {
                                 context,
                                 taskWaitDuration: Durations.medium3,
                                 task: () {
-                                  Talker().info(
+                                  LoggerUtil().infoData(
                                       "Same Page Redirection:- ${state.samePageRedirection}");
                                   if (state.samePageRedirection == true) {
                                     setState(() {
@@ -395,7 +396,7 @@ class _CashInScreenState extends State<CashInScreen> {
                                                     setState(() {
                                                       attachImage = c;
                                                     });
-                                                    Talker().info(
+                                                    LoggerUtil().infoData(
                                                         "Captured Image From Camera :- ${attachImage!.path}");
                                                     Navigator.pop(context);
                                                   });
@@ -427,7 +428,7 @@ class _CashInScreenState extends State<CashInScreen> {
                                                       setState(() {
                                                         attachImage = c;
                                                       });
-                                                      Talker().info(
+                                                      LoggerUtil().infoData(
                                                           "Captured Image From gallery :- ${attachImage!.path}");
                                                       Navigator.pop(context);
                                                     });

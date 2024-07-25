@@ -3,11 +3,12 @@
 import 'dart:async';
 
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:talker/talker.dart';
+
 
 import '../../global_blocs/internet/internet_cubit.dart';
 import '../../global_blocs/internet/internet_state.dart';
@@ -26,13 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Talker().info("Called Splash");
+    LoggerUtil().infoData("Called Splash");
   }
 
   redirectPage() async {
     if (sph.containsKey("userLoggedIn") == true) {
       if (sph.getBool("userLoggedIn") == true) {
-        Talker().info("Arguments:- ${widget.argus.toString()}");
+        LoggerUtil().infoData("Arguments:- ${widget.argus.toString()}");
         if (sph.containsKey("loginType") == true) {
           Navigator.pushReplacementNamed(context, '/add-new-business',
               arguments: {"fromLoginPage": true});

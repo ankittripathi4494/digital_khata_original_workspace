@@ -24,7 +24,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:talker/talker.dart';
+
 
 import 'model/business_list_response_model.dart';
 
@@ -87,7 +87,7 @@ class _UpdateBusinessProfileScreenState
 
         if (jsonResponse.response != "failure") {
           if (kDebugMode) {
-            Talker().info(jsonResponse.toString());
+            LoggerUtil().infoData(jsonResponse.toString());
           }
 
           setState(() {
@@ -111,7 +111,7 @@ class _UpdateBusinessProfileScreenState
   }
 
   fillFormDetails() {
-    Talker().info(
+    LoggerUtil().infoData(
         "Fetched Data :- ${(widget.argus['businessProfileData'] as BusinessListResponseData).toJson().toString()}");
     LocationHandler.getCurrentPosition().then(
       (value) {
@@ -190,7 +190,7 @@ class _UpdateBusinessProfileScreenState
         .onError((error, stackTrace) async {
       await Geolocator.requestPermission();
       if (kDebugMode) {
-        Talker().info("ERROR$error");
+        LoggerUtil().infoData("ERROR$error");
       }
     });
     return await Geolocator.getCurrentPosition();
@@ -454,7 +454,7 @@ class _UpdateBusinessProfileScreenState
                                                     maxWidth: 640,
                                                     source:
                                                         ImageSource.gallery);
-                                            Talker().info(
+                                            LoggerUtil().infoData(
                                                 "Captured Image From gallery :- ${retailerImage!.path}");
                                             setState(() {
                                               retailerImageFile =
@@ -480,7 +480,7 @@ class _UpdateBusinessProfileScreenState
                                                     maxHeight: 480,
                                                     maxWidth: 640,
                                                     source: ImageSource.camera);
-                                            Talker().info(
+                                            LoggerUtil().infoData(
                                                 "Captured Image From Camera :- ${retailerImage!.path}");
                                             setState(() {
                                               retailerImageFile =
@@ -1128,7 +1128,7 @@ class _UpdateBusinessProfileScreenState
       '/add-business-address',
     ) as Map<String, dynamic>?;
 
-    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     while (i.moveNext()) {
@@ -1159,7 +1159,7 @@ class _UpdateBusinessProfileScreenState
     }) as Map<String, dynamic>?;
 
     // Sending result back to FirstScreen
-    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     businessAddressController.clear();
@@ -1198,9 +1198,9 @@ class _UpdateBusinessProfileScreenState
     }) as Map<String, dynamic>;
 
     // Sending result back to FirstScreen
-    Talker().info(
+    LoggerUtil().infoData(
         "Selected Business Types:- ${(rese!['selectedData'] as List<BusinessTypeListResponseData>).map((c) => c.toJson().toString())}");
-    Talker().info("Selected Choices:- ${rese['choices'].toString()}");
+    LoggerUtil().infoData("Selected Choices:- ${rese['choices'].toString()}");
 
     if (rese.containsKey("selectedData")) {
       for (var i = 0;
@@ -1281,10 +1281,10 @@ class _UpdateBusinessProfileScreenState
 
     // Sending result back to FirstScreen
     (resa!["selectedData"] as List<BusinessTypeListResponseData>).map((c) {
-      Talker().info("Selected Business Types Update:- ${c.name}");
+      LoggerUtil().infoData("Selected Business Types Update:- ${c.name}");
     });
 
-    Talker().info(
+    LoggerUtil().infoData(
         "Selected Choices Update:- ${(resa['choices'] as List<String>).toList().toString()}");
 
     if (resa.containsKey("selectedData")) {
@@ -1356,7 +1356,7 @@ class _UpdateBusinessProfileScreenState
         await Navigator.pushNamed(context, '/contact-verification', arguments: {
       "contactData": businessContactController.text,
     }) as Map<String, dynamic>?;
-    Talker().info("Coming data:- ${resa!['contactDataPass']}");
+    LoggerUtil().infoData("Coming data:- ${resa!['contactDataPass']}");
 
     setState(() {
       outputResultVerfiedContact = resa['contactDataPass'];
@@ -1385,7 +1385,7 @@ class _UpdateBusinessProfileScreenState
     }) as Map<String, dynamic>?;
 
     // Sending result back to FirstScreen
-    Talker().info("Selected Contact:- ${res!['contactDataPass'].toString()}");
+    LoggerUtil().infoData("Selected Contact:- ${res!['contactDataPass'].toString()}");
 
     businessContactController.clear();
     businessContactController.text = res['contactDataPass'];

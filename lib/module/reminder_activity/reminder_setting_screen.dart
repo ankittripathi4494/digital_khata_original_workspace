@@ -1,9 +1,10 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:switcher_button/switcher_button.dart';
-import 'package:talker/talker.dart';
+
 
 class ReminderSettingScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -83,7 +84,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          Talker().info(value);
+                          LoggerUtil().infoData(value);
 
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
@@ -122,7 +123,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          Talker().info(value);
+                          LoggerUtil().infoData(value);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             margin: EdgeInsets.symmetric(
@@ -160,7 +161,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          Talker().info(value);
+                          LoggerUtil().infoData(value);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             margin: EdgeInsets.symmetric(
@@ -198,7 +199,7 @@ class _ReminderSettingScreenState extends State<ReminderSettingScreen> {
                       value: true,
                       onChange: (value) {
                         if (kDebugMode) {
-                          Talker().info(value);
+                          LoggerUtil().infoData(value);
                           ScaffoldMessenger.of(context)
                               .showSnackBar(const SnackBar(
                             margin: EdgeInsets.symmetric(

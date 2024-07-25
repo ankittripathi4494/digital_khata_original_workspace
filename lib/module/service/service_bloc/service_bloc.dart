@@ -3,10 +3,11 @@ import 'package:dkapp/module/service/model/service_category_list_response_model.
 import 'package:dkapp/module/service/service_bloc/service_event.dart';
 import 'package:dkapp/module/service/service_bloc/service_state.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:talker/talker.dart';
+
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
@@ -21,7 +22,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getCategogyList),
@@ -29,7 +30,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           ServiceCategoryListResponseModel jsonResponse =
               ServiceCategoryListResponseModel.fromJson(
@@ -37,7 +38,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(ServiceCategoryListLoadedState(
@@ -70,14 +71,14 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
         map['category_name'] = event.serviceCategoryName;
-        Talker().info("Input Map :- $map");
+        LoggerUtil().infoData("Input Map :- $map");
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.createCategory),
             body: map,
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           AddNewServiceCategoryResponseModel jsonResponse =
               AddNewServiceCategoryResponseModel.fromJson(
@@ -85,7 +86,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
 
             emit(AddNewServiceCategorySuccessState(

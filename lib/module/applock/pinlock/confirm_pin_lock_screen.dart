@@ -1,11 +1,11 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:numpad/numpad.dart';
 import 'package:pinput/pinput.dart';
-import 'package:talker/talker.dart';
 
 class ConfirmPinLockScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -81,7 +81,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                       : 'Pin and Confirm Pin are not matched';
                 },
                 onCompleted: (pin) {
-                  Talker().info('onCompleted: ');
+                  LoggerUtil().infoData('onCompleted: ');
                   if (pin == widget.argus['devicePin']) {
                     setState(() {
                       showDialog(
@@ -124,7 +124,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                                         setState(() {
                                           // initScreen = 1;
                                           if (kDebugMode) {
-                                            Talker().info('init-={initScreen}');
+                                            LoggerUtil().infoData('init-={initScreen}');
                                           }
                                           Navigator.pushNamed(
                                               context, '/dashboard');
@@ -148,7 +148,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                   }
                 },
                 onChanged: (value) {
-                  Talker().info('onChanged: $value');
+                  LoggerUtil().infoData('onChanged: $value');
                 },
                 cursor: Container(),
                 focusedPinTheme: defaultPinTheme.copyWith(
@@ -206,7 +206,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
                 //     code += "$val";
                 //   });
                 // }
-                // Talker().info(code);
+                // LoggerUtil().infoData(code);
               },
             ),
             // NumericKeyboard(
@@ -250,7 +250,7 @@ class _ConfirmPinLockScreenState extends State<ConfirmPinLockScreen> {
     }
 
     if (kDebugMode) {
-      Talker().info(textController.text);
+      LoggerUtil().infoData(textController.text);
     }
   }
 }

@@ -4,12 +4,13 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_chips_input/select_chips_input.dart';
-import 'package:talker/talker.dart';
+
 import 'dart:convert' as convert;
 import '../dashboard/screens/dashboard_screen.dart';
 
@@ -43,7 +44,7 @@ class _InVoiceScreenState extends State<InVoiceScreen>
     });
     tabController.addListener(() {
       if (kDebugMode) {
-        Talker().info('my index is${tabController.index}');
+        LoggerUtil().infoData('my index is${tabController.index}');
       }
     });
     super.initState();

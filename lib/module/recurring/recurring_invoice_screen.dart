@@ -366,14 +366,14 @@ class _RecurringInvoiceScreenState extends State<RecurringInvoiceScreen> {
                     //             // showShareScreenPopup(context);
                     //             setState(() {
                     //               isCheckbox = true;
-                    //               Talker().info(isCheckbox);
+                    //               LoggerUtil().infoData(isCheckbox);
                     //             });
                     //             // isCheckbox = false;
                     //           },
                     //           // onTap: () {
                     //           // setState(() {
                     //           //   isCheckbox = true;
-                    //           //   Talker().info(isCheckbox);
+                    //           //   LoggerUtil().infoData(isCheckbox);
                     //           // });
                     //           // },
                     //           items: _locations.map((location) {
@@ -381,7 +381,7 @@ class _RecurringInvoiceScreenState extends State<RecurringInvoiceScreen> {
                     //               onTap: () {
                     //                 setState(() {
                     //                   isCheckbox = true;
-                    //                   Talker().info(isCheckbox);
+                    //                   LoggerUtil().infoData(isCheckbox);
                     //                 });
                     //               },
                     //               value: location,

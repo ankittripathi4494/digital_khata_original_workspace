@@ -3,10 +3,11 @@ import 'package:dkapp/module/discount/discount_bloc/discount_state.dart';
 import 'package:dkapp/module/discount/model/add_new_discount_response_model.dart';
 import 'package:dkapp/module/discount/model/discount_list_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:talker/talker.dart';
+
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
@@ -21,7 +22,7 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getDiscountList),
@@ -29,7 +30,7 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           DiscountListResponseModel jsonResponse =
               DiscountListResponseModel.fromJson(
@@ -37,7 +38,7 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(DiscountListLoadedState(
@@ -72,14 +73,14 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
         map['title'] = event.discountTitle;
         map['amount'] = event.discountAmount;
         map['dis_type'] = event.discountType;
-        Talker().info("Input Map :- $map");
+        LoggerUtil().infoData("Input Map :- $map");
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.createDiscount),
             body: map,
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           AddNewDiscountResponseModel jsonResponse =
               AddNewDiscountResponseModel.fromJson(
@@ -87,7 +88,7 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
 
             emit(AddNewDiscountSuccessState(

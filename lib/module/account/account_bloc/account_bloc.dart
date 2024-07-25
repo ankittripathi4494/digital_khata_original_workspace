@@ -4,13 +4,12 @@ import 'package:dkapp/module/account/account_bloc/account_event.dart';
 import 'package:dkapp/module/account/account_bloc/account_state.dart';
 import 'package:dkapp/module/account/model/account_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
-
-import 'package:talker/talker.dart';
 
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   AccountBloc() : super(AccountInitial()) {
@@ -28,19 +27,19 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           AccountResponseModel jsonResponse =
               AccountResponseModel.fromJson(convert.jsonDecode(response.body));
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
 
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.first.dob);
-              Talker().info(jsonResponse.data!.first.fullname);
+              LoggerUtil().infoData(jsonResponse.data!.first.dob.toString());
+              LoggerUtil().infoData(jsonResponse.data!.first.fullname.toString());
             }
             emit(AccountDetailSuccessState(
                 successData: jsonResponse.data!.first));

@@ -14,12 +14,12 @@ import 'package:dkapp/module/customers/customer_bloc/customer_bloc.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_event.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_state.dart';
 import 'package:dkapp/utils/exceptions.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:talker/talker.dart';
 
 class AddCustomerScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -130,7 +130,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
               (updatedData == true)
                   ? EssentialWidgetsCollection.autoScheduleTask(context,
                       task: () {
-                      Talker().info("datya");
+                      LoggerUtil().infoData("datya");
                       setState(() {
                         updatedData = false;
                       });
@@ -162,7 +162,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       childWidget: Container(),
                       taskWaitDuration: Durations.short4,
                       task: () {
-                        Talker().info("faield");
+                        LoggerUtil().infoData("faield");
                         setState(() {
                           usergroupList.addAll([]);
                         });
@@ -723,7 +723,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                                             });
                                             Navigator.pop(context);
 
-                                            Talker().info(selectedGroup!.name);
+                                            LoggerUtil().infoData(selectedGroup!.name);
                                           },
                                         ),
                                       ),

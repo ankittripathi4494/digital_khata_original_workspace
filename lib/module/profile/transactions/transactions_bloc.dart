@@ -4,12 +4,13 @@ import 'package:dkapp/module/profile/model/transaction_list_response_model.dart'
 import 'package:dkapp/module/profile/transactions/transactions_event.dart';
 import 'package:dkapp/module/profile/transactions/transactions_state.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:talker/talker.dart';
+
 
 class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
   TransactionsBloc() : super(TransactionsInitialState()) {
@@ -31,7 +32,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
-        Talker().info(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(
@@ -40,7 +41,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           TransactionListResponseModel jsonResponse =
               TransactionListResponseModel.fromJson(
@@ -48,7 +49,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(TransactionListLoadedState(
@@ -100,7 +101,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
 
       var responseBusinessProfileImage = await requestForImage.send();
       if (responseBusinessProfileImage.statusCode == 200) {
-        Talker().info("Image uplodade success");
+        LoggerUtil().infoData("Image uplodade success");
         // await updateCashTransaction(event, emit);
         emit(AddNewCashTransactionSuccessState(
             successMessage: responseBusinessProfileImage.reasonPhrase!,
@@ -141,7 +142,7 @@ class TransactionsBloc extends Bloc<TransactionsEvent, TransactionsState> {
 
       var responseBusinessProfileImage = await requestForImage.send();
       if (responseBusinessProfileImage.statusCode == 200) {
-        Talker().info("Image uplodade success");
+        LoggerUtil().infoData("Image uplodade success");
         // await updateCashTransaction(event, emit);
         emit(UpdateCashTransactionSuccessState(
           successMessage: responseBusinessProfileImage.reasonPhrase!,

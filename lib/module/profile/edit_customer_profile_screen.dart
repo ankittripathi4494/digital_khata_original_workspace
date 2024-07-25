@@ -15,12 +15,13 @@ import 'package:dkapp/module/customers/customer_bloc/customer_event.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_state.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
 import 'package:dkapp/utils/exceptions.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:talker/talker.dart';
+
 
 class EditCustomerScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -58,7 +59,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
   }
 
   fillFormDetails() {
-    Talker().info((widget.argus['customerData'] as SelectedCustomerResponseData)
+    LoggerUtil().infoData((widget.argus['customerData'] as SelectedCustomerResponseData)
         .toJson());
     nameController.text =
         ((widget.argus['customerData'] as SelectedCustomerResponseData)
@@ -108,7 +109,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
         if (ex.id ==
             (widget.argus['customerData'] as SelectedCustomerResponseData)
                 .groupId) {
-          Talker().info("Selected");
+          LoggerUtil().infoData("Selected");
           setState(() {
             selectedGroup = ex;
             groupController.text = selectedGroup?.name ?? '';
@@ -168,7 +169,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
               (updatedData == true)
                   ? EssentialWidgetsCollection.autoScheduleTask(context,
                       task: () {
-                      Talker().info("datya");
+                      LoggerUtil().infoData("datya");
                       setState(() {
                         updatedData = false;
                       });
@@ -204,7 +205,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                       childWidget: Container(),
                       taskWaitDuration: Durations.short4,
                       task: () {
-                        Talker().info("faield");
+                        LoggerUtil().infoData("faield");
                         setState(() {
                           usergroupList.addAll([]);
                         });
@@ -938,7 +939,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                                       });
                                       Navigator.pop(context);
 
-                                      Talker().info(selectedGroup!.name);
+                                      LoggerUtil().infoData(selectedGroup!.name);
                                     },
                                   ),
                                 ),
@@ -1161,7 +1162,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       '/add-business-address',
     ) as Map<String, dynamic>?;
 
-    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     String add = '';
@@ -1193,7 +1194,7 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
     }) as Map<String, dynamic>?;
 
     // Sending result back to FirstScreen
-    Talker().info("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     addressController.clear();

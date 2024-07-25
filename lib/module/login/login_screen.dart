@@ -492,7 +492,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                         // ignore: avoid_print
                         onChange: (index) {
-                          // Talker().error(index);
+                          // LoggerUtil().errorData(index);
                           if (index == 0) {
                             setState(() {
                               emailIdController.text = "";

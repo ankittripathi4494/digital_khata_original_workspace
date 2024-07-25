@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:numpad/numpad.dart';
 import 'package:pinput/pinput.dart';
-import 'package:talker/talker.dart';
 
 class PinLockScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -87,12 +87,12 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 hapticFeedbackType: HapticFeedbackType.vibrate,
                 onCompleted: (pin) {
                   devicePin = pin;
-                  Talker().info('onCompleted: ');
+                  LoggerUtil().infoData('onCompleted: ');
                   Navigator.pushNamed(context, '/app-lock/confirm-pin-lock',
                       arguments: {devicePin: devicePin.toString()});
                 },
                 onChanged: (value) {
-                  Talker().info('onChanged: $value');
+                  LoggerUtil().infoData('onChanged: $value');
                 },
                 cursor: Container(),
                 focusedPinTheme: defaultPinTheme.copyWith(
@@ -151,7 +151,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
                 //     code += "$val";
                 //   });
                 // }
-                // Talker().info(code);
+                // LoggerUtil().infoData(code);
               },
             ),
             // NumericKeyboard(
@@ -193,7 +193,7 @@ class _PinLockScreenState extends State<PinLockScreen> {
     }
 
     if (kDebugMode) {
-      Talker().info(textController.text);
+      LoggerUtil().infoData(textController.text);
     }
   }
 }

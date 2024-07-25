@@ -14,13 +14,14 @@ import 'package:dkapp/module/recurring/recurring_bloc/recurring_bloc.dart';
 import 'package:dkapp/module/recurring/recurring_bloc/recurring_event.dart';
 import 'package:dkapp/module/recurring/recurring_bloc/recurring_state.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:talker/talker.dart';
+
 import 'package:http/http.dart' as http;
 
 class RecurringTransactionScreen extends StatefulWidget {
@@ -1217,7 +1218,7 @@ class _RecurringTransactionScreenState
                                         setState(() {
                                           planImage = c;
                                         });
-                                        Talker().info(
+                                        LoggerUtil().infoData(
                                             "Captured Image From Camera :- ${planImage!.path}");
                                         Navigator.pop(context);
                                       });
@@ -1247,7 +1248,7 @@ class _RecurringTransactionScreenState
                                           setState(() {
                                             planImage = c;
                                           });
-                                          Talker().info(
+                                          LoggerUtil().infoData(
                                               "Captured Image From gallery :- ${planImage!.path}");
                                           Navigator.pop(context);
                                         });
@@ -1321,7 +1322,7 @@ class _RecurringTransactionScreenState
                                   setState(() {
                                     planImage = c;
                                   });
-                                  Talker().info(
+                                  LoggerUtil().infoData(
                                       "Captured Image From Camera :- ${planImage!.path}");
                                   Navigator.pop(context);
                                 });
@@ -1351,7 +1352,7 @@ class _RecurringTransactionScreenState
                                     setState(() {
                                       planImage = c;
                                     });
-                                    Talker().info(
+                                    LoggerUtil().infoData(
                                         "Captured Image From gallery :- ${planImage!.path}");
                                     Navigator.pop(context);
                                   });
@@ -1779,7 +1780,7 @@ class PreviewScreen extends StatelessWidget {
 
       var responsePlanImage = await requestForImage.send();
       if (responsePlanImage.statusCode == 200) {
-        Talker().info("Image uplodade success with plan Creation");
+        LoggerUtil().infoData("Image uplodade success with plan Creation");
         Navigator.pop(context);
         Navigator.pop(context);
         Navigator.pushReplacementNamed(context, '/customer-screen-details',

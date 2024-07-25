@@ -4,6 +4,7 @@
 import 'dart:async';
 
 import 'package:buttons_tabbar/buttons_tabbar.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:simple_chips_input/select_chips_input.dart';
-import 'package:talker/talker.dart';
+
 
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/bottom_nav_bar.dart';
@@ -142,7 +143,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     itemBuilder: (context, index) {
                                       BusinessListResponseData businessData =
                                           state.successData![index];
-                                      Talker().info(
+                                      LoggerUtil().infoData(
                                           "Business Name:- ${businessData.bName}");
                                       return Material(
                                         color: Colors.white,
@@ -4462,7 +4463,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               itemCount: customerData.length,
               itemBuilder: (context, index) {
                 CustomerResponseData cd = customerData[index];
-                // Talker().info(customerData[index].toJson());
+                // LoggerUtil().infoData(customerData[index].toJson());
                 return Container(
                   margin: EdgeInsets.symmetric(
                       vertical: screenSize!.height * 0.008,

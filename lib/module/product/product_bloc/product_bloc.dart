@@ -5,10 +5,11 @@ import 'package:dkapp/module/product/model/product_unit_list_response_model.dart
 import 'package:dkapp/module/product/product_bloc/product_event.dart';
 import 'package:dkapp/module/product/product_bloc/product_state.dart';
 import 'package:dkapp/utils/api_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:talker/talker.dart';
+
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
@@ -23,7 +24,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getCategogyList),
@@ -31,7 +32,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           ProductCategoryListResponseModel jsonResponse =
               ProductCategoryListResponseModel.fromJson(
@@ -39,7 +40,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(ProductCategoryListLoadedState(
@@ -72,14 +73,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
         map['category_name'] = event.productCategoryName;
-        Talker().info("Input Map :- $map");
+        LoggerUtil().infoData("Input Map :- $map");
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.createCategory),
             body: map,
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           AddNewProductCategoryResponseModel jsonResponse =
               AddNewProductCategoryResponseModel.fromJson(
@@ -87,7 +88,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
 
             emit(AddNewProductCategorySuccessState(
@@ -115,7 +116,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         map['user_id'] = event.userId;
         map['branch_id'] = event.businessId;
         map['customer_id'] = event.customerId;
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getUnitList),
@@ -123,7 +124,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           ProductUnitListResponseModel jsonResponse =
               ProductUnitListResponseModel.fromJson(
@@ -131,7 +132,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(ProductUnitListLoadedState(
@@ -165,14 +166,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         map['customer_id'] = event.customerId;
         map['unit_name'] = event.productUnitName;
         map['unit_qty'] = event.productUnitPrecision;
-        Talker().info("Input Map :- $map");
+        LoggerUtil().infoData("Input Map :- $map");
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.createUnit),
             body: map,
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().info(response.body);
+        LoggerUtil().infoData(response.body);
         if (response.statusCode == 200) {
           AddNewProductCategoryResponseModel jsonResponse =
               AddNewProductCategoryResponseModel.fromJson(
@@ -180,7 +181,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.response.toString());
+              LoggerUtil().infoData(jsonResponse.response.toString());
             }
 
             emit(AddNewProductUnitSuccessState(
@@ -207,7 +208,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       try {
         map['token'] = 'bnbuujn';
        
-        Talker().debug(map);
+        LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
             Uri.http(APIPathList.mainDomain, APIPathList.getMasterUnitList),
@@ -215,7 +216,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             headers: {
               "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
             });
-        Talker().debug("Response Data :- ${response.body}");
+        LoggerUtil().infoData("Response Data :- ${response.body}");
         if (response.statusCode == 200) {
           ProductMasterUnitListResponseModel jsonResponse =
               ProductMasterUnitListResponseModel.fromJson(
@@ -223,7 +224,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              Talker().info(jsonResponse.data!.toString());
+              LoggerUtil().infoData(jsonResponse.data!.toString());
             }
 
             emit(ProductMasterUnitListLoadedState(

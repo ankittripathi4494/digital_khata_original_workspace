@@ -11,13 +11,13 @@ import 'package:dkapp/module/business/business_bloc/business_bloc.dart';
 import 'package:dkapp/module/business/business_bloc/business_event.dart';
 import 'package:dkapp/module/business/business_bloc/business_state.dart';
 import 'package:dkapp/utils/image_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:switcher_button/switcher_button.dart';
-import 'package:talker/talker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BusinessScreen extends StatefulWidget {
@@ -807,7 +807,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   value: true,
                                   onChange: (value) {
                                     if (kDebugMode) {
-                                      Talker().info(value);
+                                      LoggerUtil().infoData(value);
                                     }
                                   },
                                 ),
@@ -869,7 +869,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   value: true,
                                   onChange: (value) {
                                     if (kDebugMode) {
-                                      Talker().info(value);
+                                      LoggerUtil().infoData(value);
                                     }
                                   },
                                 ),
@@ -928,7 +928,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   value: true,
                                   onChange: (value) {
                                     if (kDebugMode) {
-                                      Talker().info(value);
+                                      LoggerUtil().infoData(value);
                                     }
                                   },
                                 ),

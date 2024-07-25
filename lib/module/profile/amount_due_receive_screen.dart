@@ -10,6 +10,7 @@ import 'package:dkapp/module/profile/transactions/transactions_bloc.dart';
 import 'package:dkapp/module/profile/transactions/transactions_event.dart';
 import 'package:dkapp/module/profile/transactions/transactions_state.dart';
 import 'package:dkapp/utils/image_list.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ import 'package:dkapp/global_blocs/internet/internet_cubit.dart';
 import 'package:dkapp/global_blocs/internet/internet_state.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
-import 'package:talker/talker.dart';
+
 
 class AmountDueReceiveScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -388,7 +389,7 @@ class _AmountDueReceiveScreenState extends State<AmountDueReceiveScreen> {
                                                     setState(() {
                                                       attachImage = c;
                                                     });
-                                                    Talker().info(
+                                                    LoggerUtil().infoData(
                                                         "Captured Image From Camera :- ${attachImage!.path}");
                                                     Navigator.pop(context);
                                                   });
@@ -420,7 +421,7 @@ class _AmountDueReceiveScreenState extends State<AmountDueReceiveScreen> {
                                                       setState(() {
                                                         attachImage = c;
                                                       });
-                                                      Talker().info(
+                                                      LoggerUtil().infoData(
                                                           "Captured Image From gallery :- ${attachImage!.path}");
                                                       Navigator.pop(context);
                                                     });

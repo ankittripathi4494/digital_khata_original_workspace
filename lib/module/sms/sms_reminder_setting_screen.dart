@@ -1,9 +1,9 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:switcher_button/switcher_button.dart';
-import 'package:talker/talker.dart';
 
 class SmsReminderSettingscreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -149,7 +149,7 @@ class _SmsReminderSettingscreenState extends State<SmsReminderSettingscreen> {
                         value: true,
                         onChange: (value) {
                           if (kDebugMode) {
-                            Talker().info(value);
+                            LoggerUtil().infoData(value);
                           }
                         },
                       ),
