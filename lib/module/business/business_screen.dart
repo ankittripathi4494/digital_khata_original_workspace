@@ -163,10 +163,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                   placeholder: (context, url) => CircleAvatar(
                                     backgroundColor: Colors.grey[300],
                                     radius: 45,
-                                   child: AnimatedImageLoader(
-                                          indicatorType: null,
-                                          loaderType: LoaderType.placeholder,
-                                        ),
+                                    child: AnimatedImageLoader(
+                                      indicatorType: null,
+                                      loaderType: LoaderType.placeholder,
+                                    ),
                                   ),
                                   errorWidget: (context, url, error) => Stack(
                                     children: [
@@ -995,6 +995,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                 ),
                               ),
                               ListTile(
+                                onTap: () {},
                                 minLeadingWidth: screenSize.width * 0.1,
                                 horizontalTitleGap: 0.0,
                                 leading: const Icon(
@@ -1016,6 +1017,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
                               ),
                               const Divider(),
                               ListTile(
+                                onTap: () {},
                                 minLeadingWidth: screenSize.width * 0.1,
                                 horizontalTitleGap: 0.0,
                                 leading: const Icon(
