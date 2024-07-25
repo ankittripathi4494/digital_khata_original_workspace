@@ -34,12 +34,12 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              LoggerUtil().infoData(jsonResponse.response.toString());
+              LoggerUtil().debugData(jsonResponse.response.toString());
             }
 
             if (kDebugMode) {
-              LoggerUtil().infoData(jsonResponse.data!.first.dob.toString());
-              LoggerUtil().infoData(jsonResponse.data!.first.fullname.toString());
+              LoggerUtil().debugData(jsonResponse.data!.first.dob.toString());
+              LoggerUtil().debugData(jsonResponse.data!.first.fullname.toString());
             }
             emit(AccountDetailSuccessState(
                 successData: jsonResponse.data!.first));

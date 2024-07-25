@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dkapp/module/product/model/product_category_list_response_model.dart';
 import 'package:dkapp/module/product/model/product_master_unit_list_response_model.dart';
+import 'package:dkapp/module/product/model/product_modifier_list_response_model.dart';
 import 'package:dkapp/module/product/model/product_unit_list_response_model.dart';
 
 class ProductState {}
@@ -91,6 +92,42 @@ class ProductMasterUnitListLoadedState extends ProductState {
 class ProductMasterUnitListFailedState extends ProductState {
   late final String failedMessage;
   ProductMasterUnitListFailedState({
+    required this.failedMessage,
+  });
+}
+
+//! States for Product Unit List Fetch Event
+
+class ProductModifiersListLoadingState extends ProductState {}
+
+class ProductModifiersListLoadedState extends ProductState {
+  late final List<ProductModifierListResponseData>? successData;
+  ProductModifiersListLoadedState({
+    this.successData,
+  });
+}
+
+class ProductModifiersListFailedState extends ProductState {
+  late final String failedMessage;
+  ProductModifiersListFailedState({
+    required this.failedMessage,
+  });
+}
+
+//! States for Add New Product Unit Transaction Event
+
+class AddProductModifierLoadingState extends ProductState {}
+
+class AddProductModifierSuccessState extends ProductState {
+  late final String successMessage;
+  AddProductModifierSuccessState({
+    required this.successMessage,
+  });
+}
+
+class AddProductModifierFailedState extends ProductState {
+  late final String failedMessage;
+  AddProductModifierFailedState({
     required this.failedMessage,
   });
 }

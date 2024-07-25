@@ -1,9 +1,17 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
+import 'package:dkapp/module/product/model/product_modifier_list_response_model.dart';
 import 'package:dkapp/module/product/model/product_unit_list_response_model.dart';
+import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
+import 'package:dkapp/module/product/product_bloc/product_event.dart';
+import 'package:dkapp/module/product/product_bloc/product_state.dart';
+import 'package:dkapp/module/product/product_modifier_added_form.dart';
+import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'model/product_category_list_response_model.dart';
 
@@ -21,6 +29,30 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   String currenttext = '';
   ProductCategoryListResponseData? productCategoryListResponseData;
   ProductUnitListResponseData? productUnitListResponseData;
+
+  late SharedPreferencesHelper sph;
+  ProductModifierListResponseData? selectedProductModifierListResponseData;
+  late ProductBloc productBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    sph = SharedPreferencesHelper();
+
+    productBloc = ProductBloc()
+      ..add(
+        ProductModifiersListFetchEvent(
+          customerId:
+              (widget.argus['customerData'] as SelectedCustomerResponseData)
+                  .id!,
+          userId: sph.getString("userid")!,
+          businessId:
+              (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                  .id!,
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -28,15 +60,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/emi');
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Create Product',
           style: TextStyle(
@@ -492,6 +516,68 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         ),
                       ],
                     ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    BlocProvider(
+                      create: (_) => productBloc,
+                      child: BlocBuilder<ProductBloc, ProductState>(
+                        builder: (context, state) {
+                          if (state is ProductModifiersListLoadingState) {
+                            return Center(child: AnimatedImageLoader());
+                          } else if (state is ProductModifiersListLoadedState) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: state.successData!.length,
+                              itemBuilder: (context, index) {
+                                ProductModifierListResponseData
+                                    productModifierListResponseData =
+                                    state.successData![index];
+                                return InkWell(
+                                  onTap: () {
+                                    // Navigator.pushNamed(context, '/service-details', arguments: {
+                                    //   "percent": 'true',
+                                    //   "ruppees": '',
+                                    //   "tax": '',
+                                    // });
+                                  },
+                                  child: RadioListTile(
+                                    toggleable: true,
+                                    controlAffinity:
+                                        ListTileControlAffinity.trailing,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 0),
+                                    onChanged: (c) {
+                                      setState(() {
+                                        selectedProductModifierListResponseData =
+                                            c;
+                                      });
+                                    },
+                                    title: Text(
+                                      "${productModifierListResponseData.title!} (${productModifierListResponseData.itemCount!})",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                      ),
+                                    ),
+                                    value: productModifierListResponseData,
+                                    groupValue:
+                                        selectedProductModifierListResponseData,
+                                  ),
+                                );
+                              },
+                            );
+                          } else if (state is ProductModifiersListFailedState) {
+                            return Container();
+                          } else {
+                            return Center(child: AnimatedImageLoader());
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
                     TextButton(
                         style: TextButton.styleFrom(
                             minimumSize: Size(screenSize.width * 0.9,
@@ -499,7 +585,19 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 side: const BorderSide(color: Colors.grey))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BlocProvider(
+                                  create: (_) => productBloc,
+                                  child: ModelSheetAddedForm(
+                                    argus: widget.argus,
+                                    context: context,
+                                  ),
+                                ),
+                              ));
+                        },
                         child: const Text(
                           'Add Modifier',
                           style: TextStyle(
@@ -600,7 +698,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                     ),
                                     InkWell(
                                       onTap: () {
-                                         Navigator.pop(context);
+                                        Navigator.pop(context);
                                         Navigator.pushNamed(context, '/tax',
                                             arguments: {
                                               'customerData': (widget
@@ -628,7 +726,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                         ),
                                       ),
                                     ),
-                                  
                                   ],
                                 ),
                               );

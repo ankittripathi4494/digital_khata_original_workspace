@@ -56,3 +56,31 @@ class AddProductUnitEvent extends ProductEvent {
 
 //! Product Master Unit Events
 class ProductMasterUnitListFetchEvent extends ProductEvent {}
+
+//! Product Modifiers Events
+
+class ProductModifiersListFetchEvent extends ProductEvent {
+  late final String customerId;
+  late final String userId;
+  late final String businessId;
+  ProductModifiersListFetchEvent({
+    required this.customerId,
+    required this.userId,
+    required this.businessId,
+  });
+}
+
+class AddProductModifierEvent extends ProductEvent {
+  late final String customerId;
+  late final String userId;
+  late final String businessId;
+  late final String productModifierName;
+  late final List<String> productModifierArray;
+  AddProductModifierEvent({
+    required this.customerId,
+    required this.userId,
+    required this.businessId,
+    required this.productModifierName,
+    required this.productModifierArray,
+  });
+}

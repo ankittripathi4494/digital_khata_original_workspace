@@ -1,6 +1,8 @@
 import 'package:dkapp/module/product/model/add_new_product_category_response_model.dart';
+import 'package:dkapp/module/product/model/add_new_product_modifier_response_model.dart';
 import 'package:dkapp/module/product/model/product_category_list_response_model.dart';
 import 'package:dkapp/module/product/model/product_master_unit_list_response_model.dart';
+import 'package:dkapp/module/product/model/product_modifier_list_response_model.dart';
 import 'package:dkapp/module/product/model/product_unit_list_response_model.dart';
 import 'package:dkapp/module/product/product_bloc/product_event.dart';
 import 'package:dkapp/module/product/product_bloc/product_state.dart';
@@ -200,14 +202,13 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             failedMessage: 'Failed to get platform version.'));
       }
     });
-    
     on<ProductMasterUnitListFetchEvent>((event, emit) async {
       emit(ProductMasterUnitListLoadingState());
 
       var map = {};
       try {
         map['token'] = 'bnbuujn';
-       
+
         LoggerUtil().infoData(map);
 
         http.Response response = await http.post(
@@ -247,6 +248,99 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         ));
       }
     });
-  
+    on<ProductModifiersListFetchEvent>((event, emit) async {
+      emit(ProductModifiersListLoadingState());
+
+      var map = {};
+      try {
+        map['token'] = 'bnbuujn';
+        map['user_id'] = event.userId;
+        map['branch_id'] = event.businessId;
+        map['customer_id'] = event.customerId;
+        LoggerUtil().infoData(map);
+
+        http.Response response = await http.post(
+            Uri.http(APIPathList.mainDomain, APIPathList.getModifierList),
+            body: map,
+            headers: {
+              "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+            });
+        LoggerUtil().infoData("Response Data :- ${response.body}");
+        if (response.statusCode == 200) {
+          ProductModifierListResponseModel jsonResponse =
+              ProductModifierListResponseModel.fromJson(
+                  convert.jsonDecode(response.body));
+
+          if (jsonResponse.response != "failure") {
+            if (kDebugMode) {
+              LoggerUtil().debugData((jsonResponse.data as ProductModifierListResponseData).toJson());
+            }
+
+            emit(ProductModifiersListLoadedState(
+              successData: jsonResponse.data,
+            ));
+          } else {
+            emit(ProductModifiersListFailedState(
+              failedMessage: jsonResponse.message!,
+            ));
+          }
+        } else {
+          emit(ProductModifiersListFailedState(
+            failedMessage:
+                'Request failed with status: ${response.statusCode}.',
+          ));
+        }
+      } on PlatformException {
+        emit(ProductModifiersListFailedState(
+          failedMessage: 'Failed to get platform version.',
+        ));
+      }
+    });
+    on<AddProductModifierEvent>((event, emit) async {
+      emit(AddProductModifierLoadingState());
+      var map = {};
+
+      try {
+        map['token'] = 'bnbuujn';
+        map['user_id'] = event.userId;
+        map['branch_id'] = event.businessId;
+        map['customer_id'] = event.customerId;
+        map['title'] = event.productModifierName;
+        map['modifierArray'] = event.productModifierArray.toString();
+
+        LoggerUtil().infoData("Input Map :- $map");
+        http.Response response = await http.post(
+            Uri.http(APIPathList.mainDomain, APIPathList.createModifier),
+            body: map,
+            headers: {
+              "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+            });
+        LoggerUtil().infoData(response.body);
+        if (response.statusCode == 200) {
+          AddNewProductModifierResponseModel jsonResponse =
+              AddNewProductModifierResponseModel.fromJson(
+                  convert.jsonDecode(response.body));
+
+          if (jsonResponse.response != "failure") {
+            if (kDebugMode) {
+              LoggerUtil().debugData(jsonResponse.response);
+            }
+
+            emit(AddProductModifierSuccessState(
+                successMessage: jsonResponse.message!));
+          } else {
+            emit(AddProductModifierFailedState(
+                failedMessage: jsonResponse.message!));
+          }
+        } else {
+          emit(AddProductModifierFailedState(
+              failedMessage:
+                  'Request failed with status: ${response.statusCode}.'));
+        }
+      } on PlatformException {
+        emit(AddProductModifierFailedState(
+            failedMessage: 'Failed to get platform version.'));
+      }
+    });
   }
 }
