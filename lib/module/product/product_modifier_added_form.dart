@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, library_private_types_in_public_api
+// ignore_for_file: must_be_immutable, library_private_types_in_public_api, avoid_print
 
 import 'dart:convert';
 
@@ -346,10 +346,6 @@ class _ModelSheetAddedFormState extends State<ModelSheetAddedForm> {
                     onTap: () {
                       if (formKey.currentState!.validate()) {
                         for (int i = 0; i < formFieldControllers1.length; i++) {
-                          print(
-                              "Field ${i + 1}a: ${formFieldControllers1[i].text}");
-                          print(
-                              "Field ${i + 1}b: ${formFieldControllers2[i].text}");
                           resultData.add(jsonEncode({
                             "modifier_name": formFieldControllers1[i].text,
                             "amount": formFieldControllers2[i].text
@@ -366,7 +362,8 @@ class _ModelSheetAddedFormState extends State<ModelSheetAddedForm> {
                         businessId: (widget.argus['selectedBusiness']
                                 as BusinessListResponseData)
                             .id!,
-                        productModifierName: productModifierTitleController.text,
+                        productModifierName:
+                            productModifierTitleController.text,
                         productModifierArray: resultData,
                       ));
                     },

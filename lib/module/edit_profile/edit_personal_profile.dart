@@ -169,16 +169,43 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                   radius: 23,
                                   child: IconButton(
                                       onPressed: () async {
-                                        retailerImage = await _picker.pickImage(
-                                            maxHeight: 480,
-                                            maxWidth: 640,
-                                            source: ImageSource.gallery);
-                                        LoggerUtil().infoData(
-                                            "Captured Image From Camera :- ${retailerImage!.path}");
-                                        setState(() {
-                                          retailerImageFile =
-                                              retailerImage!.path;
-                                        });
+                                         EssentialWidgetsCollection
+                                              .imagePicker(
+                                            context,
+                                            galleryFunc: () async {
+                                              LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.gallery);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Gallery :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            cameraFunc: () async {
+                                                LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.camera);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Camera :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        
                                       },
                                       icon: const Icon(
                                         Icons.camera_alt,
@@ -233,16 +260,44 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                   radius: 23,
                                   child: IconButton(
                                       onPressed: () async {
-                                        retailerImage = await _picker.pickImage(
-                                            maxHeight: 480,
-                                            maxWidth: 640,
-                                            source: ImageSource.gallery);
-                                        LoggerUtil().infoData(
-                                            "Captured Image From Camera :- ${retailerImage!.path}");
-                                        setState(() {
-                                          retailerImageFile =
-                                              retailerImage!.path;
-                                        });
+                                          EssentialWidgetsCollection
+                                              .imagePicker(
+                                                
+                                            context,
+                                            galleryFunc: () async {
+                                                LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.gallery);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Gallery :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            cameraFunc: () async {
+                                                LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.camera);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Camera :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                               
                                       },
                                       icon: const Icon(
                                         Icons.camera_alt,
@@ -276,16 +331,43 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                   radius: 23,
                                   child: IconButton(
                                       onPressed: () async {
-                                        retailerImage = await _picker.pickImage(
-                                            maxHeight: 480,
-                                            maxWidth: 640,
-                                            source: ImageSource.gallery);
-                                        LoggerUtil().infoData(
-                                            "Captured Image From Camera :- ${retailerImage!.path}");
-                                        setState(() {
-                                          retailerImageFile =
-                                              retailerImage!.path;
-                                        });
+                                          EssentialWidgetsCollection
+                                              .imagePicker(
+                                            context,
+                                            galleryFunc: () async {
+                                                LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.gallery);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Gallery :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            cameraFunc: () async {
+                                                LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.camera);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Camera :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                               
                                       },
                                       icon: const Icon(
                                         Icons.camera_alt,
@@ -315,16 +397,43 @@ class _EditPersonalProfileScreenState extends State<EditPersonalProfileScreen> {
                                   radius: 23,
                                   child: IconButton(
                                       onPressed: () async {
-                                        retailerImage = await _picker.pickImage(
-                                            maxHeight: 480,
-                                            maxWidth: 640,
-                                            source: ImageSource.gallery);
-                                        LoggerUtil().infoData(
-                                            "Captured Image From Camera :- ${retailerImage!.path}");
-                                        setState(() {
-                                          retailerImageFile =
-                                              retailerImage!.path;
-                                        });
+                                          EssentialWidgetsCollection
+                                              .imagePicker(
+                                            context,
+                                            galleryFunc: () async {
+                                                LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.gallery);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Gallery :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            cameraFunc: () async {
+                                                LoggerUtil().infoData("clickable");
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.camera);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Camera :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                               
                                       },
                                       icon: const Icon(
                                         Icons.camera_alt,

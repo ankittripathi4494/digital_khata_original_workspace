@@ -13,54 +13,10 @@ import 'package:http/http.dart' as http;
 
 class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
   DiscountBloc() : super(DiscountInitial()) {
-    on<DiscountListFetchEvent>((event, emit) async {
-      // emit(DiscountListLoadingState());
+    on<DiscountListFetchEvent>(_fetchDiscountList);
 
-      var map = {};
-      try {
-        map['token'] = 'bnbuujn';
-        map['user_id'] = event.userId;
-        map['branch_id'] = event.businessId;
-        map['customer_id'] = event.customerId;
-        LoggerUtil().infoData(map);
+    on<ToggleDiscountSelection>(_onToggleSelection);
 
-        http.Response response = await http.post(
-            Uri.http(APIPathList.mainDomain, APIPathList.getDiscountList),
-            body: map,
-            headers: {
-              "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
-            });
-        LoggerUtil().infoData("Response Data :- ${response.body}");
-        if (response.statusCode == 200) {
-          DiscountListResponseModel jsonResponse =
-              DiscountListResponseModel.fromJson(
-                  convert.jsonDecode(response.body));
-
-          if (jsonResponse.response != "failure") {
-            if (kDebugMode) {
-              LoggerUtil().infoData(jsonResponse.data!.toString());
-            }
-
-            emit(DiscountListLoadedState(
-              successData: jsonResponse.data,
-            ));
-          } else {
-            emit(DiscountListFailedState(
-              failedMessage: jsonResponse.message!,
-            ));
-          }
-        } else {
-          emit(DiscountListFailedState(
-            failedMessage:
-                'Request failed with status: ${response.statusCode}.',
-          ));
-        }
-      } on PlatformException {
-        emit(DiscountListFailedState(
-          failedMessage: 'Failed to get platform version.',
-        ));
-      }
-    });
     on<AddDiscountEvent>((event, emit) async {
       emit(AddNewDiscountLoadingState());
       var map = {};
@@ -107,5 +63,134 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
             failedMessage: 'Failed to get platform version.'));
       }
     });
+  }
+
+  _fetchDiscountList(
+      DiscountListFetchEvent event, Emitter<DiscountState> emit) async {
+    // emit(DiscountListLoadingState());
+
+    var map = {};
+    try {
+      map['token'] = 'bnbuujn';
+      map['user_id'] = event.userId;
+      map['branch_id'] = event.businessId;
+      map['customer_id'] = event.customerId;
+      LoggerUtil().infoData(map);
+
+      http.Response response = await http.post(
+          Uri.http(APIPathList.mainDomain, APIPathList.getDiscountList),
+          body: map,
+          headers: {
+            "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+          });
+      LoggerUtil().infoData("Response Data :- ${response.body}");
+      if (response.statusCode == 200) {
+        DiscountListResponseModel jsonResponse =
+            DiscountListResponseModel.fromJson(
+                convert.jsonDecode(response.body));
+
+        if (jsonResponse.response != "failure") {
+          if (kDebugMode) {
+            LoggerUtil().infoData(jsonResponse.data!.toString());
+          }
+
+          emit(DiscountListLoadedState(
+            successData: jsonResponse.data,
+          ));
+        } else {
+          emit(DiscountListFailedState(
+            failedMessage: jsonResponse.message!,
+          ));
+        }
+      } else {
+        emit(DiscountListFailedState(
+          failedMessage: 'Request failed with status: ${response.statusCode}.',
+        ));
+      }
+    } on PlatformException {
+      emit(DiscountListFailedState(
+        failedMessage: 'Failed to get platform version.',
+      ));
+    }
+  }
+
+  _onToggleSelection(
+    ToggleDiscountSelection event,
+    Emitter<DiscountState> emit,
+  ) async {
+    // emit(DiscountListLoadingState());
+
+    var map = {};
+    try {
+      map['token'] = 'bnbuujn';
+      map['user_id'] = event.userId;
+      map['branch_id'] = event.businessId;
+      map['customer_id'] = event.customerId;
+      LoggerUtil().infoData(map);
+
+      http.Response response = await http.post(
+          Uri.http(APIPathList.mainDomain, APIPathList.getDiscountList),
+          body: map,
+          headers: {
+            "HTTP_AUTHORIZATION": '${DateTime.now().millisecondsSinceEpoch}',
+          });
+      LoggerUtil().infoData("Response Data :- ${response.body}");
+      if (response.statusCode == 200) {
+        DiscountListResponseModel jsonResponse =
+            DiscountListResponseModel.fromJson(
+                convert.jsonDecode(response.body));
+
+        if (jsonResponse.response != "failure") {
+          if (kDebugMode) {
+            LoggerUtil().infoData(jsonResponse.data!.toString());
+          }
+          final updatedDiscounts = jsonResponse.data!.map((discount) {
+            if (discount.id == event.discount.id) {
+              return DiscountListResponseData(
+                id: discount.id,
+                customerId: discount.customerId,
+                branchId: discount.branchId,
+                userId: discount.userId,
+                title: discount.title,
+                amount: discount.amount,
+                disType: discount.disType,
+                createdOn: discount.createdOn,
+                createdBy: discount.createdBy,
+                isSelected: true,
+              );
+            } else {
+              return DiscountListResponseData(
+                id: discount.id,
+                customerId: discount.customerId,
+                branchId: discount.branchId,
+                userId: discount.userId,
+                title: discount.title,
+                amount: discount.amount,
+                disType: discount.disType,
+                createdOn: discount.createdOn,
+                createdBy: discount.createdBy,
+                isSelected: false,
+              );
+            }
+          }).toList();
+
+          emit(DiscountListLoadedState(
+            successData: updatedDiscounts,
+          ));
+        } else {
+          emit(DiscountListFailedState(
+            failedMessage: jsonResponse.message!,
+          ));
+        }
+      } else {
+        emit(DiscountListFailedState(
+          failedMessage: 'Request failed with status: ${response.statusCode}.',
+        ));
+      }
+    } on PlatformException {
+      emit(DiscountListFailedState(
+        failedMessage: 'Failed to get platform version.',
+      ));
+    }
   }
 }

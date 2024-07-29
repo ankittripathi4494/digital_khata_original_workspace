@@ -8,6 +8,7 @@ import 'package:dkapp/module/discount/discount_bloc/discount_bloc.dart';
 import 'package:dkapp/module/discount/discount_bloc/discount_event.dart';
 import 'package:dkapp/module/discount/discount_bloc/discount_state.dart';
 import 'package:dkapp/module/discount/model/discount_list_response_model.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,24 +27,46 @@ class _DiscountScreenState extends State<DiscountScreen> {
   late SharedPreferencesHelper sph;
   DiscountListResponseData? selectedDiscountListResponseData;
   late DiscountBloc discountBloc;
+  bool selectedDiscount = false;
+  List<DiscountListResponseData> discountListResponseData = [];
 
   @override
   void initState() {
     super.initState();
     sph = SharedPreferencesHelper();
 
-    discountBloc = DiscountBloc()
-      ..add(
-        DiscountListFetchEvent(
-          customerId:
-              (widget.argus['customerData'] as SelectedCustomerResponseData)
-                  .id!,
-          userId: sph.getString("userid")!,
-          businessId:
-              (widget.argus['selectedBusiness'] as BusinessListResponseData)
-                  .id!,
-        ),
-      );
+    fetchSelectedDiscount();
+  }
+
+  fetchSelectedDiscount() {
+    if (widget.argus.containsKey("discountData")) {
+      LoggerUtil().errorData(
+          "discountData exist with ${(widget.argus["discountData"] as DiscountListResponseData).toJson()}");
+      discountBloc = DiscountBloc()
+        ..add(ToggleDiscountSelection(
+            customerId:
+                (widget.argus['customerData'] as SelectedCustomerResponseData)
+                    .id!,
+            userId: sph.getString("userid")!,
+            businessId:
+                (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                    .id!,
+            discount:
+                (widget.argus["discountData"] as DiscountListResponseData)));
+    } else {
+      discountBloc = DiscountBloc()
+        ..add(
+          DiscountListFetchEvent(
+            customerId:
+                (widget.argus['customerData'] as SelectedCustomerResponseData)
+                    .id!,
+            userId: sph.getString("userid")!,
+            businessId:
+                (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                    .id!,
+          ),
+        );
+    }
   }
 
   @override
@@ -88,47 +111,35 @@ class _DiscountScreenState extends State<DiscountScreen> {
                   itemCount: state.successData!.length,
                   itemBuilder: (context, index) {
                     final discountData = state.successData![index];
-                    return InkWell(
-                      onTap: () {
-                        // Navigator.pushNamed(context, '/service-details', arguments: {
-                        //   "percent": 'true',
-                        //   "ruppees": '',
-                        //   "tax": '',
-                        // });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            vertical: screenSize.height * 0.01,
-                            horizontal: screenSize.width * 0.03),
-                        decoration: const BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 6.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            color: Colors.white),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.02),
-                          child: ListTile(
-                              minLeadingWidth: screenSize.width * 0.01,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: screenSize.height * 0.01),
-                              leading: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.red[100],
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18.0),
-                                  child: Icon((discountData.disType == 'A')
-                                      ? FontAwesomeIcons.indianRupeeSign
-                                      : FontAwesomeIcons.percent),
-                                ),
-                              ),
-                              title: Text(
+                    LoggerUtil().criticalData(discountData.toJson());
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.01,
+                          horizontal: screenSize.width * 0.03),
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                blurRadius: 6.0,
+                                offset: Offset(0.0, 0.1))
+                          ],
+                          color: Colors.white),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenSize.width * 0.02),
+                        child: CheckboxListTile(
+                          selected: (discountData.isSelected == null)
+                              ? false
+                              : discountData.isSelected!,
+                          activeColor: Colors.green,
+                          controlAffinity: ListTileControlAffinity.trailing,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: screenSize.height * 0.01),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
                                 discountData.title!,
                                 style: const TextStyle(
                                   color: Colors.black,
@@ -136,14 +147,24 @@ class _DiscountScreenState extends State<DiscountScreen> {
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              trailing: Text(
+                              Text(
                                 (discountData.disType == 'A')
                                     ? '\u{20B9} ${discountData.amount!}'
                                     : '${discountData.amount!} %',
                                 style: const TextStyle(
                                     color: Color.fromARGB(255, 31, 1, 102),
                                     fontSize: 20),
-                              )),
+                              )
+                            ],
+                          ),
+                          value: discountData.isSelected,
+                          checkboxShape: const CircleBorder(
+                              side: BorderSide(
+                                  color: Colors.green, width: 2),
+                              eccentricity: 0.8),
+                          onChanged: (value) {
+                            Navigator.pop(context, discountData);
+                          },
                         ),
                       ),
                     );

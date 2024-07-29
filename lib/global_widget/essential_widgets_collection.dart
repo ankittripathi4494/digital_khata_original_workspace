@@ -1,5 +1,6 @@
 import 'package:duration_button/duration_button.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EssentialWidgetsCollection {
   static showSuccessSnackbar(BuildContext context,
@@ -321,5 +322,97 @@ class EssentialWidgetsCollection {
         onPressed: () {},
         duration: taskWaitDuration!,
         child: childWidget);
+  }
+
+  static imagePicker(BuildContext context,
+      {Function()? galleryFunc, Function()? cameraFunc}) async {
+    return showModalBottomSheet(
+      backgroundColor: Colors.white,
+      scrollControlDisabledMaxHeightRatio: 0.5,
+      showDragHandle: true,
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Choose an option",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  IconButton(
+                      style: IconButton.styleFrom(
+                        foregroundColor: Colors.deepPurple,
+                        iconSize: 30,
+                      ),
+                      onPressed: galleryFunc,
+                      icon: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.images,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Gallery",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14),
+                          ),
+                        ],
+                      )),
+                  IconButton(
+                      style: IconButton.styleFrom(
+                        foregroundColor: Colors.green,
+                        iconSize: 30,
+                      ),
+                      onPressed: cameraFunc,
+                      icon: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.camera,
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            "Camera",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14),
+                          ),
+                        ],
+                      ))
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }

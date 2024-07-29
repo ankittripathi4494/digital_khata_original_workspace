@@ -1,17 +1,25 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:io';
+
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/model/selected_customer_response_model.dart';
+import 'package:dkapp/module/discount/model/discount_list_response_model.dart';
 import 'package:dkapp/module/product/model/product_modifier_list_response_model.dart';
 import 'package:dkapp/module/product/model/product_unit_list_response_model.dart';
 import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
 import 'package:dkapp/module/product/product_bloc/product_event.dart';
 import 'package:dkapp/module/product/product_bloc/product_state.dart';
 import 'package:dkapp/module/product/product_modifier_added_form.dart';
+import 'package:dkapp/module/tax/model/tax_list_response_model.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'model/product_category_list_response_model.dart';
 
@@ -32,7 +40,18 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
 
   late SharedPreferencesHelper sph;
   ProductModifierListResponseData? selectedProductModifierListResponseData;
+  List<Map<String, dynamic>> varientOptionList = [];
   late ProductBloc productBloc;
+  List<DiscountListResponseData> discountListResponseData = [];
+  List<TaxListResponseData> taxListResponseData = [];
+  String? selectedPriceType;
+  final List<String> priceTypeList = ['Fixed', 'Variable'];
+  TextEditingController productNameController = TextEditingController();
+  TextEditingController productPriceController = TextEditingController();
+  TextEditingController productSkuController = TextEditingController();
+  TextEditingController productStockController = TextEditingController();
+  List<XFile?> selectedImages = []; // List of selected image
+  final picker = ImagePicker(); // Instance of Image picker
 
   @override
   void initState() {
@@ -51,6 +70,35 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   .id!,
         ),
       );
+  }
+
+  Future getImages() async {
+    final pickedFile = await picker.pickMultiImage(
+        limit: 6,
+        imageQuality: 100, // To set quality of images
+        maxHeight: 480, // To set maxheight of images that you want in your app
+        maxWidth: 480); // To set maxheight of images that you want in your app
+    List<XFile> xfilePick = pickedFile;
+
+    // if atleast 1 images is selected it will add
+    // all images in selectedImages
+    // variable so that we can easily show them in UI
+    setState(() {
+      selectedImages = [];
+    });
+    if (xfilePick.isNotEmpty) {
+      for (var i = 0; i < xfilePick.length; i++) {
+        selectedImages.add(xfilePick[i]);
+      }
+      setState(
+        () {},
+      );
+    } else {
+      // If no image is selected it will show a
+      // snackbar saying nothing is selected
+      EssentialWidgetsCollection.showErrorSnackbar(context,
+          description: 'Nothing is selected');
+    }
   }
 
   @override
@@ -90,84 +138,51 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           offset: Offset(0.0, 0.1))
                     ],
                     borderRadius: BorderRadius.circular(5.0)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 210, 208, 208),
-                                width: 1.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 1.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            borderRadius: BorderRadius.circular(10.0)),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.03,
-                            vertical: screenSize.height * 0.01),
-                        child: Image.asset(
-                          "resources/images/add_image-removebg-preview.png",
-                          height: screenSize.height * 0.1,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 210, 208, 208),
-                                width: 1.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 1.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            borderRadius: BorderRadius.circular(10.0)),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.01,
-                            vertical: screenSize.height * 0.01),
-                        child: Image.asset(
-                          "resources/images/add_image-removebg-preview.png",
-                          height: screenSize.height * 0.1,
-                        ),
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 210, 208, 208),
-                                width: 1.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 1.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            borderRadius: BorderRadius.circular(10.0)),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.01,
-                            vertical: screenSize.height * 0.01),
-                        child: Image.asset(
-                          "resources/images/add_image-removebg-preview.png",
-                          height: screenSize.height * 0.1,
-                        ),
-                      ),
-                    ),
-                  ],
+                child: SizedBox(
+                  width: 300.0, // To show images in particular area only
+                  child: GridView.builder(
+                    itemCount: selectedImages.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 6
+                            // Horizontally only 3 images will show
+                            ),
+                    itemBuilder: (BuildContext context, int index) {
+                      return (selectedImages[index] == null)
+                          ? Center(
+                              child:
+                                  Image.file(File(selectedImages[index]!.path)))
+                          : InkWell(
+                              onTap: getImages,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color.fromARGB(
+                                            255, 210, 208, 208),
+                                        width: 1.0),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Color.fromARGB(
+                                              255, 203, 202, 202),
+                                          blurRadius: 1.0,
+                                          offset: Offset(0.0, 0.1))
+                                    ],
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: screenSize.width * 0.03,
+                                    vertical: screenSize.height * 0.01),
+                                child: Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                ),
+                              ),
+                            );
+                    },
+                  ),
                 ),
               ),
+
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.03,
@@ -184,6 +199,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: productNameController,
                       cursorColor: Colors.black,
                       decoration: const InputDecoration(
                           // hintText: 'Enter Product Name',
@@ -324,20 +340,46 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
                       trailing: SizedBox(
-                        width: screenSize.width * 0.17,
-                        child: const Row(
+                        width: screenSize.width * 0.20,
+                        child: Row(
                           children: [
-                            Text(
-                              'Fixed',
-                              style: TextStyle(
+                            Expanded(
+                              child: DropdownButton<String>(
+                                dropdownColor: Colors.white,
+                                underline: Container(),
+                                icon: const Icon(
+                                  Icons.arrow_forward_ios,
                                   color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold),
+                                ),
+                                isExpanded: true,
+                                value: selectedPriceType,
+                                hint: const Text(
+                                  'Price Type',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                items: priceTypeList
+                                    .map((String item) =>
+                                        DropdownMenuItem<String>(
+                                          value: item,
+                                          child: Text(
+                                            item,
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ))
+                                    .toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedPriceType = newValue;
+                                  });
+                                },
+                              ),
                             ),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                            )
                           ],
                         ),
                       ),
@@ -352,7 +394,11 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       trailing: SizedBox(
                         width: screenSize.width * 0.19,
                         child: TextFormField(
+                          controller: productPriceController,
+                          keyboardType: TextInputType.number,
                           cursorColor: Colors.black,
+                          style: const TextStyle(
+                              color: Colors.black, fontSize: 20),
                           decoration: const InputDecoration(
                               // hintText: 'Enter Product Name',
                               // hintStyle: TextStyle(color: Colors.black),
@@ -364,24 +410,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                   borderSide: BorderSide.none)),
                         ),
                       ),
-                      //  SizedBox(
-                      //   width: screenSize.width * 0.1,
-                      //   child: const Row(
-                      //     children: [
-                      //       Text(
-                      //         '\u20B90',
-                      //         style: TextStyle(
-                      //             color: Colors.black,
-                      //             fontSize: 15,
-                      //             fontWeight: FontWeight.bold),
-                      //       ),
-                      //       Icon(
-                      //         Icons.arrow_forward_ios,
-                      //         color: Colors.black,
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
                     ),
                     const Divider(),
                     ListTile(
@@ -393,13 +421,16 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                       trailing: SizedBox(
                         width: screenSize.width * 0.19,
                         child: TextFormField(
+                          controller: productSkuController,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[a-zA-Z0-9]')),
+                          ],
                           cursorColor: Colors.black,
                           decoration: const InputDecoration(
-                              // hintText: 'Enter Product Name',
-                              // hintStyle: TextStyle(color: Colors.black),
                               hintText: 'Text',
                               hintStyle:
-                                  TextStyle(color: Colors.black, fontSize: 20),
+                                  TextStyle(color: Colors.grey, fontSize: 14),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.zero,
                                   borderSide: BorderSide.none)),
@@ -413,18 +444,407 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                         'Stock',
                         style: TextStyle(color: Colors.black, fontSize: 15),
                       ),
-                      trailing: const Text(
-                        'Received Stock',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 33, 79, 243),
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      trailing: (productStockController.text.isEmpty)
+                          ? InkWell(
+                              onTap: () {
+                                showModalBottomSheet<void>(
+                                  backgroundColor: Colors.white,
+                                  scrollControlDisabledMaxHeightRatio: 0.5,
+                                  showDragHandle: true,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return PopScope(
+                                      canPop: false,
+                                      child: SizedBox(
+                                        width: screenSize.width,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.person_add,
+                                                    color: Colors.black,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        screenSize.width * 0.02,
+                                                  ),
+                                                  const Text(
+                                                    'Add Customer',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      screenSize.width * 0.05),
+                                              child: const Divider(),
+                                            ),
+                                            SizedBox(
+                                              height: screenSize.height * 0.03,
+                                            ),
+                                            const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 10.0),
+                                              child: Text(
+                                                'Add Stock',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      screenSize.width * 0.05),
+                                              child: TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly
+                                                ],
+                                                controller:
+                                                    productStockController,
+                                                cursorColor:
+                                                    const Color.fromARGB(
+                                                        255, 31, 1, 102),
+                                                decoration: InputDecoration(
+                                                  hintText: 'Add Stock ',
+                                                  hintStyle: const TextStyle(
+                                                      color: Colors.grey),
+                                                  border: OutlineInputBorder(
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.grey),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide:
+                                                              const BorderSide(
+                                                                  color: Colors
+                                                                      .grey),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    31,
+                                                                    1,
+                                                                    102),
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: screenSize.height * 0.03,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      screenSize.width * 0.03),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  TextButton(
+                                                      style: TextButton.styleFrom(
+                                                          shape: const RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .zero),
+                                                          minimumSize: Size(
+                                                              screenSize.width *
+                                                                  0.4,
+                                                              screenSize
+                                                                      .height *
+                                                                  0.05)),
+                                                      onPressed: () {
+                                                        productStockController
+                                                            .clear();
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('CANCEL')),
+                                                  TextButton(
+                                                      style: TextButton.styleFrom(
+                                                          shape: const RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .zero),
+                                                          backgroundColor:
+                                                              const Color
+                                                                  .fromARGB(255,
+                                                                  31, 1, 102),
+                                                          minimumSize: Size(
+                                                              screenSize.width *
+                                                                  0.4,
+                                                              screenSize
+                                                                      .height *
+                                                                  0.05)),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        'SAVE',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: const Text(
+                                'Received Stock',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 33, 79, 243),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          : InkWell(
+                              onTap: () {
+                                var temp = productStockController.text;
+                                showModalBottomSheet<void>(
+                                  backgroundColor: Colors.white,
+                                  scrollControlDisabledMaxHeightRatio: 0.5,
+                                  showDragHandle: true,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return PopScope(
+                                      canPop: false,
+                                      child: SizedBox(
+                                        width: screenSize.width,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20.0,
+                                                      vertical: 10.0),
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.person_add,
+                                                    color: Colors.black,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        screenSize.width * 0.02,
+                                                  ),
+                                                  const Text(
+                                                    'Add Customer',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      screenSize.width * 0.05),
+                                              child: const Divider(),
+                                            ),
+                                            SizedBox(
+                                              height: screenSize.height * 0.03,
+                                            ),
+                                            const Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 10.0),
+                                              child: Text(
+                                                'Add Stock',
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 18),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      screenSize.width * 0.05),
+                                              child: TextFormField(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .digitsOnly
+                                                ],
+                                                controller:
+                                                    productStockController,
+                                                cursorColor:
+                                                    const Color.fromARGB(
+                                                        255, 31, 1, 102),
+                                                decoration: InputDecoration(
+                                                  hintText: 'Add Stock ',
+                                                  hintStyle: const TextStyle(
+                                                      color: Colors.grey),
+                                                  border: OutlineInputBorder(
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.grey),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide:
+                                                              const BorderSide(
+                                                                  color: Colors
+                                                                      .grey),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                          borderSide:
+                                                              const BorderSide(
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    31,
+                                                                    1,
+                                                                    102),
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10)),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: screenSize.height * 0.03,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      screenSize.width * 0.03),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  TextButton(
+                                                      style: TextButton.styleFrom(
+                                                          shape: const RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .zero),
+                                                          minimumSize: Size(
+                                                              screenSize.width *
+                                                                  0.4,
+                                                              screenSize
+                                                                      .height *
+                                                                  0.05)),
+                                                      onPressed: () {
+                                                        productStockController
+                                                            .text = temp;
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child:
+                                                          const Text('CANCEL')),
+                                                  TextButton(
+                                                      style: TextButton.styleFrom(
+                                                          shape: const RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .zero),
+                                                          backgroundColor:
+                                                              const Color
+                                                                  .fromARGB(255,
+                                                                  31, 1, 102),
+                                                          minimumSize: Size(
+                                                              screenSize.width *
+                                                                  0.4,
+                                                              screenSize
+                                                                      .height *
+                                                                  0.05)),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text(
+                                                        'SAVE',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text(
+                                '${int.parse(productStockController.text)} in Stock',
+                                style: const TextStyle(
+                                    color: Color.fromARGB(255, 33, 79, 243),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                     ),
                     const Divider(),
                   ],
                 ),
               ),
+
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.03,
@@ -458,6 +878,83 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ]),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    (varientOptionList.isNotEmpty)
+                        ? ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: varientOptionList.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> varientOption =
+                                  varientOptionList[index];
+                              return ListTile(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, '/new-option-product-screen',
+                                      arguments: {
+                                        'customerData': (widget
+                                                .argus['customerData']
+                                            as SelectedCustomerResponseData),
+                                        'selectedBusiness':
+                                            (widget.argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                        "updatePlan": true,
+                                        'fromCustomerScreen': (widget.argus
+                                                .containsKey(
+                                                    'fromCustomerScreen'))
+                                            ? true
+                                            : false,
+                                        "varientOption": varientOption
+                                      }).then((c) {
+                                    Map<String, dynamic> de =
+                                        (c as Map<String, dynamic>);
+
+                                    setState(() {
+                                      varientOptionList.removeAt(
+                                          varientOptionList.indexWhere((c) =>
+                                              c['productName']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .trim() ==
+                                              de['productName']
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .trim()));
+                                      varientOptionList.add(de);
+                                    });
+
+                                    LoggerUtil().verboseData(
+                                        "Updated Data :- ${de.toString()}");
+                                  });
+                                },
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 0),
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${varientOption['productName']}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                      ),
+                                    ),
+                                    Text(
+                                      "\u{20B9} ${varientOption['productPrice']}",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                        : Container(),
                     TextButton(
                         style: TextButton.styleFrom(
                             minimumSize: Size(screenSize.width * 0.9,
@@ -465,7 +962,49 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 side: const BorderSide(color: Colors.grey))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, '/new-option-product-screen',
+                              arguments: {
+                                'customerData': (widget.argus['customerData']
+                                    as SelectedCustomerResponseData),
+                                'selectedBusiness':
+                                    (widget.argus['selectedBusiness']
+                                        as BusinessListResponseData),
+                                "updatePlan": true,
+                                'fromCustomerScreen': (widget.argus
+                                        .containsKey('fromCustomerScreen'))
+                                    ? true
+                                    : false
+                              }).then((c) {
+                            Map<String, dynamic> de = {
+                              "productName": "Regular",
+                              "productPrice":
+                                  (productPriceController.text.isEmpty)
+                                      ? '0'
+                                      : productPriceController.text,
+                              "productSku": productSkuController.text,
+                              "productStock": productStockController.text,
+                              "productCategory":
+                                  productCategoryListResponseData,
+                              "productUnit": productUnitListResponseData,
+                              "productPriceType": selectedPriceType
+                            };
+                            Map<String, dynamic> d3 =
+                                (c as Map<String, dynamic>);
+
+                            if (varientOptionList.isEmpty) {
+                              setState(() {
+                                varientOptionList.add(de);
+                                varientOptionList.add(d3);
+                              });
+                            } else {
+                              setState(() {
+                                varientOptionList.add(d3);
+                              });
+                            }
+                          });
+                        },
                         child: const Text(
                           'New Option',
                           style: TextStyle(
@@ -527,6 +1066,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                             return Center(child: AnimatedImageLoader());
                           } else if (state is ProductModifiersListLoadedState) {
                             return ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: state.successData!.length,
                               itemBuilder: (context, index) {
@@ -614,6 +1154,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 ),
               ),
               // SizedBox(height: screenSize.height * 0.02),
+
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.03,
@@ -633,6 +1174,244 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    (taxListResponseData.isNotEmpty)
+                        ? Column(
+                            children: [
+                              const Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Tax',
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: taxListResponseData.length,
+                                itemBuilder: (context, index) {
+                                  final taxData = taxListResponseData[index];
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/tax',
+                                          arguments: {
+                                            'customerData': (widget
+                                                    .argus['customerData']
+                                                as SelectedCustomerResponseData),
+                                            'selectedBusiness': (widget
+                                                    .argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                            "updatePlan": true,
+                                            'fromCustomerScreen': (widget.argus
+                                                    .containsKey(
+                                                        'fromCustomerScreen'))
+                                                ? true
+                                                : false,
+                                            "taxData": taxData
+                                          }).then((c) {
+                                        TaxListResponseData ed =
+                                            c as TaxListResponseData;
+                                        bool valu = taxListResponseData.any(
+                                            (cd) => ((cd.title == (ed).title) &&
+                                                (cd.amount == (ed).amount) &&
+                                                (cd.disType == (ed).disType)));
+                                        if (valu == false) {
+                                          setState(() {
+                                            taxListResponseData.add(ed);
+                                          });
+                                        }
+                                        if (valu == false) {
+                                          setState(() {
+                                            taxListResponseData = [];
+                                            taxListResponseData.add(ed);
+                                          });
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 5,
+                                          horizontal: screenSize.width * 0.03),
+                                      decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Color.fromARGB(
+                                                    255, 203, 202, 202),
+                                                blurRadius: 6.0,
+                                                offset: Offset(0.0, 0.1))
+                                          ],
+                                          color: Colors.white),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                screenSize.width * 0.02),
+                                        child: ListTile(
+                                          visualDensity: VisualDensity.compact,
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                taxData.title!,
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                              Text(
+                                                '${taxData.amount!} %',
+                                                style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 31, 1, 102),
+                                                    fontSize: 14),
+                                              )
+                                            ],
+                                          ),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          )
+                        : Container(),
+                    (discountListResponseData.isNotEmpty)
+                        ? Column(
+                            children: [
+                              const Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Discount',
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 31, 1, 102),
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: discountListResponseData.length,
+                                itemBuilder: (context, index) {
+                                  final discountData =
+                                      discountListResponseData[index];
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/discount',
+                                          arguments: {
+                                            'customerData': (widget
+                                                    .argus['customerData']
+                                                as SelectedCustomerResponseData),
+                                            'selectedBusiness': (widget
+                                                    .argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                            "updatePlan": true,
+                                            'fromCustomerScreen': (widget.argus
+                                                    .containsKey(
+                                                        'fromCustomerScreen'))
+                                                ? true
+                                                : false,
+                                            'discountData': discountData
+                                          }).then((c) {
+                                        DiscountListResponseData ed =
+                                            c as DiscountListResponseData;
+                                        bool valu = discountListResponseData
+                                            .any((cd) => ((cd.title ==
+                                                    (ed).title) &&
+                                                (cd.amount == (ed).amount) &&
+                                                (cd.disType == (ed).disType)));
+                                        if (valu == false) {
+                                          setState(() {
+                                            discountListResponseData = [];
+                                            discountListResponseData.add(ed);
+                                          });
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: 5,
+                                          horizontal: screenSize.width * 0.03),
+                                      decoration: const BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(10.0)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Color.fromARGB(
+                                                    255, 203, 202, 202),
+                                                blurRadius: 6.0,
+                                                offset: Offset(0.0, 0.1))
+                                          ],
+                                          color: Colors.white),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                screenSize.width * 0.02),
+                                        child: ListTile(
+                                          visualDensity: VisualDensity.compact,
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Text(
+                                                  discountData.title!,
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                (discountData.disType == 'A')
+                                                    ? '\u{20B9} ${discountData.amount!}'
+                                                    : '${discountData.amount!} %',
+                                                style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 31, 1, 102),
+                                                    fontSize: 14),
+                                              )
+                                            ],
+                                          ),
+                                          trailing: const Icon(
+                                            Icons.arrow_forward_ios,
+                                            color:
+                                                Color.fromARGB(255, 31, 1, 102),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          )
+                        : Container(),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     TextButton(
                         style: TextButton.styleFrom(
                             minimumSize: Size(screenSize.width * 0.9,
@@ -683,7 +1462,21 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                                           'fromCustomerScreen'))
                                                       ? true
                                                       : false
+                                            }).then((c) {
+                                          DiscountListResponseData ed =
+                                              c as DiscountListResponseData;
+                                          bool valu = discountListResponseData
+                                              .any((cd) => ((cd.title ==
+                                                      (ed).title) &&
+                                                  (cd.amount == (ed).amount) &&
+                                                  (cd.disType ==
+                                                      (ed).disType)));
+                                          if (valu == false) {
+                                            setState(() {
+                                              discountListResponseData.add(ed);
                                             });
+                                          }
+                                        });
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.symmetric(
@@ -713,7 +1506,21 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                                           'fromCustomerScreen'))
                                                       ? true
                                                       : false
+                                            }).then((c) {
+                                          TaxListResponseData ed =
+                                              c as TaxListResponseData;
+                                          bool valu = taxListResponseData.any(
+                                              (cd) => ((cd.title ==
+                                                      (ed).title) &&
+                                                  (cd.amount == (ed).amount) &&
+                                                  (cd.disType ==
+                                                      (ed).disType)));
+                                          if (valu == false) {
+                                            setState(() {
+                                              taxListResponseData.add(ed);
                                             });
+                                          }
+                                        });
                                       },
                                       child: const Padding(
                                         padding: EdgeInsets.symmetric(
@@ -742,6 +1549,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   ],
                 ),
               ),
+
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.03,
@@ -1102,13 +1910,11 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              behavior: SnackBarBehavior.floating,
-              content: Text(
-                "Please Enter name to save",
-                style: TextStyle(),
-              )));
+          if (productNameController.text.isNotEmpty) {
+          } else {
+            EssentialWidgetsCollection.showErrorSnackbar(context,
+                description: "Please enter product name to save");
+          }
         },
         child: Container(
           decoration: const BoxDecoration(

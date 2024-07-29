@@ -34,7 +34,7 @@ class LoggerUtil {
 
   // Method to get the database instance
 
-  debugData(dynamic message, [Object? error, StackTrace? stackTrace]) {
+   debugData(dynamic message, [Object? error, StackTrace? stackTrace]) {
     talkerLogger.debug(message, error, stackTrace);
   }
 

@@ -50,6 +50,7 @@ class DiscountListResponseData {
   String? disType;
   String? createdOn;
   String? createdBy;
+   bool? isSelected;
 
   DiscountListResponseData(
       {this.id,
@@ -60,7 +61,8 @@ class DiscountListResponseData {
       this.amount,
       this.disType,
       this.createdOn,
-      this.createdBy});
+      this.createdBy,
+      this.isSelected = false});
 
   DiscountListResponseData.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
@@ -90,6 +92,7 @@ class DiscountListResponseData {
     if (json["created_by"] is String) {
       createdBy = json["created_by"];
     }
+    isSelected=false;
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +106,7 @@ class DiscountListResponseData {
     _data["dis_type"] = disType;
     _data["created_on"] = createdOn;
     _data["created_by"] = createdBy;
+    _data["is_selected"] = isSelected;
     return _data;
   }
 }

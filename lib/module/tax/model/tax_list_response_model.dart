@@ -50,6 +50,7 @@ class TaxListResponseData {
   String? disType;
   String? createdOn;
   String? createdBy;
+   bool? isSelected;
 
   TaxListResponseData(
       {this.id,
@@ -60,7 +61,7 @@ class TaxListResponseData {
       this.amount,
       this.disType,
       this.createdOn,
-      this.createdBy});
+      this.createdBy, this.isSelected = false});
 
   TaxListResponseData.fromJson(Map<String, dynamic> json) {
     if (json["id"] is String) {
@@ -90,6 +91,7 @@ class TaxListResponseData {
     if (json["created_by"] is String) {
       createdBy = json["created_by"];
     }
+    isSelected=false;
   }
 
   Map<String, dynamic> toJson() {
@@ -103,6 +105,7 @@ class TaxListResponseData {
     _data["dis_type"] = disType;
     _data["created_on"] = createdOn;
     _data["created_by"] = createdBy;
+    _data["is_selected"] = isSelected;
     return _data;
   }
 }

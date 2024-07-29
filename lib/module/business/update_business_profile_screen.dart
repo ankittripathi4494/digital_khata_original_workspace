@@ -11,7 +11,6 @@ import 'package:dkapp/module/business/business_bloc/business_state.dart';
 import 'package:dkapp/module/business_type/model/business_type_list_response_model.dart';
 import 'package:dkapp/module/edit_profile/model/country_response_model.dart';
 import 'package:dkapp/utils/api_list.dart';
-import 'package:dkapp/utils/exceptions.dart';
 import 'package:dkapp/utils/image_list.dart';
 import 'package:dkapp/utils/location_handler.dart';
 import 'package:dkapp/utils/logger_util.dart';
@@ -429,68 +428,41 @@ class _UpdateBusinessProfileScreenState
                             radius: 23,
                             child: IconButton(
                                 onPressed: () async {
-                                  EssentialWidgetsCollection.showAlertDialog(
-                                      context,
-                                      icon: const Text(
-                                        'Choose an Option',
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                      title: TextButton(
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: Colors.black,
-                                            alignment: Alignment.centerLeft,
-                                            visualDensity: const VisualDensity(
-                                                horizontal: 0, vertical: -4),
-                                            textStyle: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                          onPressed: () async {
-                                            retailerImage =
-                                                await _picker.pickImage(
-                                                    maxHeight: 480,
-                                                    maxWidth: 640,
-                                                    source:
-                                                        ImageSource.gallery);
-                                            LoggerUtil().infoData(
-                                                "Captured Image From gallery :- ${retailerImage!.path}");
-                                            setState(() {
-                                              retailerImageFile =
-                                                  retailerImage!.path;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Choose from gallery"
-                                              .toTitleCase())),
-                                      content: TextButton(
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: Colors.black,
-                                            alignment: Alignment.centerLeft,
-                                            visualDensity: const VisualDensity(
-                                                horizontal: 0, vertical: -4),
-                                            textStyle: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                          onPressed: () async {
-                                            retailerImage =
-                                                await _picker.pickImage(
-                                                    maxHeight: 480,
-                                                    maxWidth: 640,
-                                                    source: ImageSource.camera);
-                                            LoggerUtil().infoData(
-                                                "Captured Image From Camera :- ${retailerImage!.path}");
-                                            setState(() {
-                                              retailerImageFile =
-                                                  retailerImage!.path;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text(
-                                            "Take a Picture".toTitleCase(),
-                                          )));
+                                    EssentialWidgetsCollection
+                                              .imagePicker(
+                                            context,
+                                            galleryFunc: () async {
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.gallery);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Gallery :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            cameraFunc: () async {
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.camera);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Camera :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                               
                                 },
                                 icon: const Icon(
                                   Icons.camera_alt,

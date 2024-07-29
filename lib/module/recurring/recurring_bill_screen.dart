@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable, unused_field, unused_local_variable
 
-import 'package:flutter/cupertino.dart';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -21,58 +22,9 @@ class _RecurringBillScreenState extends State<RecurringBillScreen> {
   String? _selectedLocation;
   int count = 1;
   late File _image;
-  final picker = ImagePicker();
-
-  //Image Picker function to get image from gallery
-  Future getImageFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      }
-    });
-  }
-
-  //Image Picker function to get image from camera
-  Future getImageFromCamera() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      }
-    });
-  }
-
-  //Show options to get image from camera or gallery
-  Future showOptions() async {
-    showCupertinoModalPopup(
-      context: context,
-      builder: (context) => CupertinoActionSheet(
-        actions: [
-          CupertinoActionSheetAction(
-            child: const Text('Photo Gallery'),
-            onPressed: () {
-              // close the options modal
-              Navigator.of(context).pop();
-              // get image from gallery
-              getImageFromGallery();
-            },
-          ),
-          CupertinoActionSheetAction(
-            child: const Text('Camera'),
-            onPressed: () {
-              // close the options modal
-              Navigator.of(context).pop();
-              // get image from camera
-              getImageFromCamera();
-            },
-          ),
-        ],
-      ),
-    );
-  }
+  final ImagePicker _picker = ImagePicker();
+  XFile? attachImage;
+  String? attachImageFile;
 
   @override
   Widget build(BuildContext context) {
@@ -1216,7 +1168,33 @@ class _RecurringBillScreenState extends State<RecurringBillScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    showOptions();
+                    EssentialWidgetsCollection.imagePicker(
+                      context,
+                      galleryFunc: () async {
+                        attachImage = await _picker.pickImage(
+                            maxHeight: 480,
+                            maxWidth: 640,
+                            source: ImageSource.gallery);
+                        LoggerUtil().infoData(
+                            "Captured Image From Gallery :- ${attachImage!.path}");
+                        setState(() {
+                          attachImageFile = attachImage!.path;
+                        });
+                        Navigator.pop(context);
+                      },
+                      cameraFunc: () async {
+                        attachImage = await _picker.pickImage(
+                            maxHeight: 480,
+                            maxWidth: 640,
+                            source: ImageSource.camera);
+                        LoggerUtil().infoData(
+                            "Captured Image From Camera :- ${attachImage!.path}");
+                        setState(() {
+                          attachImageFile = attachImage!.path;
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
                   },
                   child: Padding(
                     padding: EdgeInsets.only(right: screenSize.width * 0.69),

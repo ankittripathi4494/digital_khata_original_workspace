@@ -301,6 +301,7 @@ class _SelectCustomerScreenState extends State<SelectCustomerScreen> {
                 );
               },
             );
+          
           },
           child: const Icon(
             Icons.person_add,

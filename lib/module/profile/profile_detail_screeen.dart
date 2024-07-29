@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:io';
+import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_bloc.dart';
 import 'package:dkapp/module/customers/customer_bloc/customer_event.dart';
@@ -132,18 +133,33 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen>
                                           radius: 23,
                                           child: IconButton(
                                               onPressed: () async {
-                                                retailerImage =
-                                                    await _picker.pickImage(
-                                                        maxHeight: 480,
-                                                        maxWidth: 640,
-                                                        source:
-                                                            ImageSource.gallery);
-                                                LoggerUtil().infoData(
-                                                    "Captured Image From Camera :- ${retailerImage!.path}");
-                                                setState(() {
-                                                  retailerImageFile =
-                                                      retailerImage!.path;
-                                                });
+                                                EssentialWidgetsCollection.imagePicker(
+                    context,
+                    galleryFunc: () async {
+                      retailerImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.gallery);
+                      LoggerUtil().infoData(
+                          "Captured Image From Gallery :- ${retailerImage!.path}");
+                      setState(() {
+                        retailerImageFile = retailerImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                    cameraFunc: () async {
+                      retailerImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.camera);
+                      LoggerUtil().infoData(
+                          "Captured Image From Camera :- ${retailerImage!.path}");
+                      setState(() {
+                        retailerImageFile = retailerImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
                                               },
                                               icon: const Icon(
                                                 Icons.camera_alt,
@@ -173,18 +189,33 @@ class _ProfileDetailScreenState extends State<ProfileDetailScreen>
                                           radius: 23,
                                           child: IconButton(
                                               onPressed: () async {
-                                                retailerImage =
-                                                    await _picker.pickImage(
-                                                        maxHeight: 480,
-                                                        maxWidth: 640,
-                                                        source:
-                                                            ImageSource.gallery);
-                                                LoggerUtil().infoData(
-                                                    "Captured Image From Camera :- ${retailerImage!.path}");
-                                                setState(() {
-                                                  retailerImageFile =
-                                                      retailerImage!.path;
-                                                });
+                                               EssentialWidgetsCollection.imagePicker(
+                    context,
+                    galleryFunc: () async {
+                      retailerImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.gallery);
+                      LoggerUtil().infoData(
+                          "Captured Image From Gallery :- ${retailerImage!.path}");
+                      setState(() {
+                        retailerImageFile = retailerImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                    cameraFunc: () async {
+                      retailerImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.camera);
+                      LoggerUtil().infoData(
+                          "Captured Image From Camera :- ${retailerImage!.path}");
+                      setState(() {
+                        retailerImageFile = retailerImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
                                               },
                                               icon: const Icon(
                                                 Icons.camera_alt,

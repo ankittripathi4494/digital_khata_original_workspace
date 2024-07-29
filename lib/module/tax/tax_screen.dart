@@ -8,6 +8,7 @@ import 'package:dkapp/module/tax/model/tax_list_response_model.dart';
 import 'package:dkapp/module/tax/tax_bloc/tax_bloc.dart';
 import 'package:dkapp/module/tax/tax_bloc/tax_event.dart';
 import 'package:dkapp/module/tax/tax_bloc/tax_state.dart';
+import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,24 +26,44 @@ class _TaxScreenState extends State<TaxScreen> {
   late SharedPreferencesHelper sph;
   TaxListResponseData? selectedTaxListResponseData;
   late TaxBloc taxBloc;
-
+  List<TaxListResponseData> taxListResponseData = [];
   @override
   void initState() {
     super.initState();
     sph = SharedPreferencesHelper();
 
-    taxBloc = TaxBloc()
-      ..add(
-        TaxListFetchEvent(
-          customerId:
-              (widget.argus['customerData'] as SelectedCustomerResponseData)
-                  .id!,
-          userId: sph.getString("userid")!,
-          businessId:
-              (widget.argus['selectedBusiness'] as BusinessListResponseData)
-                  .id!,
-        ),
-      );
+    fetchSelectedTax();
+  }
+
+  fetchSelectedTax() {
+    if (widget.argus.containsKey("taxData")) {
+      LoggerUtil().errorData(
+          "taxData exist with ${(widget.argus["taxData"] as TaxListResponseData).toJson()}");
+
+      taxBloc = TaxBloc()
+        ..add(ToggleTaxSelection(
+            customerId:
+                (widget.argus['customerData'] as SelectedCustomerResponseData)
+                    .id!,
+            userId: sph.getString("userid")!,
+            businessId:
+                (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                    .id!,
+            tax: (widget.argus["taxData"] as TaxListResponseData)));
+    } else {
+      taxBloc = TaxBloc()
+        ..add(
+          TaxListFetchEvent(
+            customerId:
+                (widget.argus['customerData'] as SelectedCustomerResponseData)
+                    .id!,
+            userId: sph.getString("userid")!,
+            businessId:
+                (widget.argus['selectedBusiness'] as BusinessListResponseData)
+                    .id!,
+          ),
+        );
+    }
   }
 
   @override
@@ -86,59 +107,58 @@ class _TaxScreenState extends State<TaxScreen> {
                   shrinkWrap: true,
                   itemCount: state.successData!.length,
                   itemBuilder: (context, index) {
-                    final discountData = state.successData![index];
-                    return InkWell(
-                      onTap: () {
-                        // Navigator.pushNamed(context, '/service-details', arguments: {
-                        //   "percent": 'true',
-                        //   "ruppees": '',
-                        //   "tax": '',
-                        // });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.symmetric(
-                            vertical: screenSize.height * 0.01,
-                            horizontal: screenSize.width * 0.03),
-                        decoration: const BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 6.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            color: Colors.white),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: screenSize.width * 0.02),
-                          child: ListTile(
-                              minLeadingWidth: screenSize.width * 0.01,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: screenSize.height * 0.01),
-                              leading: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.red[100],
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(18.0),
-                                  child: Icon(FontAwesomeIcons.percent),
-                                ),
-                              ),
-                              title: Text(
-                                discountData.title!,
+                    final taxData = state.successData![index];
+                    LoggerUtil().criticalData(taxData.toJson());
+                    return Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.01,
+                          horizontal: screenSize.width * 0.03),
+                      decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color.fromARGB(255, 203, 202, 202),
+                                blurRadius: 6.0,
+                                offset: Offset(0.0, 0.1))
+                          ],
+                          color: Colors.white),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenSize.width * 0.02),
+                        child: CheckboxListTile(
+                          selected: (taxData.isSelected == null)
+                              ? false
+                              : taxData.isSelected!,
+                          activeColor: Colors.green,
+                          controlAffinity: ListTileControlAffinity.trailing,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: screenSize.height * 0.01),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                taxData.title!,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              trailing: Text(
-                               '${discountData.amount!} %',
+                              Text(
+                                '${taxData.amount!} %',
                                 style: const TextStyle(
                                     color: Color.fromARGB(255, 31, 1, 102),
                                     fontSize: 20),
-                              )),
+                              )
+                            ],
+                          ),
+                          value: taxData.isSelected,
+                          checkboxShape: const CircleBorder(
+                              side: BorderSide(color: Colors.green, width: 2),
+                              eccentricity: 0.8),
+                          onChanged: (value) {
+                            Navigator.pop(context, taxData);
+                          },
                         ),
                       ),
                     );

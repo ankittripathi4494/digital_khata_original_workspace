@@ -42,18 +42,18 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return DoubleBack(
-       message:"Press back again to close",
-        // canPop: false,
-        // onPopInvoked: (didPop) {
-        //   if (!didPop) {
-        //     EssentialWidgetsCollection.showAlertDialogForLogoutMain(context,
-        //         content: "Do you want to exit from App?", taskOne: () {
-        //       exit(0);
-        //     }, taskTwo: () {
-        //       Navigator.pop(context);
-        //     });
-        //   }
-        // },
+      message: "Press back again to close",
+      // canPop: false,
+      // onPopInvoked: (didPop) {
+      //   if (!didPop) {
+      //     EssentialWidgetsCollection.showAlertDialogForLogoutMain(context,
+      //         content: "Do you want to exit from App?", taskOne: () {
+      //       exit(0);
+      //     }, taskTwo: () {
+      //       Navigator.pop(context);
+      //     });
+      //   }
+      // },
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -156,17 +156,41 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                                     radius: 23,
                                     child: IconButton(
                                         onPressed: () async {
-                                          retailerImage =
-                                              await _picker.pickImage(
-                                                  maxHeight: 480,
-                                                  maxWidth: 640,
-                                                  source: ImageSource.gallery);
-                                          LoggerUtil().infoData(
-                                              "Captured Image From Camera :- ${retailerImage!.path}");
-                                          setState(() {
-                                            retailerImageFile =
-                                                retailerImage!.path;
-                                          });
+                                          EssentialWidgetsCollection
+                                              .imagePicker(
+                                            context,
+                                            galleryFunc: () async {
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.gallery);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Gallery :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                            cameraFunc: () async {
+                                              retailerImage =
+                                                  await _picker.pickImage(
+                                                      maxHeight: 480,
+                                                      maxWidth: 640,
+                                                      source:
+                                                          ImageSource.camera);
+                                              LoggerUtil().infoData(
+                                                  "Captured Image From Camera :- ${retailerImage!.path}");
+                                              setState(() {
+                                                retailerImageFile =
+                                                    retailerImage!.path;
+                                              });
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        
                                         },
                                         icon: const Icon(
                                           Icons.camera_alt,
@@ -606,7 +630,7 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
                                   height: screenSize.height * 0.06,
                                 ),
                                 (state is AddNewBusinessLoadingState)
-                                    ?  Center(
+                                    ? Center(
                                         child: AnimatedImageLoader(),
                                       )
                                     : ((state is AddNewBusinessValidState)
@@ -703,7 +727,8 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
       '/add-business-address',
     ) as Map<String, dynamic>?;
 
-    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil()
+        .infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     String add = '';
@@ -734,7 +759,8 @@ class _AddNewBusinessScreenState extends State<AddNewBusinessScreen> {
     }) as Map<String, dynamic>?;
 
     // Sending result back to FirstScreen
-    LoggerUtil().infoData("Selected address:- ${res!['completeAddress'].toString()}");
+    LoggerUtil()
+        .infoData("Selected address:- ${res!['completeAddress'].toString()}");
     Iterator<MapEntry<String, dynamic>> i =
         res['completeAddress'].entries.iterator;
     businessAddressController.clear();

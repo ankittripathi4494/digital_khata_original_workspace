@@ -273,7 +273,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
           if (jsonResponse.response != "failure") {
             if (kDebugMode) {
-              LoggerUtil().debugData((jsonResponse.data as ProductModifierListResponseData).toJson());
+              LoggerUtil().debugData((jsonResponse.data as List<ProductModifierListResponseData>).toString());
             }
 
             emit(ProductModifiersListLoadedState(
@@ -342,5 +342,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             failedMessage: 'Failed to get platform version.'));
       }
     });
+  
   }
 }

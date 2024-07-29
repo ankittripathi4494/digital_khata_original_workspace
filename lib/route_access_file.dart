@@ -1,17 +1,7 @@
-import 'package:dkapp/module/discount/discount_bloc/discount_bloc.dart';
-import 'package:dkapp/module/product/add_product_category_screen.dart';
-import 'package:dkapp/module/product/create_product_screen.dart';
-import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
-import 'package:dkapp/module/product/product_category_screen.dart';
-import 'package:dkapp/module/product/product_master_unit_precision_screen.dart';
-import 'package:dkapp/module/product/product_master_unit_screen.dart';
-import 'package:dkapp/module/product/product_unit_screen.dart';
-import 'package:dkapp/module/service/create_service_screen.dart';
-import 'package:dkapp/module/service/service_bloc/service_bloc.dart';
-import 'package:dkapp/module/tax/tax_bloc/tax_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
+
 import 'module/account/account_screen.dart';
 import 'module/add_business/add_address_business_screen.dart';
 import 'module/add_business/add_new_business_screen.dart';
@@ -37,6 +27,7 @@ import 'module/customers/add_customer_screen.dart';
 import 'module/customers/customer_bloc/customer_bloc.dart';
 import 'module/customers/select_customer_screen.dart';
 import 'module/dashboard/screens/dashboard_screen.dart';
+import 'module/discount/discount_bloc/discount_bloc.dart';
 import 'module/discount/discount_screen.dart';
 import 'module/edit_profile/edit_personal_profile.dart';
 import 'module/emi/emi_screen.dart';
@@ -61,8 +52,16 @@ import 'module/plan/plan_screen.dart';
 import 'module/plan/recurring_new_bill_plan_screen.dart';
 import 'module/privacy_policy/privacy_policy_screen.dart';
 import 'module/privacy_policy/terms_condition_screen.dart';
+import 'module/product/add_product_category_screen.dart';
+import 'module/product/create_product_screen.dart';
+import 'module/product/new_option_product_screen.dart';
+import 'module/product/product_bloc/product_bloc.dart';
+import 'module/product/product_category_screen.dart';
 import 'module/product/product_detail_screen.dart';
+import 'module/product/product_master_unit_precision_screen.dart';
+import 'module/product/product_master_unit_screen.dart';
 import 'module/product/product_screen.dart';
+import 'module/product/product_unit_screen.dart';
 import 'module/profile/amount_due_receive_screen.dart';
 import 'module/profile/cashin_screen.dart';
 import 'module/profile/cashout_screen.dart';
@@ -80,6 +79,9 @@ import 'module/recurring/recurring_transaction_detail_screen.dart';
 import 'module/recurring/recurring_transaction_screen.dart';
 import 'module/reminder_activity/reminder_activity.dart';
 import 'module/reward/reward_screen.dart';
+import 'module/service/create_service_screen.dart';
+import 'module/service/new_option_service_screen.dart';
+import 'module/service/service_bloc/service_bloc.dart';
 import 'module/service/service_detail_screen.dart';
 import 'module/service/service_screen.dart';
 import 'module/sms/select_sms_template_screen.dart';
@@ -89,6 +91,7 @@ import 'module/splash/splash_screen.dart';
 import 'module/subscription/checkout/checkout_diamond_screen.dart';
 import 'module/subscription/checkout/checkout_platinum_screen.dart';
 import 'module/subscription/subscription_screen.dart';
+import 'module/tax/tax_bloc/tax_bloc.dart';
 import 'module/tax/tax_screen.dart';
 import 'module/transaction/new_transaction_plan_screen.dart';
 
@@ -812,6 +815,53 @@ class RouteAccessGenerator {
             ),
           ),
         );
+      case '/new-option-product-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: NewOptionProductScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: NewOptionProductScreen(
+              argus: const {},
+            ),
+          ),
+        );
+      case '/new-option-service-screen':
+        if (arguments is Map<String, dynamic>) {
+          return PageTransition(
+            duration: const Duration(milliseconds: 500),
+            type: PageTransitionType.fade,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: NewOptionServiceScreen(
+                argus: arguments,
+              ),
+            ),
+          );
+        }
+        return PageTransition(
+          duration: const Duration(milliseconds: 500),
+          type: PageTransitionType.fade,
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: NewOptionServiceScreen(
+              argus: const {},
+            ),
+          ),
+        );
+
       case '/product-category':
         if (arguments is Map<String, dynamic>) {
           return PageTransition(

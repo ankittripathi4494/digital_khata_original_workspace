@@ -48,6 +48,9 @@ class _ProductMasterUnitPrecisionScreenState
         ),
         actions: [
           TextButton(
+              style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(fontSize: 14, letterSpacing: 1.2)),
               onPressed: () {
                 BlocProvider.of<ProductBloc>(context).add(AddProductUnitEvent(
                     customerId: (widget.argus['customerData']
@@ -60,7 +63,8 @@ class _ProductMasterUnitPrecisionScreenState
                     productUnitName: (widget.argus["selectUnit"]
                             as ProductMasterUnitListResponseData)
                         .title!,
-                    productUnitPrecision: selectedPrecision!["precision"].toString()));
+                    productUnitPrecision:
+                        selectedPrecision!["precision"].toString()));
               },
               child: Text("Save".toUpperCase()))
         ],

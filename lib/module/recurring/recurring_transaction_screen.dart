@@ -59,6 +59,7 @@ class _RecurringTransactionScreenState
 
   final ImagePicker _picker = ImagePicker();
   XFile? planImage;
+  String? planImageFile;
   getDataTimeofStartFormat(
       {Map<String, dynamic>? selectedTimeDuration,
       int? dataCount,
@@ -1188,84 +1189,33 @@ class _RecurringTransactionScreenState
                         children: [
                           InkWell(
                             onTap: () {
-                              EssentialWidgetsCollection.showAlertDialog(
-                                  context,
-                                  icon: const Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        "Choose Option",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            letterSpacing: 1.2,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.black),
-                                      ),
-                                      Divider(color: Colors.green, thickness: 2)
-                                    ],
-                                  ),
-                                  title: TextButton.icon(
-                                    onPressed: () async {
-                                      _picker
-                                          .pickImage(
-                                              maxHeight: 480,
-                                              maxWidth: 640,
-                                              source: ImageSource.camera)
-                                          .then((c) {
-                                        setState(() {
-                                          planImage = c;
-                                        });
-                                        LoggerUtil().infoData(
-                                            "Captured Image From Camera :- ${planImage!.path}");
-                                        Navigator.pop(context);
-                                      });
-                                    },
-                                    label: const Text(
-                                      "Camera",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          letterSpacing: 1.2,
-                                          fontWeight: FontWeight.w300,
-                                          color: Colors.black),
-                                    ),
-                                    icon: const Icon(
-                                      Icons.camera,
-                                      size: 25,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  content: TextButton.icon(
-                                      onPressed: () {
-                                        _picker
-                                            .pickImage(
-                                                maxHeight: 480,
-                                                maxWidth: 640,
-                                                source: ImageSource.gallery)
-                                            .then((c) {
-                                          setState(() {
-                                            planImage = c;
-                                          });
-                                          LoggerUtil().infoData(
-                                              "Captured Image From gallery :- ${planImage!.path}");
-                                          Navigator.pop(context);
-                                        });
-                                      },
-                                      icon: const Icon(
-                                        Icons.image_search,
-                                        size: 25,
-                                        color: Colors.black,
-                                      ),
-                                      label: const Text(
-                                        "Gallery",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            letterSpacing: 1.2,
-                                            fontWeight: FontWeight.w300,
-                                            color: Colors.black),
-                                      )));
+                            EssentialWidgetsCollection.imagePicker(
+                    context,
+                    galleryFunc: () async {
+                      planImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.gallery);
+                      LoggerUtil().infoData(
+                          "Captured Image From Gallery :- ${planImage!.path}");
+                      setState(() {
+                        planImageFile = planImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                    cameraFunc: () async {
+                      planImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.camera);
+                      LoggerUtil().infoData(
+                          "Captured Image From Camera :- ${planImage!.path}");
+                      setState(() {
+                        planImageFile = planImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
                             },
                             child: Container(
                               padding: const EdgeInsets.all(15.0),
@@ -1294,82 +1244,33 @@ class _RecurringTransactionScreenState
                     )
                   : InkWell(
                       onTap: () {
-                        EssentialWidgetsCollection.showAlertDialog(context,
-                            icon: const Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "Choose Option",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      letterSpacing: 1.2,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black),
-                                ),
-                                Divider(color: Colors.green, thickness: 2)
-                              ],
-                            ),
-                            title: TextButton.icon(
-                              onPressed: () async {
-                                _picker
-                                    .pickImage(
-                                        maxHeight: 480,
-                                        maxWidth: 640,
-                                        source: ImageSource.camera)
-                                    .then((c) {
-                                  setState(() {
-                                    planImage = c;
-                                  });
-                                  LoggerUtil().infoData(
-                                      "Captured Image From Camera :- ${planImage!.path}");
-                                  Navigator.pop(context);
-                                });
-                              },
-                              label: const Text(
-                                "Camera",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    letterSpacing: 1.2,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.black),
-                              ),
-                              icon: const Icon(
-                                Icons.camera,
-                                size: 25,
-                                color: Colors.black,
-                              ),
-                            ),
-                            content: TextButton.icon(
-                                onPressed: () {
-                                  _picker
-                                      .pickImage(
-                                          maxHeight: 480,
-                                          maxWidth: 640,
-                                          source: ImageSource.gallery)
-                                      .then((c) {
-                                    setState(() {
-                                      planImage = c;
-                                    });
-                                    LoggerUtil().infoData(
-                                        "Captured Image From gallery :- ${planImage!.path}");
-                                    Navigator.pop(context);
-                                  });
-                                },
-                                icon: const Icon(
-                                  Icons.image_search,
-                                  size: 25,
-                                  color: Colors.black,
-                                ),
-                                label: const Text(
-                                  "Gallery",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      letterSpacing: 1.2,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.black),
-                                )));
+                         EssentialWidgetsCollection.imagePicker(
+                    context,
+                    galleryFunc: () async {
+                      planImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.gallery);
+                      LoggerUtil().infoData(
+                          "Captured Image From Gallery :- ${planImage!.path}");
+                      setState(() {
+                        planImageFile = planImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                    cameraFunc: () async {
+                      planImage = await _picker.pickImage(
+                          maxHeight: 480,
+                          maxWidth: 640,
+                          source: ImageSource.camera);
+                      LoggerUtil().infoData(
+                          "Captured Image From Camera :- ${planImage!.path}");
+                      setState(() {
+                        planImageFile = planImage!.path;
+                      });
+                      Navigator.pop(context);
+                    },
+                  );
                       },
                       child: Padding(
                         padding:
