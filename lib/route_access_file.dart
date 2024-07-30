@@ -1451,16 +1451,22 @@ class RouteAccessGenerator {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
-            child: ServiceScreen(
-              argus: arguments,
+            child: BlocProvider(
+              create: (context) => ServiceBloc(),
+              child: ServiceScreen(
+                argus: arguments,
+              ),
             ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: ServiceScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => ServiceBloc(),
+            child: ServiceScreen(
+              argus: const {},
+            ),
           ),
         );
       case '/service-details':
@@ -1531,16 +1537,22 @@ class RouteAccessGenerator {
           return PageTransition(
             duration: const Duration(milliseconds: 500),
             type: PageTransitionType.fade,
-            child: ProductScreen(
-              argus: arguments,
+            child: BlocProvider(
+              create: (context) => ProductBloc(),
+              child: ProductScreen(
+                argus: arguments,
+              ),
             ),
           );
         }
         return PageTransition(
           duration: const Duration(milliseconds: 500),
           type: PageTransitionType.fade,
-          child: ProductScreen(
-            argus: const {},
+          child: BlocProvider(
+            create: (context) => ProductBloc(),
+            child: ProductScreen(
+              argus: const {},
+            ),
           ),
         );
       case '/product-detail':

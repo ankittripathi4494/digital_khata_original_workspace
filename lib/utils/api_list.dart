@@ -51,4 +51,8 @@ class APIPathList {
      static const String createTax = "${subfolder}createTax";
        static const String getModifierList = "${subfolder}getModifierList";
      static const String createModifier = "${subfolder}createModifier";
+     static const String getProductList = "${subfolder}getproductList";
+     static const String getServiceList = "${subfolder}getServiceList";
+     static const String createProduct = "${subfolder}createProduct";
+     static const String createService = "${subfolder}createService";
 }

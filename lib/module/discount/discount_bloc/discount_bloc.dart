@@ -193,4 +193,5 @@ class DiscountBloc extends Bloc<DiscountEvent, DiscountState> {
       ));
     }
   }
+
 }

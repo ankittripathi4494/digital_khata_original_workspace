@@ -487,105 +487,107 @@ class _EmiScreenState extends State<EmiScreen> {
                     builder: (BuildContext context) {
                       return SizedBox(
                         width: screenSize.width,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Center(
-                              child: Text(
-                                'Add',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            SizedBox(
-                              height: screenSize.height * 0.03,
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator
-                                    .pushNamed(context, '/product', arguments: {
-                                  'customerData': (widget.argus['customerData']
-                                      as SelectedCustomerResponseData),
-                                  'selectedBusiness':
-                                      (widget.argus['selectedBusiness']
-                                          as BusinessListResponseData),
-                                  "updatePlan": true,
-                                  'fromCustomerScreen': (widget.argus
-                                          .containsKey('fromCustomerScreen'))
-                                      ? true
-                                      : false
-                                });
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Center(
                                 child: Text(
-                                  'Product',
+                                  'Add',
                                   style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
+                                      color: Colors.black,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                                Navigator
-                                    .pushNamed(context, '/service', arguments: {
-                                  'customerData': (widget.argus['customerData']
-                                      as SelectedCustomerResponseData),
-                                  'selectedBusiness':
-                                      (widget.argus['selectedBusiness']
-                                          as BusinessListResponseData),
-                                  "updatePlan": true,
-                                  'fromCustomerScreen': (widget.argus
-                                          .containsKey('fromCustomerScreen'))
-                                      ? true
-                                      : false
-                                });
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                child: Text(
-                                  'Service',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
+                              SizedBox(
+                                height: screenSize.height * 0.03,
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator
+                                      .pushNamed(context, '/product', arguments: {
+                                    'customerData': (widget.argus['customerData']
+                                        as SelectedCustomerResponseData),
+                                    'selectedBusiness':
+                                        (widget.argus['selectedBusiness']
+                                            as BusinessListResponseData),
+                                    "updatePlan": true,
+                                    'fromCustomerScreen': (widget.argus
+                                            .containsKey('fromCustomerScreen'))
+                                        ? true
+                                        : false
+                                  });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  child: Text(
+                                    'Product',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  ),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.pushNamed(context, '/custom-amount',
-                                    arguments: {
-                                      'customerData':
-                                          (widget.argus['customerData']
-                                              as SelectedCustomerResponseData),
-                                      'selectedBusiness':
-                                          (widget.argus['selectedBusiness']
-                                              as BusinessListResponseData),
-                                      "updatePlan": true,
-                                      'fromCustomerScreen': (widget.argus
-                                              .containsKey(
-                                                  'fromCustomerScreen'))
-                                          ? true
-                                          : false
-                                    });
-                              },
-                              child: const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                child: Text(
-                                  'Custom Amount',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator
+                                      .pushNamed(context, '/service', arguments: {
+                                    'customerData': (widget.argus['customerData']
+                                        as SelectedCustomerResponseData),
+                                    'selectedBusiness':
+                                        (widget.argus['selectedBusiness']
+                                            as BusinessListResponseData),
+                                    "updatePlan": true,
+                                    'fromCustomerScreen': (widget.argus
+                                            .containsKey('fromCustomerScreen'))
+                                        ? true
+                                        : false
+                                  });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  child: Text(
+                                    'Service',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/custom-amount',
+                                      arguments: {
+                                        'customerData':
+                                            (widget.argus['customerData']
+                                                as SelectedCustomerResponseData),
+                                        'selectedBusiness':
+                                            (widget.argus['selectedBusiness']
+                                                as BusinessListResponseData),
+                                        "updatePlan": true,
+                                        'fromCustomerScreen': (widget.argus
+                                                .containsKey(
+                                                    'fromCustomerScreen'))
+                                            ? true
+                                            : false
+                                      });
+                                },
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  child: Text(
+                                    'Custom Amount',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },

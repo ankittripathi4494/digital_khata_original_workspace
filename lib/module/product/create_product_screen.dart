@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
@@ -38,6 +39,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   ProductCategoryListResponseData? productCategoryListResponseData;
   ProductUnitListResponseData? productUnitListResponseData;
 
+  List<ProductModifierListResponseData> selectedModifierList = [];
+
   late SharedPreferencesHelper sph;
   ProductModifierListResponseData? selectedProductModifierListResponseData;
   List<Map<String, dynamic>> varientOptionList = [];
@@ -50,9 +53,11 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
   TextEditingController productPriceController = TextEditingController();
   TextEditingController productSkuController = TextEditingController();
   TextEditingController productStockController = TextEditingController();
-  List<XFile?> selectedImages = []; // List of selected image
-  final picker = ImagePicker(); // Instance of Image picker
-
+  TextEditingController productDescriptionController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  XFile? attachImage;
+  List<XFile?> attachImages =
+      List<XFile?>.filled(6, null); // List of selected image
   @override
   void initState() {
     super.initState();
@@ -70,35 +75,6 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   .id!,
         ),
       );
-  }
-
-  Future getImages() async {
-    final pickedFile = await picker.pickMultiImage(
-        limit: 6,
-        imageQuality: 100, // To set quality of images
-        maxHeight: 480, // To set maxheight of images that you want in your app
-        maxWidth: 480); // To set maxheight of images that you want in your app
-    List<XFile> xfilePick = pickedFile;
-
-    // if atleast 1 images is selected it will add
-    // all images in selectedImages
-    // variable so that we can easily show them in UI
-    setState(() {
-      selectedImages = [];
-    });
-    if (xfilePick.isNotEmpty) {
-      for (var i = 0; i < xfilePick.length; i++) {
-        selectedImages.add(xfilePick[i]);
-      }
-      setState(
-        () {},
-      );
-    } else {
-      // If no image is selected it will show a
-      // snackbar saying nothing is selected
-      EssentialWidgetsCollection.showErrorSnackbar(context,
-          description: 'Nothing is selected');
-    }
   }
 
   @override
@@ -125,6 +101,51 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is AddNewProductSuccessState) {
+                    return EssentialWidgetsCollection.autoScheduleTask(
+                      context,
+                      taskWaitDuration: Durations.medium4,
+                      task: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, '/product',
+                            arguments: {
+                              'customerData': (widget.argus['customerData']
+                                  as SelectedCustomerResponseData),
+                              'selectedBusiness':
+                                  (widget.argus['selectedBusiness']
+                                      as BusinessListResponseData),
+                              "updatePlan": true,
+                              'fromCustomerScreen': (widget.argus
+                                      .containsKey('fromCustomerScreen'))
+                                  ? true
+                                  : false
+                            });
+                        EssentialWidgetsCollection.showSuccessSnackbar(context,
+                            description: "Product created Successfully");
+                      },
+                    );
+                  }
+                  if (state is AddNewProductFailedState) {
+                    return EssentialWidgetsCollection.autoScheduleTask(
+                      context,
+                      taskWaitDuration: Durations.medium4,
+                      task: () {
+                        Navigator.pop(context);
+                        EssentialWidgetsCollection.showErrorSnackbar(context,
+                            description: "Product creation failed");
+                      },
+                    );
+                  }
+                  if (state is AddNewProductLoadingState) {
+                    return Center(
+                      child: AnimatedImageLoader(),
+                    );
+                  }
+                  return Container();
+                },
+              ),
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.03,
@@ -138,47 +159,450 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                           offset: Offset(0.0, 0.1))
                     ],
                     borderRadius: BorderRadius.circular(5.0)),
-                child: SizedBox(
-                  width: 300.0, // To show images in particular area only
-                  child: GridView.builder(
-                    itemCount: selectedImages.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 6
-                            // Horizontally only 3 images will show
-                            ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return (selectedImages[index] == null)
-                          ? Center(
-                              child:
-                                  Image.file(File(selectedImages[index]!.path)))
-                          : InkWell(
-                              onTap: getImages,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color.fromARGB(
-                                            255, 210, 208, 208),
-                                        width: 1.0),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                          color: Color.fromARGB(
-                                              255, 203, 202, 202),
-                                          blurRadius: 1.0,
-                                          offset: Offset(0.0, 0.1))
-                                    ],
-                                    borderRadius: BorderRadius.circular(10.0)),
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: screenSize.width * 0.03,
-                                    vertical: screenSize.height * 0.01),
-                                child: Image.asset(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(0) == null) {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(0) == null) {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              }
+
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(0) == null)
+                              ? Image.asset(
                                   "resources/images/add_image-removebg-preview.png",
                                   height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(0)!.path),
+                                  height: screenSize.height * 0.1,
                                 ),
-                              ),
-                            );
-                    },
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(1) == null) {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(1) == null) {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(1) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(1)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(2) == null) {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(2) == null) {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(2) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(2)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(3) == null) {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(3) == null) {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(3) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(3)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(4) == null) {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(4) == null) {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(4) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(4)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(5) == null) {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(5) == null) {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(5) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(5)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
@@ -631,7 +1055,37 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                       ),
                                     );
                                   },
-                                );
+                                ).then((c) {
+                                  Map<String, dynamic> de = {
+                                    "productName": "Regular",
+                                    "productPrice":
+                                        (productPriceController.text.isEmpty)
+                                            ? '0'
+                                            : productPriceController.text,
+                                    "productSku": productSkuController.text,
+                                    "productStock": productStockController.text,
+                                    "productCategory":
+                                        productCategoryListResponseData,
+                                    "productUnit": productUnitListResponseData,
+                                    "productPriceType": selectedPriceType
+                                  };
+
+                                  if (varientOptionList.isEmpty) {
+                                    setState(() {
+                                      varientOptionList.add(de);
+                                    });
+                                  } else {
+                                    int indexData =
+                                        varientOptionList.indexWhere((c) =>
+                                            c['productName'] ==
+                                            de['productName']);
+
+                                    setState(() {
+                                      varientOptionList.removeAt(indexData);
+                                      varientOptionList.insert(indexData, de);
+                                    });
+                                  }
+                                });
                               },
                               child: const Text(
                                 'Received Stock',
@@ -829,7 +1283,37 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                       ),
                                     );
                                   },
-                                );
+                                ).then((c) {
+                                  Map<String, dynamic> de = {
+                                    "productName": "Regular",
+                                    "productPrice":
+                                        (productPriceController.text.isEmpty)
+                                            ? '0'
+                                            : productPriceController.text,
+                                    "productSku": productSkuController.text,
+                                    "productStock": productStockController.text,
+                                    "productCategory":
+                                        productCategoryListResponseData,
+                                    "productUnit": productUnitListResponseData,
+                                    "productPriceType": selectedPriceType
+                                  };
+
+                                  if (varientOptionList.isEmpty) {
+                                    setState(() {
+                                      varientOptionList.add(de);
+                                    });
+                                  } else {
+                                    int indexData =
+                                        varientOptionList.indexWhere((c) =>
+                                            c['productName'] ==
+                                            de['productName']);
+
+                                    setState(() {
+                                      varientOptionList.removeAt(indexData);
+                                      varientOptionList.insert(indexData, de);
+                                    });
+                                  }
+                                });
                               },
                               child: Text(
                                 '${int.parse(productStockController.text)} in Stock',
@@ -926,7 +1410,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                     });
 
                                     LoggerUtil().verboseData(
-                                        "Updated Data :- ${de.toString()}");
+                                        "Updated varientOptionList Data :- ${varientOptionList.toString()}");
                                   });
                                 },
                                 contentPadding: const EdgeInsets.symmetric(
@@ -1004,6 +1488,8 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                               });
                             }
                           });
+                          LoggerUtil().verboseData(
+                              "Updated varientOptionList Data :- ${varientOptionList.toString()}");
                         },
                         child: const Text(
                           'New Option',
@@ -1073,37 +1559,61 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                                 ProductModifierListResponseData
                                     productModifierListResponseData =
                                     state.successData![index];
-                                return InkWell(
-                                  onTap: () {
-                                    // Navigator.pushNamed(context, '/service-details', arguments: {
-                                    //   "percent": 'true',
-                                    //   "ruppees": '',
-                                    //   "tax": '',
-                                    // });
-                                  },
-                                  child: RadioListTile(
-                                    toggleable: true,
-                                    controlAffinity:
-                                        ListTileControlAffinity.trailing,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 0),
-                                    onChanged: (c) {
-                                      setState(() {
-                                        selectedProductModifierListResponseData =
-                                            c;
-                                      });
-                                    },
-                                    title: Text(
-                                      "${productModifierListResponseData.title!} (${productModifierListResponseData.itemCount!})",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                      ),
+
+                                return CheckboxListTile(
+                                  visualDensity:
+                                      const VisualDensity(vertical: -4),
+                                  activeColor: Colors.green,
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: screenSize.height * 0.01),
+                                  value: productModifierListResponseData
+                                      .isSelected,
+                                  checkboxShape: const CircleBorder(
+                                      side: BorderSide(
+                                          color: Colors.green, width: 2),
+                                      eccentricity: 0.8),
+                                  title: Text(
+                                    "${productModifierListResponseData.title!} (${productModifierListResponseData.itemCount!})",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromARGB(255, 31, 1, 102),
                                     ),
-                                    value: productModifierListResponseData,
-                                    groupValue:
-                                        selectedProductModifierListResponseData,
                                   ),
+                                  onChanged: (bool? value) {
+                                    if (value == true) {
+                                      setState(() {
+                                        selectedModifierList.add(
+                                            productModifierListResponseData);
+                                      });
+                                    } else {
+                                      int indexData =
+                                          selectedModifierList.indexWhere((c) =>
+                                              c.accountId ==
+                                              productModifierListResponseData
+                                                  .accountId);
+                                      setState(() {
+                                        selectedModifierList
+                                            .removeAt(indexData);
+                                      });
+                                    }
+                                    BlocProvider.of<ProductBloc>(context).add(
+                                        ToggleModifierSelection(
+                                            customerId: (widget
+                                                        .argus['customerData']
+                                                    as SelectedCustomerResponseData)
+                                                .id!,
+                                            userId: sph.getString("userid")!,
+                                            businessId: (widget.argus[
+                                                        'selectedBusiness']
+                                                    as BusinessListResponseData)
+                                                .id!,
+                                            productModifier:
+                                                productModifierListResponseData,
+                                            isSelected: value!,
+                                            index: index));
+                                  },
                                 );
                               },
                             );
@@ -1570,6 +2080,7 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     TextFormField(
+                      controller: productDescriptionController,
                       autofocus: false,
                       cursorColor: Colors.black,
                       decoration: const InputDecoration(
@@ -1908,26 +2419,70 @@ class _CreateProductScreenState extends State<CreateProductScreen> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: InkWell(
-        onTap: () {
-          if (productNameController.text.isNotEmpty) {
-          } else {
-            EssentialWidgetsCollection.showErrorSnackbar(context,
-                description: "Please enter product name to save");
-          }
+      floatingActionButton: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          return InkWell(
+            onTap: () {
+              if (productNameController.text.isNotEmpty) {
+                List<Map<String, dynamic>> tempList = [];
+                for (Map<String, dynamic> evol in varientOptionList) {
+                  Map<String, dynamic> map = {};
+
+                  map["category_id"] = (evol['productCategory']
+                          as ProductCategoryListResponseData)
+                      .id;
+                  map["unit_id"] =
+                      (evol['productUnit'] as ProductUnitListResponseData).id;
+                  map["price"] = evol['productPrice'];
+                  map["sku"] = evol['productSku'];
+                  map["option_name"] = evol['productName'];
+                  map["stock"] = evol['productStock'];
+                  map["price_type"] = evol['productPriceType'];
+                  tempList.add(map);
+                }
+                List<XFile>? images = [];
+
+                for (var edd in attachImages) {
+                  if (edd != null) {
+                    images.add(edd);
+                  }
+                }
+                BlocProvider.of<ProductBloc>(context).add(AddProductEvent(
+                    productImages: images,
+                    customerId: (widget.argus['customerData']
+                            as SelectedCustomerResponseData)
+                        .id!,
+                    userId: sph.getString("userid")!,
+                    businessId: (widget.argus['selectedBusiness']
+                            as BusinessListResponseData)
+                        .id!,
+                    productName: productNameController.text,
+                    productModifiersIds: selectedModifierList,
+                    productDiscountIds: discountListResponseData,
+                    productTaxIds: taxListResponseData,
+                    productDescription: productDescriptionController.text,
+                    productArray: (tempList.isNotEmpty)
+                        ? tempList.map((c) => jsonEncode(c)).toList()
+                        : []));
+              } else {
+                EssentialWidgetsCollection.showErrorSnackbar(context,
+                    description: "Please enter product name to save");
+              }
+            },
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 31, 1, 102),
+              ),
+              padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.015,
+                  horizontal: screenSize.width * 0.4),
+              child: const Text(
+                'SAVE',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          );
         },
-        child: Container(
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 31, 1, 102),
-          ),
-          padding: EdgeInsets.symmetric(
-              vertical: screenSize.height * 0.015,
-              horizontal: screenSize.width * 0.4),
-          child: const Text(
-            'SAVE',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-        ),
       ),
     );
   }

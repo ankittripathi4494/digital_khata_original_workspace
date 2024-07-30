@@ -1,4 +1,5 @@
 import 'package:dkapp/module/service/model/service_category_list_response_model.dart';
+import 'package:dkapp/module/service/model/service_list_response_model.dart';
 
 class ServiceState {}
 
@@ -34,6 +35,40 @@ class AddNewServiceCategorySuccessState extends ServiceState {
 class AddNewServiceCategoryFailedState extends ServiceState {
   late final String failedMessage;
   AddNewServiceCategoryFailedState({
+    required this.failedMessage,
+  });
+}
+
+//! States for Service List Fetch Event
+
+class ServiceListLoadingState extends ServiceState {}
+
+class ServiceListLoadedState extends ServiceState {
+  late final List<ServiceListResponseData>? successData;
+  ServiceListLoadedState({
+    this.successData,
+  });
+}
+
+class ServiceListFailedState extends ServiceState {
+  late final String failedMessage;
+  ServiceListFailedState({required this.failedMessage});
+}
+
+//! States for Add New Service  Event
+
+class AddNewServiceLoadingState extends ServiceState {}
+
+class AddNewServiceSuccessState extends ServiceState {
+  late final String successMessage;
+  AddNewServiceSuccessState({
+    required this.successMessage,
+  });
+}
+
+class AddNewServiceFailedState extends ServiceState {
+  late final String failedMessage;
+  AddNewServiceFailedState({
     required this.failedMessage,
   });
 }

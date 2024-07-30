@@ -1,5 +1,8 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dkapp/global_widget/animated_loading_widget.dart';
 import 'package:dkapp/global_widget/essential_widgets_collection.dart';
 import 'package:dkapp/module/business/model/business_list_response_model.dart';
@@ -11,11 +14,15 @@ import 'package:dkapp/module/product/product_bloc/product_bloc.dart';
 import 'package:dkapp/module/product/product_bloc/product_event.dart';
 import 'package:dkapp/module/product/product_bloc/product_state.dart';
 import 'package:dkapp/module/product/product_modifier_added_form.dart';
+import 'package:dkapp/module/service/service_bloc/service_bloc.dart';
+import 'package:dkapp/module/service/service_bloc/service_event.dart';
+import 'package:dkapp/module/service/service_bloc/service_state.dart';
 import 'package:dkapp/module/tax/model/tax_list_response_model.dart';
 import 'package:dkapp/utils/logger_util.dart';
 import 'package:dkapp/utils/shared_preferences_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateServiceScreen extends StatefulWidget {
   late Map<String, dynamic> argus;
@@ -43,7 +50,11 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   TextEditingController productPriceController = TextEditingController();
   TextEditingController productSkuController = TextEditingController();
   TextEditingController productStockController = TextEditingController();
-
+  TextEditingController productDescriptionController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  XFile? attachImage;
+  List<XFile?> attachImages =
+      List<XFile?>.filled(6, null); // List of selected image
   @override
   void initState() {
     super.initState();
@@ -70,15 +81,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushReplacementNamed(context, '/emi');
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Create Service',
           style: TextStyle(
@@ -95,6 +98,51 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              BlocBuilder<ServiceBloc, ServiceState>(
+                builder: (context, state) {
+                  if (state is AddNewServiceSuccessState) {
+                    return EssentialWidgetsCollection.autoScheduleTask(
+                      context,
+                      taskWaitDuration: Durations.medium4,
+                      task: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacementNamed(context, '/service',
+                            arguments: {
+                              'customerData': (widget.argus['customerData']
+                                  as SelectedCustomerResponseData),
+                              'selectedBusiness':
+                                  (widget.argus['selectedBusiness']
+                                      as BusinessListResponseData),
+                              "updatePlan": true,
+                              'fromCustomerScreen': (widget.argus
+                                      .containsKey('fromCustomerScreen'))
+                                  ? true
+                                  : false
+                            });
+                        EssentialWidgetsCollection.showSuccessSnackbar(context,
+                            description: "Service created Successfully");
+                      },
+                    );
+                  }
+                  if (state is AddNewServiceFailedState) {
+                    return EssentialWidgetsCollection.autoScheduleTask(
+                      context,
+                      taskWaitDuration: Durations.medium4,
+                      task: () {
+                        Navigator.pop(context);
+                        EssentialWidgetsCollection.showErrorSnackbar(context,
+                            description: "Service creation failed");
+                      },
+                    );
+                  }
+                  if (state is AddNewServiceLoadingState) {
+                    return Center(
+                      child: AnimatedImageLoader(),
+                    );
+                  }
+                  return Container();
+                },
+              ),
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.03,
@@ -108,84 +156,454 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                           offset: Offset(0.0, 0.1))
                     ],
                     borderRadius: BorderRadius.circular(5.0)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 210, 208, 208),
-                                width: 1.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 1.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            borderRadius: BorderRadius.circular(10.0)),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.03,
-                            vertical: screenSize.height * 0.01),
-                        child: Image.asset(
-                          "resources/images/add_image-removebg-preview.png",
-                          height: screenSize.height * 0.1,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(0) == null) {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(0) == null) {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[0] = attachImage;
+                                });
+                              }
+
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(0) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(0)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
                         ),
                       ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 210, 208, 208),
-                                width: 1.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 1.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            borderRadius: BorderRadius.circular(10.0)),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.01,
-                            vertical: screenSize.height * 0.01),
-                        child: Image.asset(
-                          "resources/images/add_image-removebg-preview.png",
-                          height: screenSize.height * 0.1,
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(1) == null) {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(1) == null) {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[1] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(1) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(1)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
                         ),
                       ),
-                    ),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 210, 208, 208),
-                                width: 1.0),
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: Color.fromARGB(255, 203, 202, 202),
-                                  blurRadius: 1.0,
-                                  offset: Offset(0.0, 0.1))
-                            ],
-                            borderRadius: BorderRadius.circular(10.0)),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: screenSize.width * 0.01,
-                            vertical: screenSize.height * 0.01),
-                        child: Image.asset(
-                          "resources/images/add_image-removebg-preview.png",
-                          height: screenSize.height * 0.1,
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(2) == null) {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(2) == null) {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[2] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(2) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(2)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
                         ),
                       ),
-                    ),
-                  ],
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(3) == null) {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(3) == null) {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[3] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(3) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(3)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(4) == null) {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(4) == null) {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[4] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(4) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(4)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          EssentialWidgetsCollection.imagePicker(
+                            context,
+                            galleryFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.gallery);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Gallery :- ${attachImage!.path}");
+
+                              if (attachImages.elementAt(5) == null) {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                            cameraFunc: () async {
+                              LoggerUtil().infoData("clickable");
+                              attachImage = await _picker.pickImage(
+                                  maxHeight: 480,
+                                  maxWidth: 640,
+                                  source: ImageSource.camera);
+                              LoggerUtil().infoData(
+                                  "Captured Image From Camera :- ${attachImage!.path}");
+                              if (attachImages.elementAt(5) == null) {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              } else {
+                                setState(() {
+                                  attachImages[5] = attachImage;
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 210, 208, 208),
+                                  width: 1.0),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color.fromARGB(255, 203, 202, 202),
+                                    blurRadius: 1.0,
+                                    offset: Offset(0.0, 0.1))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0)),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenSize.width * 0.03,
+                              vertical: screenSize.height * 0.01),
+                          child: (attachImages.elementAt(5) == null)
+                              ? Image.asset(
+                                  "resources/images/add_image-removebg-preview.png",
+                                  height: screenSize.height * 0.1,
+                                )
+                              : Image.file(
+                                  File(attachImages.elementAt(5)!.path),
+                                  height: screenSize.height * 0.1,
+                                ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
+
               Container(
                 margin: EdgeInsets.symmetric(
                     horizontal: screenSize.width * 0.03,
@@ -214,7 +632,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                               borderSide: BorderSide.none)),
                     ),
                     const Divider(),
-                     ListTile(
+                    ListTile(
                       onTap: () {
                         Navigator.pushNamed(context, '/product-category',
                             arguments: {
@@ -564,37 +982,44 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                 ProductModifierListResponseData
                                     productModifierListResponseData =
                                     state.successData![index];
-                                return InkWell(
-                                  onTap: () {
-                                    // Navigator.pushNamed(context, '/service-details', arguments: {
-                                    //   "percent": 'true',
-                                    //   "ruppees": '',
-                                    //   "tax": '',
-                                    // });
-                                  },
-                                  child: RadioListTile(
-                                    toggleable: true,
-                                    controlAffinity:
-                                        ListTileControlAffinity.trailing,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20, vertical: 0),
-                                    onChanged: (c) {
-                                      setState(() {
-                                        selectedProductModifierListResponseData =
-                                            c;
-                                      });
-                                    },
-                                    title: Text(
-                                      "${productModifierListResponseData.title!} (${productModifierListResponseData.itemCount!})",
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Color.fromARGB(255, 31, 1, 102),
-                                      ),
+                                return CheckboxListTile(
+                                  visualDensity:
+                                      const VisualDensity(vertical: -4),
+                                  activeColor: Colors.green,
+                                  controlAffinity:
+                                      ListTileControlAffinity.trailing,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: screenSize.height * 0.01),
+                                  value: productModifierListResponseData
+                                      .isSelected,
+                                  checkboxShape: const CircleBorder(
+                                      side: BorderSide(
+                                          color: Colors.green, width: 2),
+                                      eccentricity: 0.8),
+                                  title: Text(
+                                    "${productModifierListResponseData.title!} (${productModifierListResponseData.itemCount!})",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.fromARGB(255, 31, 1, 102),
                                     ),
-                                    value: productModifierListResponseData,
-                                    groupValue:
-                                        selectedProductModifierListResponseData,
                                   ),
+                                  onChanged: (bool? value) {
+                                    BlocProvider.of<ProductBloc>(context).add(
+                                        ToggleModifierSelection(
+                                            customerId: (widget
+                                                        .argus['customerData']
+                                                    as SelectedCustomerResponseData)
+                                                .id!,
+                                            userId: sph.getString("userid")!,
+                                            businessId: (widget.argus[
+                                                        'selectedBusiness']
+                                                    as BusinessListResponseData)
+                                                .id!,
+                                            productModifier:
+                                                productModifierListResponseData,
+                                            isSelected: value!,
+                                            index: index));
+                                  },
                                 );
                               },
                             );
@@ -1061,6 +1486,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     TextFormField(
+                      controller: productDescriptionController,
                       autofocus: false,
                       cursorColor: Colors.black,
                       decoration: const InputDecoration(
@@ -1274,26 +1700,6 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                                                       Text(t),
                                                                 ))
                                                             .toList(),
-                                                        // const Text(
-                                                        //   'Text',
-                                                        //   style: TextStyle(
-                                                        //       color: Colors
-                                                        //           .black,
-                                                        //       fontSize: 20),
-                                                        // ),
-                                                        // Checkbox(
-                                                        //   checkColor:
-                                                        //       Colors.green,
-                                                        //   onChanged:
-                                                        //       (bool? value) {
-                                                        //     isChecked = value;
-                                                        //     setState(() {
-                                                        //       isChecked =
-                                                        //           true;
-                                                        //     });
-                                                        //   },
-                                                        //   value: isChecked,
-                                                        // )
                                                       ),
                                                     ),
                                                   ],
@@ -1402,6 +1808,49 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
       floatingActionButton: InkWell(
         onTap: () {
           if (productNameController.text.isNotEmpty) {
+            List<Map<String, dynamic>> tempList = [];
+            for (Map<String, dynamic> evol in varientOptionList) {
+              Map<String, dynamic> map = {};
+
+              map["category_id"] =
+                  (evol['productCategory'] as ProductCategoryListResponseData)
+                      .id;
+
+              map["price"] = evol['productPrice'];
+              map["sku"] = evol['productSku'];
+              map["option_name"] = evol['productName'];
+              map["stock"] = evol['productStock'];
+              map["price_type"] = evol['productPriceType'];
+              tempList.add(map);
+            }
+            List<XFile>? images = [];
+
+            for (var edd in attachImages) {
+              if (edd != null) {
+                images.add(edd);
+              }
+            }
+            BlocProvider.of<ServiceBloc>(context).add(AddServiceEvent(
+                productImages: images,
+                customerId: (widget.argus['customerData']
+                        as SelectedCustomerResponseData)
+                    .id!,
+                userId: sph.getString("userid")!,
+                businessId: (widget.argus['selectedBusiness']
+                        as BusinessListResponseData)
+                    .id!,
+                productName: productNameController.text,
+                productModifiersIds: '',
+                productDiscountIds: (discountListResponseData.isNotEmpty)
+                    ? discountListResponseData.map((c) => c.id).join(',')
+                    : '',
+                productTaxIds: (taxListResponseData.isNotEmpty)
+                    ? taxListResponseData.map((c) => c.id).join(',')
+                    : '',
+                productDescription: productDescriptionController.text,
+                productArray: (tempList.isNotEmpty)
+                    ? tempList.map((c) => jsonEncode(c)).toList()
+                    : []));
           } else {
             EssentialWidgetsCollection.showErrorSnackbar(context,
                 description: "Please enter service name to save");
